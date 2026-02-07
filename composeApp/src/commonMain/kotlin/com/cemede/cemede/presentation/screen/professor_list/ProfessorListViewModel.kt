@@ -2,10 +2,10 @@ package com.cemede.cemede.presentation.screen.professor_list
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.cemede.cemede.domain.model.CoroutineResult
 import com.cemede.cemede.domain.model.Professor
 import com.cemede.cemede.domain.use_case.GetAllProfessorsUseCase
 import com.cemede.cemede.domain.use_case.SyncProfessorsUseCase
+import com.cemede.cemede.domain.util.CoroutineResult
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
@@ -20,8 +20,25 @@ class ProfessorListViewModel(
     val state = _state.asStateFlow()
 
     init {
-        getProfessors()
         syncProfessors()
+    }
+
+    fun syncProfessors() = viewModelScope.launch {
+        _state.value = _state.value.copy(isLoading = true)
+        when (val result = syncProfessorsUseCase()) {
+            is CoroutineResult.Success -> {
+                _state.value = _state.value.copy(isLoading = false)
+                getProfessors()
+            }
+
+            is CoroutineResult.Error -> {
+                _state.value =
+                    _state.value.copy(
+                        isLoading = false,
+                        error = result.message,
+                    )
+            }
+        }
     }
 
     private fun getProfessors() {
@@ -29,25 +46,6 @@ class ProfessorListViewModel(
             .onEach { professors ->
                 _state.value = _state.value.copy(professors = professors)
             }.launchIn(viewModelScope)
-    }
-
-    fun syncProfessors() {
-        viewModelScope.launch {
-            _state.value = _state.value.copy(isLoading = true)
-            when (val result = syncProfessorsUseCase()) {
-                is CoroutineResult.Success -> {
-                    _state.value = _state.value.copy(isLoading = false)
-                }
-
-                is CoroutineResult.Error -> {
-                    _state.value =
-                        _state.value.copy(
-                            isLoading = false,
-                            error = result.message,
-                        )
-                }
-            }
-        }
     }
 }
 

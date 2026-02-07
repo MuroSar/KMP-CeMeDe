@@ -16,23 +16,31 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
+import cemede.composeapp.generated.resources.Res
+import cemede.composeapp.generated.resources.professor_list_screen_item
+import cemede.composeapp.generated.resources.professor_list_screen_search_bar
+import cemede.composeapp.generated.resources.professor_list_screen_title
+import com.cemede.cemede.domain.model.Professor
+import com.cemede.cemede.presentation.theme.padding_16
+import com.cemede.cemede.presentation.theme.padding_8
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
 @Composable
 fun ProfessorListScreen(
-    onNavigateToProfessorDetail: (String) -> Unit,
+    onNavigateToProfessorDetail: (Professor) -> Unit,
     viewModel: ProfessorListViewModel = koinInject(),
 ) {
     val state by viewModel.state.collectAsState()
     var searchQuery by remember { mutableStateOf("") }
 
-    Column(modifier = Modifier.padding(16.dp)) {
+    Column(modifier = Modifier.padding(padding_16)) {
+        Text(text = stringResource(Res.string.professor_list_screen_title))
         TextField(
             value = searchQuery,
             onValueChange = { searchQuery = it },
             modifier = Modifier.fillMaxWidth(),
-            placeholder = { Text("Buscar profesor") },
+            placeholder = { Text(stringResource(Res.string.professor_list_screen_search_bar)) },
         )
 
         if (state.isLoading) {
@@ -46,12 +54,12 @@ fun ProfessorListScreen(
         LazyColumn {
             items(state.professors.filter { it.name.contains(searchQuery, ignoreCase = true) }) {
                 Text(
-                    text = it.name,
+                    text = stringResource(Res.string.professor_list_screen_item, it.id, it.name),
                     modifier =
                         Modifier
                             .fillMaxWidth()
-                            .clickable { onNavigateToProfessorDetail(it.name) }
-                            .padding(8.dp),
+                            .clickable { onNavigateToProfessorDetail(it) }
+                            .padding(padding_8),
                 )
             }
         }

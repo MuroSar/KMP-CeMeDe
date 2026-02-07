@@ -5,7 +5,7 @@ import com.cemede.cemede.data.data_base.model.StudentEntity
 object CsvParser {
     fun parseStudents(
         csvData: String,
-        professorName: String,
+        professorId: Int,
     ): List<StudentEntity> {
         val lines = csvData.lines()
         val studentListStartIndex = lines.indexOf("Listado de alumnos") + 1
@@ -21,7 +21,7 @@ object CsvParser {
                 if (studentName.isNullOrBlank()) {
                     null
                 } else {
-                    StudentEntity(name = studentName, professorName = professorName)
+                    StudentEntity(name = studentName, professorId = professorId)
                 }
             }
     }

@@ -6,8 +6,8 @@ import androidx.room.Relation
 data class ProfessorAndStudents(
     @Embedded val professor: ProfessorEntity,
     @Relation(
-        parentColumn = "name",
-        entityColumn = "professorName",
+        parentColumn = "id",
+        entityColumn = "professorId",
     )
     val students: List<StudentEntity>,
 )

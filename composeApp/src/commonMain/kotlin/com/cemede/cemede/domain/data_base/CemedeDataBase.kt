@@ -7,7 +7,10 @@ import kotlinx.coroutines.flow.Flow
 
 interface CemedeDataBase {
     fun getAllProfessors(): Flow<List<Professor>>
-    fun getProfessorDetail(name: String): Flow<Professor>
-    suspend fun upsertProfessors(professors: MutableList<ProfessorEntity>)
-    suspend fun upsertStudents(allStudents: MutableList<StudentEntity>)
+
+    fun getProfessorDetail(id: Int): Flow<Professor>
+
+    suspend fun upsertAllProfessors(professors: MutableList<ProfessorEntity>)
+
+    suspend fun upsertAllStudents(allStudents: MutableList<StudentEntity>)
 }

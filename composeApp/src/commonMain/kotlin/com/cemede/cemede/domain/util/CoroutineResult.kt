@@ -1,4 +1,4 @@
-package com.cemede.cemede.domain.model
+package com.cemede.cemede.domain.util
 
 sealed class CoroutineResult<out T> {
     data class Success<out T>(

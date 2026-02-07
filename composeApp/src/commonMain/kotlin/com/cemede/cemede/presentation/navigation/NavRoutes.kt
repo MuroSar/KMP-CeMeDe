@@ -15,6 +15,7 @@ sealed interface NavRoutes {
 
     @Serializable
     data class ProfessorDetail(
+        val professorId: Int,
         val professorName: String,
     ) : NavRoutes
 }

@@ -30,27 +30,34 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
+import cemede.composeapp.generated.resources.Res
+import cemede.composeapp.generated.resources.accept
+import cemede.composeapp.generated.resources.error
+import cemede.composeapp.generated.resources.professor_detail_screen_search_bar
+import com.cemede.cemede.domain.model.Professor
+import com.cemede.cemede.presentation.theme.padding_16
+import com.cemede.cemede.presentation.theme.padding_8
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfessorDetailScreen(
-    professorName: String,
+    professor: Professor,
     onBack: () -> Unit,
     viewModel: ProfessorDetailViewModel = koinInject(),
 ) {
     val state by viewModel.state.collectAsState()
     var searchQuery by remember { mutableStateOf("") }
 
-    LaunchedEffect(professorName) {
-        viewModel.getProfessor(professorName)
+    LaunchedEffect(professor.id) {
+        viewModel.getProfessor(professor.id)
     }
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(professorName) },
+                title = { Text("${professor.id} - ${professor.name}") },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
@@ -59,18 +66,18 @@ fun ProfessorDetailScreen(
             )
         },
     ) {
-        Column(modifier = Modifier.padding(it).padding(16.dp)) {
+        Column(modifier = Modifier.padding(it).padding(padding_16)) {
             state.professor?.let { professor ->
                 TextField(
                     value = searchQuery,
                     onValueChange = { searchQuery = it },
                     modifier = Modifier.fillMaxWidth(),
-                    placeholder = { Text("Buscar alumno") },
+                    placeholder = { Text(stringResource(Res.string.professor_detail_screen_search_bar)) },
                 )
 
                 LazyColumn {
                     items(professor.students.filter { student -> student.name.contains(searchQuery, ignoreCase = true) }) {
-                        Text(text = it.name, modifier = Modifier.padding(8.dp))
+                        Text(text = it.name, modifier = Modifier.padding(padding_8))
                     }
                 }
             }
@@ -90,7 +97,7 @@ fun ProfessorDetailScreen(
                 } else {
                     // Warning banner
                     Box(
-                        modifier = Modifier.fillMaxWidth().background(Color.Red).padding(8.dp),
+                        modifier = Modifier.fillMaxWidth().background(Color.Red).padding(padding_8),
                         contentAlignment = Alignment.Center,
                     ) {
                         Text(text = "Esta información puede no estar actualizada", color = Color.White)
@@ -100,11 +107,11 @@ fun ProfessorDetailScreen(
                 // Error dialog
                 AlertDialog(
                     onDismissRequest = { /* TODO */ },
-                    title = { Text("Error") },
+                    title = { Text(stringResource(Res.string.error)) },
                     text = { Text("Ha ocurrido un error inesperado. Por favor, inténtalo más tarde.") },
                     confirmButton = {
                         Button(onClick = onBack) {
-                            Text("Aceptar")
+                            Text(stringResource(Res.string.accept))
                         }
                     },
                 )

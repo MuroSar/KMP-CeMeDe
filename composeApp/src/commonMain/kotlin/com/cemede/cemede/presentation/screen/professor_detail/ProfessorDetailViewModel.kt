@@ -15,8 +15,8 @@ class ProfessorDetailViewModel(
     private val _state = MutableStateFlow(ProfessorDetailState())
     val state = _state.asStateFlow()
 
-    fun getProfessor(name: String) {
-        getProfessorDetailUseCase(name)
+    fun getProfessor(id: Int) {
+        getProfessorDetailUseCase(id)
             .onEach { professor ->
                 _state.value = _state.value.copy(professor = professor)
             }.launchIn(viewModelScope)

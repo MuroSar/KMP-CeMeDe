@@ -4,6 +4,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
+import com.cemede.cemede.domain.model.Professor
 import com.cemede.cemede.presentation.screen.main.MainScreen
 import com.cemede.cemede.presentation.screen.professor_detail.ProfessorDetailScreen
 import com.cemede.cemede.presentation.screen.professor_list.ProfessorListScreen
@@ -27,14 +28,14 @@ fun NavGraphBuilder.addCeMeDeScreenGraph(navController: NavController) {
         MainScreen(onNavigateToProfessorList = { navController.navigate(NavRoutes.ProfessorList) })
     }
     composable<NavRoutes.ProfessorList> {
-        ProfessorListScreen(onNavigateToProfessorDetail = { professorName ->
-            navController.navigate(NavRoutes.ProfessorDetail(professorName))
+        ProfessorListScreen(onNavigateToProfessorDetail = { professor ->
+            navController.navigate(NavRoutes.ProfessorDetail(professor.id, professor.name))
         })
     }
     composable<NavRoutes.ProfessorDetail> { backStackEntry ->
         val professorDetail: NavRoutes.ProfessorDetail = backStackEntry.toRoute()
         ProfessorDetailScreen(
-            professorName = professorDetail.professorName,
+            professor = Professor(professorDetail.professorId, professorDetail.professorName),
             onBack = { navController.popBackStack() },
         )
     }

@@ -4,9 +4,9 @@ import com.cemede.cemede.data.data_base.model.ProfessorEntity
 import com.cemede.cemede.data.mapper.CsvParser
 import com.cemede.cemede.domain.data_base.CemedeDataBase
 import com.cemede.cemede.domain.data_source.CSVDataSource
-import com.cemede.cemede.domain.model.CoroutineResult
 import com.cemede.cemede.domain.model.Professor
 import com.cemede.cemede.domain.repository.ProfessorRepository
+import com.cemede.cemede.domain.util.CoroutineResult
 import kotlinx.coroutines.flow.Flow
 
 class ProfessorRepositoryImpl(
@@ -15,7 +15,7 @@ class ProfessorRepositoryImpl(
 ) : ProfessorRepository {
     override fun getAllProfessors(): Flow<List<Professor>> = cemedeDataBase.getAllProfessors()
 
-    override fun getProfessorDetail(name: String): Flow<Professor> = cemedeDataBase.getProfessorDetail(name)
+    override fun getProfessorDetail(id: Int): Flow<Professor> = cemedeDataBase.getProfessorDetail(id)
 
     override suspend fun syncProfessors(): CoroutineResult<Unit> {
         val professorUrls =
@@ -40,8 +40,9 @@ class ProfessorRepositoryImpl(
         for ((name, url) in professorUrls) {
             when (val result = csvDataSource.getProfessorData(url)) {
                 is CoroutineResult.Success -> {
-                    professors.add(ProfessorEntity(name))
-                    val students = CsvParser.parseStudents(result.data, name)
+                    val professorEntity = ProfessorEntity(name = name)
+                    professors.add(professorEntity)
+                    val students = CsvParser.parseStudents(result.data, professorEntity.id)
                     allStudents.addAll(students)
                 }
 
@@ -51,8 +52,8 @@ class ProfessorRepositoryImpl(
             }
         }
 
-        cemedeDataBase.upsertProfessors(professors)
-        cemedeDataBase.upsertStudents(allStudents)
+        cemedeDataBase.upsertAllProfessors(professors)
+        cemedeDataBase.upsertAllStudents(allStudents)
 
         return CoroutineResult.Success(Unit)
     }
