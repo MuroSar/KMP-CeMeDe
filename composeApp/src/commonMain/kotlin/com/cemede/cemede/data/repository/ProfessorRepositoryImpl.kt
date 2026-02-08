@@ -25,7 +25,8 @@ class ProfessorRepositoryImpl(
         for ((name, url) in UrlProvider.professorUrls) {
             when (val result = csvDataSource.getProfessorData(url)) {
                 is CoroutineResult.Success -> {
-                    val professorEntity = ProfessorEntity(name = name)
+                    val professorEntity = ProfessorEntity(name = name, isWorking = true) // Revisar el mapeo de isWorking, tendríamos que
+                    // primero consumir la lista de horarios
                     professors.add(professorEntity)
                     val students = CsvParser.parseStudents(result.data, professorEntity.id)
                     allStudents.addAll(students)

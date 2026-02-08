@@ -82,7 +82,7 @@ fun MainScreen(onNavigateToProfessorList: () -> Unit) {
     CemedeTheme {
         Scaffold(
             topBar = {
-                CemedeTopAppBar.TopAppBar(
+                CemedeTopAppBar.MainTopAppBar(
                     icon = Icons.Default.MedicalServices,
                     title = stringResource(Res.string.main_screen_top_app_bar_title),
                     actions = {

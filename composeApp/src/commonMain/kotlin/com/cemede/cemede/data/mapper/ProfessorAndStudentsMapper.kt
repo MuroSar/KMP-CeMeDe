@@ -8,6 +8,7 @@ fun ProfessorAndStudents.mapToProfessor() =
     Professor(
         id = professor.id,
         name = professor.name,
+        isWorking = professor.isWorking,
         students =
             students.map {
                 Student(

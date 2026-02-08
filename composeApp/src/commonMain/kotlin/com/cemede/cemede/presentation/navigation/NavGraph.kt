@@ -28,14 +28,28 @@ fun NavGraphBuilder.addCeMeDeScreenGraph(navController: NavController) {
         MainScreen(onNavigateToProfessorList = { navController.navigate(NavRoutes.ProfessorList) })
     }
     composable<NavRoutes.ProfessorList> {
-        ProfessorListScreen(onNavigateToProfessorDetail = { professor ->
-            navController.navigate(NavRoutes.ProfessorDetail(professor.id, professor.name))
-        })
+        ProfessorListScreen(
+            onNavigateBack = { navController.popBackStack() },
+            onNavigateToProfessorDetail = { professor ->
+                navController.navigate(
+                    NavRoutes.ProfessorDetail(
+                        professorId = professor.id,
+                        professorName = professor.name,
+                        professorIsWorking = professor.isWorking,
+                    ),
+                )
+            },
+        )
     }
     composable<NavRoutes.ProfessorDetail> { backStackEntry ->
         val professorDetail: NavRoutes.ProfessorDetail = backStackEntry.toRoute()
         ProfessorDetailScreen(
-            professor = Professor(professorDetail.professorId, professorDetail.professorName),
+            professor =
+                Professor(
+                    id = professorDetail.professorId,
+                    name = professorDetail.professorName,
+                    isWorking = professorDetail.professorIsWorking,
+                ),
             onBack = { navController.popBackStack() },
         )
     }

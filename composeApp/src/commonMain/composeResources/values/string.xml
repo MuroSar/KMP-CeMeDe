@@ -4,7 +4,10 @@
     <string name="under_construction">En construcción...</string>
     <string name="accept">Aceptar</string>
     <string name="error">Error</string>
+    <string name="back">Volver</string>
     <string name="see_all">Ver todo</string>
+    <string name="synchronizing_data">Sincronizando datos...</string>
+    <string name="clear_search">Limpiar búsqueda</string>
 
     <!--Main screen-->
     <string name="main_screen_top_app_bar_title">CE.ME.DE</string>
@@ -24,11 +27,23 @@
     <string name="construction_banner_subtitle">Esta funcionalidad estará disponible próximamente.</string>
     <string name="construction_banner_button">Cerrar</string>
 
+    <!--Professor card-->
+    <string name="professor_card_photo_content_description">Foto de perfil de %1$s</string>
+    <string name="professor_card_name">Prof. %1$s</string>
+    <string name="professor_card_id">ID %1$s</string>
+    <string name="professor_card_action_call">Llamar</string>
+    <string name="professor_card_action_message">Mensaje</string>
+    <string name="professor_card_action_schedule">Horario</string>
+
+    <!--Professor list screen-->
+    <string name="professor_list_screen_header_title">Staff</string>
+    <string name="professor_list_screen_search_bar">Buscar profesor..</string>
+    <string name="professor_list_screen_loading">Actualizando listado de profes</string>
+    <string name="professor_list_screen_empty_state_title">No se encontraron profesores</string>
+    <string name="professor_list_screen_empty_state_subtitle">Intenta con otro nombre o verifica la que esté bien escrito.</string>
 
 
-    <string name="professor_list_screen_title">Profesores</string>
-    <string name="professor_list_screen_search_bar">Buscar profesor</string>
-    <string name="professor_list_screen_item">%1$s - %2$s</string>
+
 
     <string name="professor_detail_screen_search_bar">Buscar alumno</string>
 </resources>
