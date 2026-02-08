@@ -23,10 +23,13 @@ val font_size_14 = 14.sp
 val font_size_16 = 16.sp
 val font_size_18 = 18.sp
 val font_size_20 = 20.sp
+val font_size_22 = 22.sp
 val font_size_36 = 36.sp
 
 // Height
 val height_4 = 4.dp
+val height_24 = 24.dp
+val height_48 = 48.dp
 
 // Letter Spacing
 val letter_spacing_0_5 = 0.5.sp
@@ -35,6 +38,7 @@ val letter_spacing_1 = 1.sp
 val letter_spacing_5 = 5.sp
 
 // Padding
+val padding_2 = 2.dp
 val padding_4 = 4.dp
 val padding_6 = 6.dp
 val padding_8 = 8.dp
@@ -56,13 +60,16 @@ const val SCALE_1_25 = 1.25f
 val size_8 = 8.dp
 val size_12 = 12.dp
 val size_16 = 16.dp
+val size_18 = 18.dp
 val size_24 = 24.dp
 val size_32 = 32.dp
 val size_36 = 36.dp
 val size_40 = 40.dp
 val size_48 = 48.dp
 val size_56 = 56.dp
+val size_96 = 96.dp
 val size_120 = 120.dp
+val size_160 = 160.dp
 val size_200 = 200.dp
 val size_250 = 250.dp
 
@@ -77,6 +84,7 @@ val space_40 = 40.dp
 const val WEIGHT_1 = 1f
 
 // Width
+val width_2 = 2.dp
 val width_4 = 4.dp
 val width_24 = 24.dp
 val width_48 = 48.dp

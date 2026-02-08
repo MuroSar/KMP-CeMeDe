@@ -244,7 +244,7 @@ private fun DecorativeElements() {
                 Modifier
                     .align(Alignment.TopEnd)
                     .padding(padding_15)
-                    .alpha(ALPHA_0_5)
+                    .alpha(ALPHA_0_1)
                     .size(size_200),
             tint = Color.White,
         )
@@ -255,7 +255,7 @@ private fun DecorativeElements() {
                 Modifier
                     .align(Alignment.BottomStart)
                     .padding(start = padding_30, bottom = padding_70)
-                    .alpha(ALPHA_0_5)
+                    .alpha(ALPHA_0_1)
                     .size(size_200),
             tint = Color.White,
         )

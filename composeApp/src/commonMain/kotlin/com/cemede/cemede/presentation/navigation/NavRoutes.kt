@@ -17,5 +17,6 @@ sealed interface NavRoutes {
     data class ProfessorDetail(
         val professorId: Int,
         val professorName: String,
+        val professorIsWorking: Boolean,
     ) : NavRoutes
 }
