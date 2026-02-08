@@ -15,7 +15,7 @@ import androidx.room.PrimaryKey
             onDelete = ForeignKey.CASCADE,
         ),
     ],
-    indices = [Index(value = ["name"], unique = true)]
+    indices = [Index(value = ["name"], unique = true)],
 )
 data class StudentEntity(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,

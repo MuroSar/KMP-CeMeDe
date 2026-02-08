@@ -23,23 +23,24 @@ class ProfessorListViewModel(
         syncProfessors()
     }
 
-    fun syncProfessors() = viewModelScope.launch {
-        _state.value = _state.value.copy(isLoading = true)
-        when (val result = syncProfessorsUseCase()) {
-            is CoroutineResult.Success -> {
-                _state.value = _state.value.copy(isLoading = false)
-                getProfessors()
-            }
+    fun syncProfessors() =
+        viewModelScope.launch {
+            _state.value = _state.value.copy(isLoading = true)
+            when (val result = syncProfessorsUseCase()) {
+                is CoroutineResult.Success -> {
+                    _state.value = _state.value.copy(isLoading = false)
+                    getProfessors()
+                }
 
-            is CoroutineResult.Error -> {
-                _state.value =
-                    _state.value.copy(
-                        isLoading = false,
-                        error = result.message,
-                    )
+                is CoroutineResult.Error -> {
+                    _state.value =
+                        _state.value.copy(
+                            isLoading = false,
+                            error = result.message,
+                        )
+                }
             }
         }
-    }
 
     private fun getProfessors() {
         getAllProfessorsUseCase()

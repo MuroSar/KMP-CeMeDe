@@ -1,7 +1,7 @@
 package com.cemede.cemede.domain.repository
 
-import com.cemede.cemede.domain.util.CoroutineResult
 import com.cemede.cemede.domain.model.Professor
+import com.cemede.cemede.domain.util.CoroutineResult
 import kotlinx.coroutines.flow.Flow
 
 interface ProfessorRepository {
