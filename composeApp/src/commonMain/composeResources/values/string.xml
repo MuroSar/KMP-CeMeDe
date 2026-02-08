@@ -1,13 +1,30 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <resources>
+    <!--Common-->
     <string name="under_construction">En construcción...</string>
     <string name="accept">Aceptar</string>
     <string name="error">Error</string>
+    <string name="see_all">Ver todo</string>
 
-    <string name="main_screen_title">CE.ME.DE</string>
-    <string name="main_screen_button_search_professor">Buscar profe</string>
-    <string name="main_screen_button_search_member">Buscar alumno</string>
-    <string name="main_screen_button_protocols">Protocolos</string>
+    <!--Main screen-->
+    <string name="main_screen_top_app_bar_title">CE.ME.DE</string>
+    <string name="main_screen_top_app_bar_settings">Ajustes</string>
+    <string name="main_screen_title">Hola, bienvenido!!</string>
+    <string name="main_screen_subtitle">Gestión interna de CE.ME.DE</string>
+    <string name="main_screen_staff_button_title">Staff</string>
+    <string name="main_screen_staff_button_subtitle">Buscar profe</string>
+    <string name="main_screen_member_button_title">Socios</string>
+    <string name="main_screen_member_button_subtitle">Buscar socio</string>
+    <string name="main_screen_services_button_title">Servicios</string>
+    <string name="main_screen_services_button_subtitle">Protocolos</string>
+    <string name="main_screen_daily_resume">Resumen diario</string>
+
+    <!--Construction banner-->
+    <string name="construction_banner_title">En construcción</string>
+    <string name="construction_banner_subtitle">Esta funcionalidad estará disponible próximamente.</string>
+    <string name="construction_banner_button">Cerrar</string>
+
+
 
     <string name="professor_list_screen_title">Profesores</string>
     <string name="professor_list_screen_search_bar">Buscar profesor</string>
