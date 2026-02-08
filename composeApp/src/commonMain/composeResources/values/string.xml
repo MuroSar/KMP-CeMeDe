@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<resources>
+    <string name="under_construction">En construcción...</string>
+    <string name="accept">Aceptar</string>
+    <string name="error">Error</string>
+
+    <string name="main_screen_title">CE.ME.DE</string>
+    <string name="main_screen_button_search_professor">Buscar profe</string>
+    <string name="main_screen_button_search_member">Buscar alumno</string>
+    <string name="main_screen_button_protocols">Protocolos</string>
+
+    <string name="professor_list_screen_title">Profesores</string>
+    <string name="professor_list_screen_search_bar">Buscar profesor</string>
+    <string name="professor_list_screen_item">%1$s - %2$s</string>
+
+    <string name="professor_detail_screen_search_bar">Buscar alumno</string>
+</resources>

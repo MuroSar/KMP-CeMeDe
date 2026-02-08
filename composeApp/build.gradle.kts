@@ -1,6 +1,5 @@
 import org.jetbrains.compose.ExperimentalComposeLibrary
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
-import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -32,7 +31,7 @@ kotlin {
 
     listOf(
         iosArm64(), // Dispositivo real
-        iosSimulatorArm64() // Simulador en Mac Apple Silicon
+        iosSimulatorArm64(), // Simulador en Mac Apple Silicon
     ).forEach { iosTarget ->
         iosTarget.binaries.framework {
             baseName = "ComposeApp"
@@ -58,6 +57,8 @@ kotlin {
             implementation(libs.compose.runtime)
             implementation(libs.compose.foundation)
             implementation(libs.compose.material3)
+            implementation(libs.material.icons.core)
+            implementation(libs.material.icons.extended)
             implementation(libs.compose.ui)
             implementation(libs.compose.components.resources)
             implementation(libs.compose.uiToolingPreview)
@@ -208,7 +209,7 @@ ktlint {
     }
 
     filter {
-        exclude("**/build/**") // Exclude build folder
+        exclude("**/build/**", "**/resources/**", "**/*.md", "**/*.properties", "**/generated/**")
     }
 
     // To execute ktlint you can run:
