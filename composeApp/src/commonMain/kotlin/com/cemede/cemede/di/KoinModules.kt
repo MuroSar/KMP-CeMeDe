@@ -7,10 +7,10 @@ import com.cemede.cemede.data.repository.ProfessorRepositoryImpl
 import com.cemede.cemede.domain.data_base.CemedeDataBase
 import com.cemede.cemede.domain.data_source.CSVDataSource
 import com.cemede.cemede.domain.repository.ProfessorRepository
-import com.cemede.cemede.domain.use_case.GetProfessorDetailUseCase
-import com.cemede.cemede.domain.use_case.GetProfessorDetailUseCaseImpl
 import com.cemede.cemede.domain.use_case.GetAllProfessorsUseCase
 import com.cemede.cemede.domain.use_case.GetAllProfessorsUseCaseImpl
+import com.cemede.cemede.domain.use_case.GetProfessorDetailUseCase
+import com.cemede.cemede.domain.use_case.GetProfessorDetailUseCaseImpl
 import com.cemede.cemede.domain.use_case.SyncProfessorsUseCase
 import com.cemede.cemede.domain.use_case.SyncProfessorsUseCaseImpl
 import com.cemede.cemede.presentation.screen.professor_detail.ProfessorDetailViewModel

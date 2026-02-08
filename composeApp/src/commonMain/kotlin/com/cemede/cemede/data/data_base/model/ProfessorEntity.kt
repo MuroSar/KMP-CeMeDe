@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 
 @Entity(
     tableName = "professors",
-    indices = [Index(value = ["name"], unique = true)]
+    indices = [Index(value = ["name"], unique = true)],
 )
 data class ProfessorEntity(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,

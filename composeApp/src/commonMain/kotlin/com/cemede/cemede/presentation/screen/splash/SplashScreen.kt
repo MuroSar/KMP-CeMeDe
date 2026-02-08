@@ -32,7 +32,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
-import com.cemede.cemede.presentation.theme.CemedeTheme
 import com.cemede.cemede.presentation.theme.ALPHA_0_1
 import com.cemede.cemede.presentation.theme.ALPHA_0_2
 import com.cemede.cemede.presentation.theme.ALPHA_0_3
@@ -40,6 +39,10 @@ import com.cemede.cemede.presentation.theme.ALPHA_0_4
 import com.cemede.cemede.presentation.theme.ALPHA_0_5
 import com.cemede.cemede.presentation.theme.ALPHA_0_6
 import com.cemede.cemede.presentation.theme.ALPHA_0_8
+import com.cemede.cemede.presentation.theme.CemedeTheme
+import com.cemede.cemede.presentation.theme.SCALE_1_1
+import com.cemede.cemede.presentation.theme.SCALE_1_25
+import com.cemede.cemede.presentation.theme.WEIGHT_1
 import com.cemede.cemede.presentation.theme.font_size_12
 import com.cemede.cemede.presentation.theme.font_size_18
 import com.cemede.cemede.presentation.theme.font_size_20
@@ -53,8 +56,6 @@ import com.cemede.cemede.presentation.theme.padding_15
 import com.cemede.cemede.presentation.theme.padding_30
 import com.cemede.cemede.presentation.theme.padding_48
 import com.cemede.cemede.presentation.theme.padding_70
-import com.cemede.cemede.presentation.theme.SCALE_1_1
-import com.cemede.cemede.presentation.theme.SCALE_1_25
 import com.cemede.cemede.presentation.theme.size_120
 import com.cemede.cemede.presentation.theme.size_200
 import com.cemede.cemede.presentation.theme.size_250
@@ -62,7 +63,6 @@ import com.cemede.cemede.presentation.theme.size_32
 import com.cemede.cemede.presentation.theme.space_32
 import com.cemede.cemede.presentation.theme.space_4
 import com.cemede.cemede.presentation.theme.space_40
-import com.cemede.cemede.presentation.theme.WEIGHT_1
 import com.cemede.cemede.presentation.theme.width_24
 import com.cemede.cemede.presentation.theme.width_4
 import com.cemede.cemede.presentation.theme.width_48
@@ -76,30 +76,31 @@ fun SplashScreen(onSplashFinished: () -> Unit) {
     LaunchedEffect(Unit) {
         pulse.animateTo(
             targetValue = 1.1f,
-            animationSpec = tween(durationMillis = ANIMATION_DURATION)
+            animationSpec = tween(durationMillis = ANIMATION_DURATION),
         )
         onSplashFinished()
     }
 
     CemedeTheme {
         Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(MaterialTheme.colorScheme.background),
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .background(MaterialTheme.colorScheme.background),
         ) {
             DecorativeElements()
             Column(
                 modifier = Modifier.fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Column(
                     modifier = Modifier.weight(WEIGHT_1),
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
+                    verticalArrangement = Arrangement.Center,
                 ) {
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.spacedBy(space_40)
+                        verticalArrangement = Arrangement.spacedBy(space_40),
                     ) {
                         CemedeLogo(pulse = pulse.value)
                         AppTitle()
@@ -118,53 +119,56 @@ private fun CemedeLogo(pulse: Float) {
         contentAlignment = Alignment.Center,
     ) {
         Box(
-            modifier = Modifier
-                .matchParentSize()
-                .scale(SCALE_1_1)
-                .alpha(ALPHA_0_2)
-                .background(Color.White.copy(alpha = ALPHA_0_3), CircleShape)
+            modifier =
+                Modifier
+                    .matchParentSize()
+                    .scale(SCALE_1_1)
+                    .alpha(ALPHA_0_2)
+                    .background(Color.White.copy(alpha = ALPHA_0_3), CircleShape),
         )
         Box(
-            modifier = Modifier
-                .matchParentSize()
-                .scale(SCALE_1_25)
-                .alpha(ALPHA_0_1)
-                .background(Color.White.copy(alpha = ALPHA_0_2), CircleShape)
+            modifier =
+                Modifier
+                    .matchParentSize()
+                    .scale(SCALE_1_25)
+                    .alpha(ALPHA_0_1)
+                    .background(Color.White.copy(alpha = ALPHA_0_2), CircleShape),
         )
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.scale(pulse),
-            verticalArrangement = Arrangement.spacedBy(space_32)
+            verticalArrangement = Arrangement.spacedBy(space_32),
         ) {
             Box(contentAlignment = Alignment.Center) {
                 Icon(
                     imageVector = Icons.Filled.Favorite,
                     contentDescription = "Explore Icon",
                     modifier = Modifier.size(size_120),
-                    tint = MaterialTheme.colorScheme.primary
+                    tint = MaterialTheme.colorScheme.primary,
                 )
                 Box(
-                    modifier = Modifier
-                        .size(size_32)
-                        .background(
-                            color = MaterialTheme.colorScheme.primary,
-                            shape = CircleShape,
-                        )
-                        .border(
-                            width = width_4,
-                            color = MaterialTheme.colorScheme.background,
-                            shape = CircleShape,
-                        )
+                    modifier =
+                        Modifier
+                            .size(size_32)
+                            .background(
+                                color = MaterialTheme.colorScheme.primary,
+                                shape = CircleShape,
+                            ).border(
+                                width = width_4,
+                                color = MaterialTheme.colorScheme.background,
+                                shape = CircleShape,
+                            ),
                 )
             }
             Text(
-                text = buildAnnotatedString {
-                    append("CE.")
-                    withStyle(style = SpanStyle(color = MaterialTheme.colorScheme.primary)) {
-                        append("ME.")
-                    }
-                    append("DE")
-                },
+                text =
+                    buildAnnotatedString {
+                        append("CE.")
+                        withStyle(style = SpanStyle(color = MaterialTheme.colorScheme.primary)) {
+                            append("ME.")
+                        }
+                        append("DE")
+                    },
                 color = Color.White,
                 fontSize = font_size_36,
                 fontWeight = FontWeight.ExtraBold,
@@ -207,14 +211,16 @@ private fun SplashScreenFooter(modifier: Modifier = Modifier) {
         verticalArrangement = Arrangement.spacedBy(space_32),
     ) {
         Box(
-            modifier = Modifier
-                .size(width = width_48, height = height_4)
-                .background(Color.White.copy(alpha = ALPHA_0_2), CircleShape)
+            modifier =
+                Modifier
+                    .size(width = width_48, height = height_4)
+                    .background(Color.White.copy(alpha = ALPHA_0_2), CircleShape),
         ) {
             Box(
-                modifier = Modifier
-                    .size(width = width_24, height = height_4)
-                    .background(MaterialTheme.colorScheme.primary, CircleShape)
+                modifier =
+                    Modifier
+                        .size(width = width_24, height = height_4)
+                        .background(MaterialTheme.colorScheme.primary, CircleShape),
             )
         }
         Text(
@@ -223,7 +229,7 @@ private fun SplashScreenFooter(modifier: Modifier = Modifier) {
             fontSize = font_size_12,
             fontWeight = FontWeight.Normal,
             letterSpacing = letter_spacing_0_8,
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Center,
         )
     }
 }
@@ -234,24 +240,25 @@ private fun DecorativeElements() {
         Icon(
             imageVector = Icons.Filled.FitnessCenter,
             contentDescription = null,
-            modifier = Modifier
-                .align(Alignment.TopEnd)
-                .padding(padding_15)
-                .alpha(ALPHA_0_5)
-                .size(size_200),
-            tint = Color.White
+            modifier =
+                Modifier
+                    .align(Alignment.TopEnd)
+                    .padding(padding_15)
+                    .alpha(ALPHA_0_5)
+                    .size(size_200),
+            tint = Color.White,
         )
         Icon(
             imageVector = Icons.Filled.HealthAndSafety,
             contentDescription = null,
-            modifier = Modifier
-                .align(Alignment.BottomStart)
-                .padding(start = padding_30, bottom = padding_70)
-                .alpha(ALPHA_0_5)
-                .size(size_200),
-            tint = Color.White
+            modifier =
+                Modifier
+                    .align(Alignment.BottomStart)
+                    .padding(start = padding_30, bottom = padding_70)
+                    .alpha(ALPHA_0_5)
+                    .size(size_200),
+            tint = Color.White,
         )
-
     }
 }
 
