@@ -14,6 +14,7 @@ fun ProfessorAndStudents.mapToProfessor() =
                 Student(
                     id = it.id,
                     name = it.name,
+                    processType = it.processType,
                 )
             },
     )

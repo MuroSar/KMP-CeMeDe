@@ -8,23 +8,31 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 
 class ProfessorDetailViewModel(
+    private val professor: Professor,
     private val getProfessorDetailUseCase: GetProfessorDetailUseCase,
 ) : ViewModel() {
     private val _state = MutableStateFlow(ProfessorDetailState())
     val state = _state.asStateFlow()
 
-    fun getProfessor(id: Int) {
-        getProfessorDetailUseCase(id)
-            .onEach { professor ->
-                _state.value = _state.value.copy(professor = professor)
-            }.launchIn(viewModelScope)
+    init {
+        getProfessorDetail(professor.id)
     }
+
+    fun getProfessorDetail(id: Int) =
+        viewModelScope.launch {
+            _state.value = _state.value.copy(isLoading = true)
+            getProfessorDetailUseCase(id)
+                .onEach { professor ->
+                    _state.value = _state.value.copy(professor = professor, isLoading = false)
+                }.launchIn(viewModelScope)
+        }
 }
 
 data class ProfessorDetailState(
     val professor: Professor? = null,
-    val isLoading: Boolean = false,
+    val isLoading: Boolean = true,
     val error: String? = null,
 )

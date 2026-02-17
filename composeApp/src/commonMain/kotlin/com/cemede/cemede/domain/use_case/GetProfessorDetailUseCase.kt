@@ -5,11 +5,11 @@ import com.cemede.cemede.domain.repository.ProfessorRepository
 import kotlinx.coroutines.flow.Flow
 
 fun interface GetProfessorDetailUseCase {
-    operator fun invoke(id: Int): Flow<Professor>
+    suspend operator fun invoke(id: Int): Flow<Professor>
 }
 
 class GetProfessorDetailUseCaseImpl(
     private val repository: ProfessorRepository,
 ) : GetProfessorDetailUseCase {
-    override operator fun invoke(id: Int): Flow<Professor> = repository.getProfessorDetail(id)
+    override suspend operator fun invoke(id: Int): Flow<Professor> = repository.getProfessorDetail(id)
 }

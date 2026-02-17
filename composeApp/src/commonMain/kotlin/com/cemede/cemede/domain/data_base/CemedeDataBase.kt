@@ -6,9 +6,9 @@ import com.cemede.cemede.domain.model.Professor
 import kotlinx.coroutines.flow.Flow
 
 interface CemedeDataBase {
-    fun getAllProfessors(): Flow<List<Professor>>
+    suspend fun getAllProfessors(): Flow<List<Professor>>
 
-    fun getProfessorDetail(id: Int): Flow<Professor>
+    suspend fun getProfessorDetail(id: Int): Flow<Professor>
 
     suspend fun upsertProfessor(professor: ProfessorEntity): Long
 

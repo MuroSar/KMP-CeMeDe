@@ -14,9 +14,9 @@ class ProfessorRepositoryImpl(
     private val cemedeDataBase: CemedeDataBase,
     private val csvDataSource: CSVDataSource,
 ) : ProfessorRepository {
-    override fun getAllProfessors(): Flow<List<Professor>> = cemedeDataBase.getAllProfessors()
+    override suspend fun getAllProfessors(): Flow<List<Professor>> = cemedeDataBase.getAllProfessors()
 
-    override fun getProfessorDetail(id: Int): Flow<Professor> = cemedeDataBase.getProfessorDetail(id)
+    override suspend fun getProfessorDetail(id: Int): Flow<Professor> = cemedeDataBase.getProfessorDetail(id)
 
     override suspend fun syncProfessors(): CoroutineResult<Unit> {
         val allStudents = mutableListOf<com.cemede.cemede.data.data_base.model.StudentEntity>()

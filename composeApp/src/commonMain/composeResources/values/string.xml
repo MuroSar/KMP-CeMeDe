@@ -8,6 +8,8 @@
     <string name="see_all">Ver todo</string>
     <string name="synchronizing_data">Sincronizando datos...</string>
     <string name="clear_search">Limpiar búsqueda</string>
+    <string name="empty_state_subtitle">Intenta con otro nombre o verifica la que esté bien escrito.</string>
+    <string name="filter">Filtrar</string>
 
     <!--Splash screen-->
     <string name="splash_screen_title_ce">CE.</string>
@@ -48,10 +50,11 @@
     <string name="professor_list_screen_search_bar">Buscar profesor..</string>
     <string name="professor_list_screen_loading">Actualizando listado de profes</string>
     <string name="professor_list_screen_empty_state_title">No se encontraron profesores</string>
-    <string name="professor_list_screen_empty_state_subtitle">Intenta con otro nombre o verifica la que esté bien escrito.</string>
 
-
-
-
+    <!--Professor detail screen-->
+    <string name="professor_detail_screen_header_title">Detalle del profesor</string>
     <string name="professor_detail_screen_search_bar">Buscar alumno</string>
+    <string name="professor_detail_screen_loading">Cargando detalle del instructor</string>
+    <string name="professor_detail_screen_empty_state_title">No se encontraron alumnos</string>
+    <string name="professor_detail_screen_student_list">Alumnos asignados</string>
 </resources>

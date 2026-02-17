@@ -42,7 +42,7 @@ class ProfessorListViewModel(
             }
         }
 
-    private fun getProfessors() {
+    private suspend fun getProfessors() {
         getAllProfessorsUseCase()
             .onEach { professors ->
                 _state.value = _state.value.copy(professors = professors)
@@ -52,6 +52,6 @@ class ProfessorListViewModel(
 
 data class ProfessorListState(
     val professors: List<Professor> = emptyList(),
-    val isLoading: Boolean = false,
+    val isLoading: Boolean = true,
     val error: String? = null,
 )

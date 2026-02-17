@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.map
 class CemedeDataBaseImpl(
     private val cemedeDao: CemedeDao,
 ) : CemedeDataBase {
-    override fun getAllProfessors(): Flow<List<Professor>> =
+    override suspend fun getAllProfessors(): Flow<List<Professor>> =
         cemedeDao.getAllProfessorsAndStudents().map { professorsAndStudents ->
             println("✅ getAllProfessors from DB, $professorsAndStudents ,SUCCESS")
             professorsAndStudents.map { professorAndStudents ->
@@ -20,7 +20,7 @@ class CemedeDataBaseImpl(
             }
         }
 
-    override fun getProfessorDetail(id: Int): Flow<Professor> =
+    override suspend fun getProfessorDetail(id: Int): Flow<Professor> =
         cemedeDao.getProfessorDetail(id).map { professorAndStudents ->
             println("✅ getProfessorDetail from DB, $professorAndStudents , SUCCESS")
             professorAndStudents.mapToProfessor()

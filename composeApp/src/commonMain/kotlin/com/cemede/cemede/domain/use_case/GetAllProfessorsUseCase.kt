@@ -5,11 +5,11 @@ import com.cemede.cemede.domain.repository.ProfessorRepository
 import kotlinx.coroutines.flow.Flow
 
 fun interface GetAllProfessorsUseCase {
-    operator fun invoke(): Flow<List<Professor>>
+    suspend operator fun invoke(): Flow<List<Professor>>
 }
 
 class GetAllProfessorsUseCaseImpl(
     private val repository: ProfessorRepository,
 ) : GetAllProfessorsUseCase {
-    override operator fun invoke(): Flow<List<Professor>> = repository.getAllProfessors()
+    override suspend operator fun invoke(): Flow<List<Professor>> = repository.getAllProfessors()
 }
