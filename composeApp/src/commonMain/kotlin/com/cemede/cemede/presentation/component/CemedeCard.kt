@@ -79,7 +79,7 @@ object CemedeCard {
                 ) {
                     Box {
                         Image(
-                            painter = painterResource(Res.drawable.cemede_logo), // Placeholder
+                            painter = painterResource(Res.drawable.cemede_logo),
                             contentDescription = stringResource(Res.string.professor_card_photo_content_description, professor.name),
                             modifier =
                                 Modifier
@@ -125,7 +125,7 @@ object CemedeCard {
                         Icon(
                             modifier = Modifier.size(size_18),
                             imageVector = Icons.Default.Call,
-                            contentDescription = null,
+                            contentDescription = "Ícono de llamada",
                         )
                         Spacer(modifier = Modifier.padding(horizontal = padding_2))
                         Text(
@@ -143,7 +143,7 @@ object CemedeCard {
                         Icon(
                             modifier = Modifier.size(size_18),
                             imageVector = Icons.Default.ChatBubble,
-                            contentDescription = null,
+                            contentDescription = "Ícono de mensaje",
                         )
                         Spacer(modifier = Modifier.padding(horizontal = padding_2))
                         Text(
@@ -161,7 +161,7 @@ object CemedeCard {
                         Icon(
                             modifier = Modifier.size(size_18),
                             imageVector = Icons.Default.CalendarMonth,
-                            contentDescription = null,
+                            contentDescription = "Ícono de horarios",
                         )
                         Spacer(modifier = Modifier.padding(horizontal = padding_2))
                         Text(

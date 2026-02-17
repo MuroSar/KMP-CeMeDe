@@ -32,6 +32,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
+import cemede.composeapp.generated.resources.Res
+import cemede.composeapp.generated.resources.splash_screen_subtitle_line1
+import cemede.composeapp.generated.resources.splash_screen_subtitle_line2
+import cemede.composeapp.generated.resources.splash_screen_title_ce
+import cemede.composeapp.generated.resources.splash_screen_title_de
+import cemede.composeapp.generated.resources.splash_screen_title_me
+import cemede.composeapp.generated.resources.splash_screen_version
 import com.cemede.cemede.presentation.theme.ALPHA_0_1
 import com.cemede.cemede.presentation.theme.ALPHA_0_2
 import com.cemede.cemede.presentation.theme.ALPHA_0_3
@@ -66,6 +73,7 @@ import com.cemede.cemede.presentation.theme.space_40
 import com.cemede.cemede.presentation.theme.width_24
 import com.cemede.cemede.presentation.theme.width_4
 import com.cemede.cemede.presentation.theme.width_48
+import org.jetbrains.compose.resources.stringResource
 
 private const val ANIMATION_DURATION: Int = 2000
 
@@ -142,7 +150,7 @@ private fun CemedeLogo(pulse: Float) {
             Box(contentAlignment = Alignment.Center) {
                 Icon(
                     imageVector = Icons.Filled.Favorite,
-                    contentDescription = "Explore Icon",
+                    contentDescription = "Splash Icon",
                     modifier = Modifier.size(size_120),
                     tint = MaterialTheme.colorScheme.primary,
                 )
@@ -163,11 +171,11 @@ private fun CemedeLogo(pulse: Float) {
             Text(
                 text =
                     buildAnnotatedString {
-                        append("CE.")
+                        append(stringResource(Res.string.splash_screen_title_ce))
                         withStyle(style = SpanStyle(color = MaterialTheme.colorScheme.primary)) {
-                            append("ME.")
+                            append(stringResource(Res.string.splash_screen_title_me))
                         }
-                        append("DE")
+                        append(stringResource(Res.string.splash_screen_title_de))
                     },
                 color = Color.White,
                 fontSize = font_size_36,
@@ -185,7 +193,7 @@ private fun AppTitle() {
         verticalArrangement = Arrangement.spacedBy(space_4),
     ) {
         Text(
-            text = "CENTRO MÉDICO",
+            text = stringResource(Res.string.splash_screen_subtitle_line1),
             color = Color.White.copy(alpha = ALPHA_0_8),
             fontSize = font_size_20,
             fontWeight = FontWeight.Medium,
@@ -193,7 +201,7 @@ private fun AppTitle() {
             textAlign = TextAlign.Center,
         )
         Text(
-            text = "Deportivo del Este",
+            text = stringResource(Res.string.splash_screen_subtitle_line2),
             color = Color.White.copy(alpha = ALPHA_0_6),
             fontSize = font_size_18,
             fontWeight = FontWeight.Light,
@@ -224,7 +232,7 @@ private fun SplashScreenFooter(modifier: Modifier = Modifier) {
             )
         }
         Text(
-            text = "MANEJO INTERNO V1.0",
+            text = stringResource(Res.string.splash_screen_version),
             color = Color.White.copy(alpha = ALPHA_0_4),
             fontSize = font_size_12,
             fontWeight = FontWeight.Normal,
@@ -239,7 +247,7 @@ private fun DecorativeElements() {
     Box(modifier = Modifier.fillMaxSize()) {
         Icon(
             imageVector = Icons.Filled.FitnessCenter,
-            contentDescription = null,
+            contentDescription = "Ícono de decoración superior",
             modifier =
                 Modifier
                     .align(Alignment.TopEnd)
@@ -250,7 +258,7 @@ private fun DecorativeElements() {
         )
         Icon(
             imageVector = Icons.Filled.HealthAndSafety,
-            contentDescription = null,
+            contentDescription = "Ícono de decoración inferior",
             modifier =
                 Modifier
                     .align(Alignment.BottomStart)

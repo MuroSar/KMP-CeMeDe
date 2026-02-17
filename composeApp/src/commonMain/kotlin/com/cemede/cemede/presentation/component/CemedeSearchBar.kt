@@ -42,7 +42,7 @@ object CemedeSearchBar {
             leadingIcon = {
                 Icon(
                     imageVector = Icons.Default.Search,
-                    contentDescription = null,
+                    contentDescription = "Ícono de buscar",
                 )
             },
             placeholder = {
