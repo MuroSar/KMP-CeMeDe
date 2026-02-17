@@ -66,7 +66,7 @@ fun CemedeLoader(
             )
             Icon(
                 imageVector = Icons.Default.LightMode,
-                contentDescription = null,
+                contentDescription = "Ícono de cargando",
                 modifier =
                     Modifier
                         .size(size_48)

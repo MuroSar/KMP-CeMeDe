@@ -51,7 +51,7 @@ object CemedeEmptyState {
             ) {
                 Icon(
                     imageVector = Icons.Default.SearchOff,
-                    contentDescription = null,
+                    contentDescription = "Ícono de sin resultados",
                     modifier = Modifier.size(size_160),
                     tint = MaterialTheme.colorScheme.onSurface.copy(alpha = ALPHA_0_1),
                 )
@@ -82,7 +82,10 @@ object CemedeEmptyState {
                     ),
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(imageVector = Icons.Default.Refresh, contentDescription = null)
+                    Icon(
+                        imageVector = Icons.Default.Refresh,
+                        contentDescription = "Ícono de recargar",
+                    )
                     Spacer(modifier = Modifier.width(padding_8))
                     Text(
                         text = actionText,

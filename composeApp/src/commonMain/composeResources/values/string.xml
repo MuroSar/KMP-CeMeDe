@@ -9,6 +9,14 @@
     <string name="synchronizing_data">Sincronizando datos...</string>
     <string name="clear_search">Limpiar búsqueda</string>
 
+    <!--Splash screen-->
+    <string name="splash_screen_title_ce">CE.</string>
+    <string name="splash_screen_title_me">ME.</string>
+    <string name="splash_screen_title_de">DE</string>
+    <string name="splash_screen_subtitle_line1">CENTRO MÉDICO</string>
+    <string name="splash_screen_subtitle_line2">Deportivo del Este</string>
+    <string name="splash_screen_version">MANEJO INTERNO V1.0</string>
+
     <!--Main screen-->
     <string name="main_screen_top_app_bar_title">CE.ME.DE</string>
     <string name="main_screen_top_app_bar_settings">Ajustes</string>
