@@ -19,7 +19,6 @@ class ProfessorRepositoryImpl(
     override fun getProfessorDetail(id: Int): Flow<Professor> = cemedeDataBase.getProfessorDetail(id)
 
     override suspend fun syncProfessors(): CoroutineResult<Unit> {
-        val professors = mutableListOf<ProfessorEntity>()
         val allStudents = mutableListOf<com.cemede.cemede.data.data_base.model.StudentEntity>()
 
         for ((name, url) in UrlProvider.professorUrls) {
@@ -27,8 +26,8 @@ class ProfessorRepositoryImpl(
                 is CoroutineResult.Success -> {
                     // TODO: Revisar el mapeo de isWorking, tendríamos que primero consumir la lista de horarios
                     val professorEntity = ProfessorEntity(name = name, isWorking = true)
-                    professors.add(professorEntity)
-                    val students = CsvParser.parseStudents(result.data, professorEntity.id)
+                    val newProfessorId = cemedeDataBase.upsertProfessor(professorEntity)
+                    val students = CsvParser.parseStudents(result.data, newProfessorId.toInt())
                     allStudents.addAll(students)
                 }
 
@@ -38,7 +37,6 @@ class ProfessorRepositoryImpl(
             }
         }
 
-        cemedeDataBase.upsertAllProfessors(professors)
         cemedeDataBase.upsertAllStudents(allStudents)
 
         return CoroutineResult.Success(Unit)

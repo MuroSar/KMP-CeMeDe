@@ -10,7 +10,7 @@ interface CemedeDataBase {
 
     fun getProfessorDetail(id: Int): Flow<Professor>
 
-    suspend fun upsertAllProfessors(professors: MutableList<ProfessorEntity>)
+    suspend fun upsertProfessor(professor: ProfessorEntity): Long
 
     suspend fun upsertAllStudents(allStudents: MutableList<StudentEntity>)
 }

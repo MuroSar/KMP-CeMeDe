@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface CemedeDao {
     @Upsert
-    suspend fun upsertAllProfessors(professors: List<ProfessorEntity>)
+    suspend fun upsertProfessor(professors: ProfessorEntity): Long
 
     @Upsert
     suspend fun upsertAllStudents(students: List<StudentEntity>)

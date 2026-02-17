@@ -3,22 +3,25 @@ package com.cemede.cemede.data.mapper
 import com.cemede.cemede.data.data_base.model.StudentEntity
 
 object CsvParser {
+    private const val STUDENTS_ROW_STARTS: Int = 1
+    private const val NOT_AN_ANSWER: String = "#N/A"
+
     fun parseStudents(
         csvData: String,
         professorId: Int,
     ): List<StudentEntity> {
         val lines = csvData.lines()
-        val studentListStartIndex = lines.indexOf("Listado de alumnos") + 1
+        val studentNameListIndex = lines.first().split(',').indexOfFirst { it.equals("Listado de alumnos", ignoreCase = true) }
 
-        if (studentListStartIndex == 0) { // indexOf returns -1 if not found, so +1 makes it 0
+        if (studentNameListIndex == -1) {
             return emptyList()
         }
 
         return lines
-            .subList(studentListStartIndex, lines.size)
+            .subList(STUDENTS_ROW_STARTS, lines.size)
             .mapNotNull { line ->
                 val studentName = line.split(',').firstOrNull()?.trim()
-                if (studentName.isNullOrBlank()) {
+                if (studentName.isNullOrBlank() || studentName == NOT_AN_ANSWER) {
                     null
                 } else {
                     StudentEntity(name = studentName, professorId = professorId)

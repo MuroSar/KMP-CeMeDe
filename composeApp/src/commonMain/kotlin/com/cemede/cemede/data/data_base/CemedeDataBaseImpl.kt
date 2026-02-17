@@ -26,9 +26,10 @@ class CemedeDataBaseImpl(
             professorAndStudents.mapToProfessor()
         }
 
-    override suspend fun upsertAllProfessors(professors: MutableList<ProfessorEntity>) {
-        cemedeDao.upsertAllProfessors(professors)
-        println("✅ upsertAllProfessors into DB, SUCCESS")
+    override suspend fun upsertProfessor(professor: ProfessorEntity): Long {
+        val professorId = cemedeDao.upsertProfessor(professor)
+        println("✅ upsertProfessor into DB, $professorId - $professor , SUCCESS")
+        return professorId
     }
 
     override suspend fun upsertAllStudents(allStudents: MutableList<StudentEntity>) {
