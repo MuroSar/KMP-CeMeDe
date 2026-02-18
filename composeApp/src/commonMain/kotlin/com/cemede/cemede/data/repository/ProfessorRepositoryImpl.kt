@@ -2,24 +2,28 @@ package com.cemede.cemede.data.repository
 
 import com.cemede.cemede.data.UrlProvider
 import com.cemede.cemede.data.data_base.model.ProfessorEntity
+import com.cemede.cemede.data.data_base.model.StudentEntity
 import com.cemede.cemede.data.mapper.CsvParser
 import com.cemede.cemede.domain.data_base.CemedeDataBase
 import com.cemede.cemede.domain.data_source.CSVDataSource
 import com.cemede.cemede.domain.model.Professor
 import com.cemede.cemede.domain.repository.ProfessorRepository
 import com.cemede.cemede.domain.util.CoroutineResult
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.withContext
 
 class ProfessorRepositoryImpl(
     private val cemedeDataBase: CemedeDataBase,
     private val csvDataSource: CSVDataSource,
 ) : ProfessorRepository {
-    override suspend fun getAllProfessors(): Flow<List<Professor>> = cemedeDataBase.getAllProfessors()
+    override suspend fun getAllProfessorsFlow(): Flow<List<Professor>> = cemedeDataBase.getAllProfessorsFlow()
 
-    override suspend fun getProfessorDetail(id: Int): Flow<Professor> = cemedeDataBase.getProfessorDetail(id)
+    override suspend fun getProfessorDetailFlow(id: Int): Flow<Professor> = cemedeDataBase.getProfessorDetailFlow(id)
 
     override suspend fun syncProfessors(): CoroutineResult<Unit> {
-        val allStudents = mutableListOf<com.cemede.cemede.data.data_base.model.StudentEntity>()
+        val allStudents = mutableListOf<StudentEntity>()
 
         for ((name, url) in UrlProvider.professorUrls) {
             when (val result = csvDataSource.getProfessorData(url)) {
@@ -39,6 +43,29 @@ class ProfessorRepositoryImpl(
 
         cemedeDataBase.upsertAllStudents(allStudents)
 
+        return CoroutineResult.Success(Unit)
+    }
+
+    override suspend fun syncProfessorSchedule(professor: Professor): CoroutineResult<Unit> {
+        val url = UrlProvider.professorSchedule[professor.name] ?: ""
+
+        when (val result = csvDataSource.getProfessorScheduleData(url)) {
+            is CoroutineResult.Success -> {
+                val professorFromDb = withContext(Dispatchers.IO) { cemedeDataBase.getProfessorDetail(professor.id) }
+                val professorWithSchedule = ProfessorEntity(
+                    id = professorFromDb.id,
+                    name = professorFromDb.name,
+                    isWorking = professorFromDb.isWorking,
+                    studentsSchedule = CsvParser.parseStudentsSchedule(result.data)
+                )
+
+                cemedeDataBase.upsertProfessor(professorWithSchedule)
+            }
+
+            is CoroutineResult.Error -> {
+                return result
+            }
+        }
         return CoroutineResult.Success(Unit)
     }
 }

@@ -5,4 +5,5 @@ data class Professor(
     val name: String,
     val isWorking: Boolean,
     val students: List<Student> = emptyList(),
+    val studentsSchedule: Map<String, Map<String, Int>> = emptyMap(),
 )

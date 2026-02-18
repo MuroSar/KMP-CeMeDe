@@ -12,4 +12,5 @@ data class ProfessorEntity(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val name: String,
     val isWorking: Boolean,
+    val studentsSchedule: Map<String, Map<String, Int>> = emptyMap(),
 )

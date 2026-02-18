@@ -23,5 +23,9 @@ interface CemedeDao {
 
     @Transaction
     @Query("SELECT * FROM professors WHERE id = :id")
-    fun getProfessorDetail(id: Int): Flow<ProfessorAndStudents>
+    fun getProfessorDetailFlow(id: Int): Flow<ProfessorAndStudents>
+
+    @Transaction
+    @Query("SELECT * FROM professors WHERE id = :id")
+    fun getProfessorDetail(id: Int): ProfessorAndStudents
 }

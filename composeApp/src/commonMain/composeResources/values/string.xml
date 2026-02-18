@@ -53,8 +53,8 @@
 
     <!--Professor detail screen-->
     <string name="professor_detail_screen_header_title">Detalle del profesor</string>
-    <string name="professor_detail_screen_search_bar">Buscar alumno</string>
-    <string name="professor_detail_screen_loading">Cargando detalle del instructor</string>
+    <string name="professor_detail_screen_search_bar">Buscar alumno..</string>
+    <string name="professor_detail_screen_loading">Cargando detalle del profesor</string>
     <string name="professor_detail_screen_empty_state_title">No se encontraron alumnos</string>
     <string name="professor_detail_screen_student_list">Alumnos asignados</string>
 </resources>

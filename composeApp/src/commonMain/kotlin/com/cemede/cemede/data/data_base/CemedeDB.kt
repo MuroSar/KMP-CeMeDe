@@ -4,6 +4,8 @@ import androidx.room.ConstructedBy
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.RoomDatabaseConstructor
+import androidx.room.TypeConverters
+import com.cemede.cemede.data.data_base.converter.NestedMapConverter
 import com.cemede.cemede.data.data_base.dao.CemedeDao
 import com.cemede.cemede.data.data_base.model.ProfessorEntity
 import com.cemede.cemede.data.data_base.model.StudentEntity
@@ -16,6 +18,7 @@ import com.cemede.cemede.data.data_base.model.StudentEntity
     version = 1,
 )
 @ConstructedBy(MyDatabaseCtor::class)
+@TypeConverters(NestedMapConverter::class)
 abstract class CemedeDB : RoomDatabase() {
     abstract fun cemedeDao(): CemedeDao
 

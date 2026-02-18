@@ -18,4 +18,14 @@ class CSVDataSourceImpl(
             println("❌ getProfessorData from $url, ERROR")
             CoroutineResult.Error("Error downloading CSV from $url", e)
         }
+
+    override suspend fun getProfessorScheduleData(url: String): CoroutineResult<String> =
+        try {
+            val response = httpClient.get(url)
+            println("✅ getProfessorScheduleData from $url, SUCCESS")
+            CoroutineResult.Success(response.bodyAsText())
+        } catch (e: Exception) {
+            println("❌ getProfessorScheduleData from $url, ERROR")
+            CoroutineResult.Error("Error downloading CSV from $url", e)
+        }
 }

@@ -32,7 +32,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -52,8 +51,8 @@ import cemede.composeapp.generated.resources.filter
 import cemede.composeapp.generated.resources.professor_detail_screen_empty_state_title
 import cemede.composeapp.generated.resources.professor_detail_screen_header_title
 import cemede.composeapp.generated.resources.professor_detail_screen_loading
+import cemede.composeapp.generated.resources.professor_detail_screen_search_bar
 import cemede.composeapp.generated.resources.professor_detail_screen_student_list
-import cemede.composeapp.generated.resources.professor_list_screen_search_bar
 import cemede.composeapp.generated.resources.synchronizing_data
 import com.cemede.cemede.domain.model.Professor
 import com.cemede.cemede.domain.model.Student
@@ -66,7 +65,6 @@ import com.cemede.cemede.presentation.component.CemedeTopAppBar
 import com.cemede.cemede.presentation.theme.ALPHA_0_2
 import com.cemede.cemede.presentation.theme.CemedeTheme
 import com.cemede.cemede.presentation.theme.height_16
-import com.cemede.cemede.presentation.theme.height_48
 import com.cemede.cemede.presentation.theme.height_8
 import com.cemede.cemede.presentation.theme.padding_16
 import com.cemede.cemede.presentation.theme.padding_8
@@ -85,9 +83,6 @@ fun ProfessorDetailScreen(
 ) {
     val state by viewModel.state.collectAsState()
 
-    LaunchedEffect(professor.id) {
-        viewModel.getProfessorDetail(professor.id)
-    }
     ProfessorDetailContent(
         state = state,
         onNavigateBack = onNavigateBack,
@@ -135,7 +130,9 @@ fun ProfessorDetailContent(
                             onMessageButtonClick = { showConstructionBanner = true },
                         )
                         //TODO: Llegué hasta acá
-                        WeeklySchedule()
+                        WeeklySchedule(
+                            studentsSchedule = state.professor.studentsSchedule,
+                        )
                         AssignedStudents(
                             students = state.professor.students,
                             onNavigateToStudentDetail = { showConstructionBanner = true },
@@ -170,7 +167,9 @@ val weeklyScheduleItems = listOf(
 )
 
 @Composable
-private fun WeeklySchedule() {
+private fun WeeklySchedule(
+    studentsSchedule: Map<String, Map<String, Int>>,
+) {
     Column(
         modifier = Modifier
             .background(Color.White.copy(alpha = ALPHA_0_2))
@@ -190,10 +189,17 @@ private fun WeeklySchedule() {
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.primary
             )
-            Text("JUNIO 2024", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.secondary)
+            Text(
+                text = "JUNIO 2024",
+                style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.colorScheme.secondary,
+            )
         }
         Spacer(modifier = Modifier.height(16.dp))
-        LazyRow(contentPadding = PaddingValues(horizontal = 16.dp), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+        LazyRow(
+            contentPadding = PaddingValues(horizontal = 16.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+        ) {
             items(weeklyScheduleItems) { schedule ->
                 WeeklyScheduleItem(schedule)
             }
@@ -278,8 +284,8 @@ private fun AssignedStudents(
 
         if (showSearchBar) {
             CemedeSearchBar.SearchBar(
-                modifier = Modifier.padding(horizontal = padding_16, vertical = padding_8),
-                placeholder = stringResource(Res.string.professor_list_screen_search_bar),
+                modifier = Modifier.padding(vertical = padding_8),
+                placeholder = stringResource(Res.string.professor_detail_screen_search_bar),
                 searchQuery = searchQuery,
                 onSearchQueryChange = { searchQuery = it },
             )
