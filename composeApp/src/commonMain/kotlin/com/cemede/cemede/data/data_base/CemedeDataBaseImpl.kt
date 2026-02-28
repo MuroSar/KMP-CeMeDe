@@ -4,8 +4,10 @@ import com.cemede.cemede.data.data_base.dao.CemedeDao
 import com.cemede.cemede.data.data_base.model.ProfessorEntity
 import com.cemede.cemede.data.data_base.model.StudentEntity
 import com.cemede.cemede.data.mapper.mapToProfessor
+import com.cemede.cemede.data.mapper.mapToStudent
 import com.cemede.cemede.domain.data_base.CemedeDataBase
 import com.cemede.cemede.domain.model.Professor
+import com.cemede.cemede.domain.model.Student
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
@@ -30,6 +32,12 @@ class CemedeDataBaseImpl(
         val professorAndStudents = cemedeDao.getProfessorDetail(id)
         println("✅ getProfessorDetail from DB, $professorAndStudents , SUCCESS")
         return professorAndStudents.mapToProfessor()
+    }
+
+    override suspend fun getStudentByName(name: String): Student? {
+        val student = cemedeDao.getStudentByName(name)
+        println("✅ getStudentByName from DB, $student , SUCCESS")
+        return student?.mapToStudent()
     }
 
     override suspend fun upsertProfessor(professor: ProfessorEntity): Long {

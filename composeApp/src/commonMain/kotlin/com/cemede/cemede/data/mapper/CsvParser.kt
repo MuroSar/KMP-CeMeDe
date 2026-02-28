@@ -1,6 +1,7 @@
 package com.cemede.cemede.data.mapper
 
 import com.cemede.cemede.data.data_base.model.StudentEntity
+import com.cemede.cemede.domain.model.DayOfWeek
 
 object CsvParser {
     private const val STUDENTS_ROW_STARTS: Int = 1
@@ -38,21 +39,22 @@ object CsvParser {
 
     /**
      * Parses a CSV string representing a weekly schedule and returns a map.
-     * The format of the returned map is: `Map<Day, Map<Time, StudentCount>>`.
-     * E.g., {"Lunes", {"12:00:00 p. m.", 6}}
+     * The format of the returned map is: `Map<DayOfWeek, Map<Time, List<String>>>`.
+     * E.g., {DayOfWeek.MONDAY, {"12:00:00 p. m.", listOf("Student Name")}}
      *
      * @param csvData The raw CSV string to parse.
-     * @return A map representing the schedule with student counts.
+     * @return A map representing the schedule with student names.
      */
-    fun parseStudentsSchedule(csvData: String): Map<String, Map<String, Int>> {
+    fun parseStudentsSchedule(csvData: String): Map<DayOfWeek, Map<String, List<String>>> {
         val lines = csvData.lines().filter { it.isNotBlank() }
         if (lines.isEmpty()) return emptyMap()
 
         // 1. Get headers (Days of the week)
         val header = lines.first().split(',')
-        val days = header.subList(1, 6) // Assuming the columns are [Time, Lunes, Martes, Miercoles, Jueves, Viernes]
+        val dayHeaders = header.subList(1, 6) // Assuming the columns are [Time, Lunes, Martes, Miercoles, Jueves, Viernes]
+        val days = dayHeaders.map { DayOfWeek.fromDisplayName(it.trim()) }
 
-        val studentsSchedule = mutableMapOf<String, MutableMap<String, Int>>()
+        val studentsSchedule = mutableMapOf<DayOfWeek, MutableMap<String, List<String>>>()
 
         // 2. Iterate through schedule rows (skip header)
         lines.drop(STUDENTS_SCHEDULE_ROW_STARTS).forEach { line ->
@@ -61,17 +63,21 @@ object CsvParser {
 
             // 3. Iterate through days and count students in each cell
             days.forEachIndexed { index, day ->
+                if (day == null) return@forEachIndexed
+
                 // Column index is day index + 1
                 val cellContent = columns.getOrNull(index + 1)?.trim() ?: ""
 
                 if (cellContent.isNotBlank() && cellContent != NOT_AN_ANSWER) {
-                    val studentCount = cellContent.split("; ")
-                        .filter { it.trim().isNotBlank() }
-                        .size
+                    val studentNames =
+                        cellContent
+                            .split("; ")
+                            .filter { it.trim().isNotBlank() }
+                            .map { it.trim() }
 
-                    if (studentCount > 0) {
-                        val timeMap = studentsSchedule.getOrPut(day.trim()) { mutableMapOf() }
-                        timeMap[timeLabel] = studentCount
+                    if (studentNames.isNotEmpty()) {
+                        val timeMap = studentsSchedule.getOrPut(day) { mutableMapOf() }
+                        timeMap[timeLabel] = studentNames
                     }
                 }
             }

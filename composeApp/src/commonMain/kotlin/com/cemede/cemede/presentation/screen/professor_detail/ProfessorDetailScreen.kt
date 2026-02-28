@@ -54,6 +54,7 @@ import cemede.composeapp.generated.resources.professor_detail_screen_loading
 import cemede.composeapp.generated.resources.professor_detail_screen_search_bar
 import cemede.composeapp.generated.resources.professor_detail_screen_student_list
 import cemede.composeapp.generated.resources.synchronizing_data
+import com.cemede.cemede.domain.model.DayOfWeek
 import com.cemede.cemede.domain.model.Professor
 import com.cemede.cemede.domain.model.Student
 import com.cemede.cemede.presentation.component.CemedeBanner
@@ -168,7 +169,7 @@ val weeklyScheduleItems = listOf(
 
 @Composable
 private fun WeeklySchedule(
-    studentsSchedule: Map<String, Map<String, Int>>,
+    studentsSchedule: Map<DayOfWeek, Map<String, List<String>>>,
 ) {
     Column(
         modifier = Modifier

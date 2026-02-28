@@ -6,7 +6,9 @@ import com.cemede.cemede.data.data_base.model.StudentEntity
 import com.cemede.cemede.data.mapper.CsvParser
 import com.cemede.cemede.domain.data_base.CemedeDataBase
 import com.cemede.cemede.domain.data_source.CSVDataSource
+import com.cemede.cemede.domain.model.DayOfWeek
 import com.cemede.cemede.domain.model.Professor
+import com.cemede.cemede.domain.model.Student
 import com.cemede.cemede.domain.repository.ProfessorRepository
 import com.cemede.cemede.domain.util.CoroutineResult
 import kotlinx.coroutines.Dispatchers
@@ -52,12 +54,29 @@ class ProfessorRepositoryImpl(
         when (val result = csvDataSource.getProfessorScheduleData(url)) {
             is CoroutineResult.Success -> {
                 val professorFromDb = withContext(Dispatchers.IO) { cemedeDataBase.getProfessorDetail(professor.id) }
-                val professorWithSchedule = ProfessorEntity(
-                    id = professorFromDb.id,
-                    name = professorFromDb.name,
-                    isWorking = professorFromDb.isWorking,
-                    studentsSchedule = CsvParser.parseStudentsSchedule(result.data)
-                )
+
+                val studentsScheduleWithNames = CsvParser.parseStudentsSchedule(result.data)
+                val studentsSchedule = mutableMapOf<DayOfWeek, Map<String, List<Student>>>()
+
+                studentsScheduleWithNames.forEach { (day, timeMap) ->
+                    val newTimeMap = mutableMapOf<String, List<Student>>()
+                    timeMap.forEach { (time, studentNames) ->
+                        val students =
+                            studentNames.mapNotNull { studentName ->
+                                cemedeDataBase.getStudentByName(studentName)
+                            }
+                        newTimeMap[time] = students
+                    }
+                    studentsSchedule[day] = newTimeMap
+                }
+
+                val professorWithSchedule =
+                    ProfessorEntity(
+                        id = professorFromDb.id,
+                        name = professorFromDb.name,
+                        isWorking = professorFromDb.isWorking,
+                        studentsSchedule = studentsSchedule,
+                    )
 
                 cemedeDataBase.upsertProfessor(professorWithSchedule)
             }
