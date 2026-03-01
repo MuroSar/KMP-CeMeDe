@@ -14,7 +14,9 @@ const val ALPHA_0_7 = 0.7f
 const val ALPHA_0_8 = 0.8f
 
 // Elevation
+val elevation_1 = 1.dp
 val elevation_2 = 2.dp
+val elevation_4 = 4.dp
 val elevation_8 = 8.dp
 
 // Font Size
@@ -48,6 +50,7 @@ val padding_10 = 10.dp
 val padding_12 = 12.dp
 val padding_15 = 15.dp
 val padding_16 = 16.dp
+val padding_24 = 24.dp
 val padding_30 = 30.dp
 val padding_48 = 48.dp
 val padding_70 = 70.dp
@@ -95,3 +98,4 @@ val width_2 = 2.dp
 val width_4 = 4.dp
 val width_24 = 24.dp
 val width_48 = 48.dp
+val width_110 = 110.dp

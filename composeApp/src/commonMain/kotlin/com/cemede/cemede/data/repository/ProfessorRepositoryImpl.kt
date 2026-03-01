@@ -15,6 +15,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
+import kotlinx.datetime.LocalTime
 
 class ProfessorRepositoryImpl(
     private val cemedeDataBase: CemedeDataBase,
@@ -56,10 +57,10 @@ class ProfessorRepositoryImpl(
                 val professorFromDb = withContext(Dispatchers.IO) { cemedeDataBase.getProfessorDetail(professor.id) }
 
                 val studentsScheduleWithNames = CsvParser.parseStudentsSchedule(result.data)
-                val studentsSchedule = mutableMapOf<DayOfWeek, Map<String, List<Student>>>()
+                val studentsSchedule = mutableMapOf<DayOfWeek, Map<LocalTime, List<Student>>>()
 
                 studentsScheduleWithNames.forEach { (day, timeMap) ->
-                    val newTimeMap = mutableMapOf<String, List<Student>>()
+                    val newTimeMap = mutableMapOf<LocalTime, List<Student>>()
                     timeMap.forEach { (time, studentNames) ->
                         val students =
                             studentNames.mapNotNull { studentName ->

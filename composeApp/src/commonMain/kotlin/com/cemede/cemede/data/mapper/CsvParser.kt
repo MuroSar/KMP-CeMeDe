@@ -2,6 +2,8 @@ package com.cemede.cemede.data.mapper
 
 import com.cemede.cemede.data.data_base.model.StudentEntity
 import com.cemede.cemede.domain.model.DayOfWeek
+import com.cemede.cemede.domain.util.DateTimeHandler
+import kotlinx.datetime.LocalTime
 
 object CsvParser {
     private const val STUDENTS_ROW_STARTS: Int = 1
@@ -40,12 +42,12 @@ object CsvParser {
     /**
      * Parses a CSV string representing a weekly schedule and returns a map.
      * The format of the returned map is: `Map<DayOfWeek, Map<Time, List<String>>>`.
-     * E.g., {DayOfWeek.MONDAY, {"12:00:00 p. m.", listOf("Student Name")}}
+     * E.g., {DayOfWeek.MONDAY, {LocalTime(12,0,0), listOf("Student Name")}}
      *
      * @param csvData The raw CSV string to parse.
      * @return A map representing the schedule with student names.
      */
-    fun parseStudentsSchedule(csvData: String): Map<DayOfWeek, Map<String, List<String>>> {
+    fun parseStudentsSchedule(csvData: String): Map<DayOfWeek, Map<LocalTime, List<String>>> {
         val lines = csvData.lines().filter { it.isNotBlank() }
         if (lines.isEmpty()) return emptyMap()
 
@@ -54,12 +56,18 @@ object CsvParser {
         val dayHeaders = header.subList(1, 6) // Assuming the columns are [Time, Lunes, Martes, Miercoles, Jueves, Viernes]
         val days = dayHeaders.map { DayOfWeek.fromDisplayName(it.trim()) }
 
-        val studentsSchedule = mutableMapOf<DayOfWeek, MutableMap<String, List<String>>>()
+        val studentsSchedule = mutableMapOf<DayOfWeek, MutableMap<LocalTime, List<String>>>()
 
         // 2. Iterate through schedule rows (skip header)
         lines.drop(STUDENTS_SCHEDULE_ROW_STARTS).forEach { line ->
             val columns = line.split(',')
             val timeLabel = columns.firstOrNull()?.trim() ?: return@forEach
+            val time =
+                DateTimeHandler.parseTime(
+                    timeLabel
+                        .replace("a. m.", "AM")
+                        .replace("p. m.", "PM"),
+                )
 
             // 3. Iterate through days and count students in each cell
             days.forEachIndexed { index, day ->
@@ -77,7 +85,7 @@ object CsvParser {
 
                     if (studentNames.isNotEmpty()) {
                         val timeMap = studentsSchedule.getOrPut(day) { mutableMapOf() }
-                        timeMap[timeLabel] = studentNames
+                        timeMap[time] = studentNames
                     }
                 }
             }

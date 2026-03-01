@@ -5,6 +5,7 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.cemede.cemede.domain.model.DayOfWeek
 import com.cemede.cemede.domain.model.Student
+import kotlinx.datetime.LocalTime
 
 @Entity(
     tableName = "professors",
@@ -14,5 +15,5 @@ data class ProfessorEntity(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val name: String,
     val isWorking: Boolean,
-    val studentsSchedule: Map<DayOfWeek, Map<String, List<Student>>> = emptyMap(),
+    val studentsSchedule: Map<DayOfWeek, Map<LocalTime, List<Student>>> = emptyMap(),
 )

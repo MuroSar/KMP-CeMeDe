@@ -19,14 +19,9 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.FilterList
-import androidx.compose.material.icons.filled.Groups
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -41,13 +36,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import cemede.composeapp.generated.resources.Res
 import cemede.composeapp.generated.resources.back
 import cemede.composeapp.generated.resources.clear_search
 import cemede.composeapp.generated.resources.empty_state_subtitle
 import cemede.composeapp.generated.resources.filter
+import cemede.composeapp.generated.resources.professor_detail_screen_daily_schedule
+import cemede.composeapp.generated.resources.professor_detail_screen_daily_schedule_empty_state
 import cemede.composeapp.generated.resources.professor_detail_screen_empty_state_title
 import cemede.composeapp.generated.resources.professor_detail_screen_header_title
 import cemede.composeapp.generated.resources.professor_detail_screen_loading
@@ -57,20 +54,26 @@ import cemede.composeapp.generated.resources.synchronizing_data
 import com.cemede.cemede.domain.model.DayOfWeek
 import com.cemede.cemede.domain.model.Professor
 import com.cemede.cemede.domain.model.Student
+import com.cemede.cemede.domain.util.DateTimeHandler
 import com.cemede.cemede.presentation.component.CemedeBanner
 import com.cemede.cemede.presentation.component.CemedeCard
+import com.cemede.cemede.presentation.component.CemedeDialog
 import com.cemede.cemede.presentation.component.CemedeEmptyState
 import com.cemede.cemede.presentation.component.CemedeLoader
 import com.cemede.cemede.presentation.component.CemedeSearchBar
 import com.cemede.cemede.presentation.component.CemedeTopAppBar
 import com.cemede.cemede.presentation.theme.ALPHA_0_2
+import com.cemede.cemede.presentation.theme.ALPHA_0_7
 import com.cemede.cemede.presentation.theme.CemedeTheme
 import com.cemede.cemede.presentation.theme.height_16
 import com.cemede.cemede.presentation.theme.height_8
 import com.cemede.cemede.presentation.theme.padding_16
+import com.cemede.cemede.presentation.theme.padding_24
 import com.cemede.cemede.presentation.theme.padding_8
 import com.cemede.cemede.presentation.theme.size_16
+import com.cemede.cemede.presentation.theme.space_12
 import com.cemede.cemede.presentation.theme.width_4
+import kotlinx.datetime.LocalTime
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import org.koin.core.parameter.parametersOf
@@ -99,6 +102,16 @@ fun ProfessorDetailContent(
     onNavigateToStudentDetail: (Student) -> Unit,
 ) {
     var showConstructionBanner by remember { mutableStateOf(false) }
+    var selectedSchedule by remember { mutableStateOf<Pair<LocalTime, List<Student>>?>(null) }
+
+    selectedSchedule?.let {
+        CemedeDialog.StudentListDialog(
+            time = it.first,
+            students = it.second,
+            onStudentClicked = { student -> onNavigateToStudentDetail(student) },
+            onDismiss = { selectedSchedule = null },
+        )
+    }
 
     CemedeTheme {
         Scaffold(
@@ -130,9 +143,11 @@ fun ProfessorDetailContent(
                             onCallButtonClick = { showConstructionBanner = true },
                             onMessageButtonClick = { showConstructionBanner = true },
                         )
-                        //TODO: Llegué hasta acá
-                        WeeklySchedule(
+                        DailySchedule(
                             studentsSchedule = state.professor.studentsSchedule,
+                            onScheduleClick = { time, students ->
+                                selectedSchedule = time to students
+                            },
                         )
                         AssignedStudents(
                             students = state.professor.students,
@@ -158,89 +173,66 @@ fun ProfessorDetailContent(
     }
 }
 
-data class Schedule(val time: String, val studentCount: Int, val isIndividual: Boolean, val isActive: Boolean)
-
-val weeklyScheduleItems = listOf(
-    Schedule("07:00 AM", 4, false, false),
-    Schedule("09:00 AM", 2, false, true),
-    Schedule("11:30 AM", 1, true, false),
-    Schedule("01:00 PM", 6, false, false)
-)
-
 @Composable
-private fun WeeklySchedule(
-    studentsSchedule: Map<DayOfWeek, Map<String, List<String>>>,
+private fun DailySchedule(
+    studentsSchedule: Map<DayOfWeek, Map<LocalTime, List<Student>>>,
+    onScheduleClick: (LocalTime, List<Student>) -> Unit,
 ) {
-    Column(
-        modifier = Modifier
-            .background(Color.White.copy(alpha = ALPHA_0_2))
-            .padding(vertical = 24.dp)
+    val now = DateTimeHandler.getCurrentDateTimeInfo()
+    val today = DayOfWeek.valueOf(now.dayOfWeek.name)
 
+    Column(
+        modifier =
+            Modifier
+                .background(Color.White.copy(alpha = ALPHA_0_2))
+                .padding(vertical = padding_24),
     ) {
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = padding_16),
             horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
-                "Cronograma Semanal",
+                stringResource(Res.string.professor_detail_screen_daily_schedule),
                 style = MaterialTheme.typography.labelMedium,
                 fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.primary
+                color = MaterialTheme.colorScheme.primary,
             )
             Text(
-                text = "JUNIO 2024",
+                text = "${DateTimeHandler.getSpanishMonth(now.month)} ${now.year}",
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.secondary,
             )
         }
-        Spacer(modifier = Modifier.height(16.dp))
-        LazyRow(
-            contentPadding = PaddingValues(horizontal = 16.dp),
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
-        ) {
-            items(weeklyScheduleItems) { schedule ->
-                WeeklyScheduleItem(schedule)
-            }
-        }
-    }
-}
+        Spacer(modifier = Modifier.height(height_16))
 
-@Composable
-private fun WeeklyScheduleItem(schedule: Schedule) {
-    val backgroundColor = if (schedule.isActive) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surface
-    val contentColor = if (schedule.isActive) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface
-    val subContentColor = if (schedule.isActive) Color.White.copy(alpha = 0.7f) else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
-
-    Card(
-        modifier = Modifier.width(110.dp),
-        colors = CardDefaults.cardColors(containerColor = backgroundColor),
-        elevation = CardDefaults.cardElevation(if (schedule.isActive) 4.dp else 1.dp)
-    ) {
-        Column(modifier = Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            Text(schedule.time, style = MaterialTheme.typography.labelSmall, color = subContentColor)
-            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                Icon(
-                    if (schedule.isIndividual) Icons.Default.Person else Icons.Default.Groups,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.secondary,
-                    modifier = Modifier.size(16.dp)
-                )
-                Text(
-                    if (schedule.isIndividual) "Individual" else "${schedule.studentCount} Alumnos",
-                    style = MaterialTheme.typography.labelMedium,
-                    fontWeight = FontWeight.Bold,
-                    color = contentColor
-                )
-            }
-            LinearProgressIndicator(
-                progress = if (schedule.isIndividual) 0f else schedule.studentCount / 6f,
+        if (studentsSchedule[today].isNullOrEmpty()) {
+            Text(
                 modifier = Modifier.fillMaxWidth(),
-                color = MaterialTheme.colorScheme.secondary,
-                trackColor = contentColor.copy(alpha = 0.2f)
+                text = stringResource(Res.string.professor_detail_screen_daily_schedule_empty_state),
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = ALPHA_0_7),
+                textAlign = TextAlign.Center,
             )
+        } else {
+            LazyRow(
+                contentPadding = PaddingValues(horizontal = padding_16),
+                horizontalArrangement = Arrangement.spacedBy(space_12),
+            ) {
+                studentsSchedule[today]?.let {
+                    items(it.entries.toList()) { (time, students) ->
+                        CemedeCard.WeeklyScheduleCard(
+                            time = time,
+                            students = students,
+                            now = now,
+                            onCardClick = { onScheduleClick(time, students) },
+                        )
+                    }
+                }
+            }
         }
     }
 }
@@ -257,22 +249,22 @@ private fun AssignedStudents(
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
                 text = stringResource(Res.string.professor_detail_screen_student_list),
                 style = MaterialTheme.typography.labelMedium,
                 fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.primary
+                color = MaterialTheme.colorScheme.primary,
             )
             TextButton(
                 onClick = { showSearchBar = !showSearchBar },
-                enabled = students.isNotEmpty()
+                enabled = students.isNotEmpty(),
             ) {
                 Icon(
                     imageVector = Icons.Default.FilterList,
                     contentDescription = "Ícono de filtrar",
-                    modifier = Modifier.size(size_16)
+                    modifier = Modifier.size(size_16),
                 )
                 Spacer(modifier = Modifier.width(width_4))
                 Text(
@@ -327,12 +319,58 @@ private fun AssignedStudents(
 @Preview(showSystemUi = true)
 @Composable
 private fun ProfessorDetailScreenPreview() {
-    val students = listOf(
-        Student(id = 1, name = "Juan Pérez", processType = "Readaptacion"),
-        Student(id = 2, name = "María García", processType = "Deportivo"),
-        Student(id = 3, name = "Lucas Rodríguez", processType = "Salud"),
+    val students =
+        listOf(
+            Student(id = 1, name = "Juan Pérez", processType = "Readaptacion"),
+            Student(id = 2, name = "María García", processType = "Deportivo"),
+            Student(id = 3, name = "Lucas Rodríguez", processType = "Salud"),
+        )
+    val professor = Professor(
+        id = 1,
+        name = "Prof. Macarena",
+        isWorking = true,
+        students = students,
+        studentsSchedule = mapOf(
+            DayOfWeek.MONDAY to mapOf(DateTimeHandler.parseTime("12:00:00 PM") to students),
+            DayOfWeek.TUESDAY to mapOf(DateTimeHandler.parseTime("12:00:00 PM") to students),
+            DayOfWeek.WEDNESDAY to mapOf(DateTimeHandler.parseTime("12:00:00 PM") to students),
+            DayOfWeek.THURSDAY to mapOf(DateTimeHandler.parseTime("12:00:00 PM") to students),
+            DayOfWeek.FRIDAY to mapOf(DateTimeHandler.parseTime("12:00:00 PM") to students),
+            DayOfWeek.SATURDAY to mapOf(DateTimeHandler.parseTime("21:00:00 PM") to students),
+            DayOfWeek.SUNDAY to mapOf(DateTimeHandler.parseTime("12:00:00 PM") to students),
+        ),
     )
-    val professor = Professor(1, "Prof. Macarena", true, students = students)
+    ProfessorDetailContent(
+        state = ProfessorDetailState(professor = professor, isLoading = false),
+        onNavigateBack = {},
+        onNavigateToStudentDetail = {},
+    )
+}
+
+@Preview(showSystemUi = true)
+@Composable
+private fun ProfessorDetailScreenNoSchedulePreview() {
+    val students =
+        listOf(
+            Student(id = 1, name = "Juan Pérez", processType = "Readaptacion"),
+            Student(id = 2, name = "María García", processType = "Deportivo"),
+            Student(id = 3, name = "Lucas Rodríguez", processType = "Salud"),
+        )
+    val professor = Professor(
+        id = 1,
+        name = "Prof. Macarena",
+        isWorking = true,
+        students = students,
+        studentsSchedule = mapOf(
+            DayOfWeek.MONDAY to mapOf(),
+            DayOfWeek.TUESDAY to mapOf(),
+            DayOfWeek.WEDNESDAY to mapOf(),
+            DayOfWeek.THURSDAY to mapOf(),
+            DayOfWeek.FRIDAY to mapOf(),
+            DayOfWeek.SATURDAY to mapOf(),
+            DayOfWeek.SUNDAY to mapOf(),
+        ),
+    )
     ProfessorDetailContent(
         state = ProfessorDetailState(professor = professor, isLoading = false),
         onNavigateBack = {},
