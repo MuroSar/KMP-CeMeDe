@@ -36,6 +36,7 @@ val height_24 = 24.dp
 val height_48 = 48.dp
 
 // Letter Spacing
+val letter_spacing_0_2 = 0.2.sp
 val letter_spacing_0_5 = 0.5.sp
 val letter_spacing_0_8 = 0.8.sp
 val letter_spacing_1 = 1.sp
@@ -63,6 +64,7 @@ const val SCALE_1_1 = 1.1f
 const val SCALE_1_25 = 1.25f
 
 // Size
+val size_0 = 0.dp
 val size_8 = 8.dp
 val size_12 = 12.dp
 val size_14 = 14.dp
@@ -76,6 +78,7 @@ val size_40 = 40.dp
 val size_44 = 44.dp
 val size_48 = 48.dp
 val size_56 = 56.dp
+val size_80 = 80.dp
 val size_96 = 96.dp
 val size_120 = 120.dp
 val size_160 = 160.dp

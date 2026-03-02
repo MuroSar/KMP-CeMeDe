@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.FilterList
@@ -27,6 +28,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -48,6 +50,7 @@ import cemede.composeapp.generated.resources.professor_detail_screen_daily_sched
 import cemede.composeapp.generated.resources.professor_detail_screen_empty_state_title
 import cemede.composeapp.generated.resources.professor_detail_screen_header_title
 import cemede.composeapp.generated.resources.professor_detail_screen_loading
+import cemede.composeapp.generated.resources.professor_detail_screen_professor_not_found
 import cemede.composeapp.generated.resources.professor_detail_screen_search_bar
 import cemede.composeapp.generated.resources.professor_detail_screen_student_list
 import cemede.composeapp.generated.resources.synchronizing_data
@@ -73,6 +76,7 @@ import com.cemede.cemede.presentation.theme.padding_8
 import com.cemede.cemede.presentation.theme.size_16
 import com.cemede.cemede.presentation.theme.space_12
 import com.cemede.cemede.presentation.theme.width_4
+import com.cemede.cemede.presentation.util.AnimationUtils.smoothScrollTo
 import kotlinx.datetime.LocalTime
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
@@ -104,16 +108,16 @@ fun ProfessorDetailContent(
     var showConstructionBanner by remember { mutableStateOf(false) }
     var selectedSchedule by remember { mutableStateOf<Pair<LocalTime, List<Student>>?>(null) }
 
-    selectedSchedule?.let {
-        CemedeDialog.StudentListDialog(
-            time = it.first,
-            students = it.second,
-            onStudentClicked = { student -> onNavigateToStudentDetail(student) },
-            onDismiss = { selectedSchedule = null },
-        )
-    }
-
     CemedeTheme {
+        selectedSchedule?.let {
+            CemedeDialog.StudentListDialog(
+                time = it.first,
+                students = it.second,
+                onStudentClicked = { student -> onNavigateToStudentDetail(student) },
+                onDismiss = { selectedSchedule = null },
+            )
+        }
+
         Scaffold(
             topBar = {
                 CemedeTopAppBar.TopAppBar(
@@ -156,7 +160,7 @@ fun ProfessorDetailContent(
                     }
                 } else {
                     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                        Text(state.error ?: "No se encontró el profesor.")
+                        Text(state.error ?: stringResource(Res.string.professor_detail_screen_professor_not_found))
                     }
                 }
 
@@ -180,6 +184,21 @@ private fun DailySchedule(
 ) {
     val now = DateTimeHandler.getCurrentDateTimeInfo()
     val today = DayOfWeek.valueOf(now.dayOfWeek.name)
+
+    val scrollState = rememberLazyListState()
+
+    val scheduleForToday = studentsSchedule[today]?.entries?.toList()?.sortedBy { it.key }
+    val upcomingAppointmentIndex =
+        scheduleForToday?.indexOfFirst { (time, _) -> time >= now.time } ?: -1
+
+    // Tip: Cambié la key a `upcomingAppointmentIndex`.
+    // Así, si el índice cambia mientras el usuario tiene la app abierta, volverá a animar.
+    LaunchedEffect(upcomingAppointmentIndex) {
+        if (upcomingAppointmentIndex != -1) {
+            // Llamamos a nuestra nueva función mágica
+            scrollState.smoothScrollTo(upcomingAppointmentIndex)
+        }
+    }
 
     Column(
         modifier =
@@ -219,6 +238,7 @@ private fun DailySchedule(
             )
         } else {
             LazyRow(
+                state = scrollState,
                 contentPadding = PaddingValues(horizontal = padding_16),
                 horizontalArrangement = Arrangement.spacedBy(space_12),
             ) {
@@ -325,21 +345,23 @@ private fun ProfessorDetailScreenPreview() {
             Student(id = 2, name = "María García", processType = "Deportivo"),
             Student(id = 3, name = "Lucas Rodríguez", processType = "Salud"),
         )
-    val professor = Professor(
-        id = 1,
-        name = "Prof. Macarena",
-        isWorking = true,
-        students = students,
-        studentsSchedule = mapOf(
-            DayOfWeek.MONDAY to mapOf(DateTimeHandler.parseTime("12:00:00 PM") to students),
-            DayOfWeek.TUESDAY to mapOf(DateTimeHandler.parseTime("12:00:00 PM") to students),
-            DayOfWeek.WEDNESDAY to mapOf(DateTimeHandler.parseTime("12:00:00 PM") to students),
-            DayOfWeek.THURSDAY to mapOf(DateTimeHandler.parseTime("12:00:00 PM") to students),
-            DayOfWeek.FRIDAY to mapOf(DateTimeHandler.parseTime("12:00:00 PM") to students),
-            DayOfWeek.SATURDAY to mapOf(DateTimeHandler.parseTime("21:00:00 PM") to students),
-            DayOfWeek.SUNDAY to mapOf(DateTimeHandler.parseTime("12:00:00 PM") to students),
-        ),
-    )
+    val professor =
+        Professor(
+            id = 1,
+            name = "Prof. Macarena",
+            isWorking = true,
+            students = students,
+            studentsSchedule =
+                mapOf(
+                    DayOfWeek.MONDAY to mapOf(DateTimeHandler.parseTime("12:00:00 PM") to students),
+                    DayOfWeek.TUESDAY to mapOf(DateTimeHandler.parseTime("12:00:00 PM") to students),
+                    DayOfWeek.WEDNESDAY to mapOf(DateTimeHandler.parseTime("12:00:00 PM") to students),
+                    DayOfWeek.THURSDAY to mapOf(DateTimeHandler.parseTime("12:00:00 PM") to students),
+                    DayOfWeek.FRIDAY to mapOf(DateTimeHandler.parseTime("12:00:00 PM") to students),
+                    DayOfWeek.SATURDAY to mapOf(DateTimeHandler.parseTime("21:00:00 PM") to students),
+                    DayOfWeek.SUNDAY to mapOf(DateTimeHandler.parseTime("12:00:00 PM") to students),
+                ),
+        )
     ProfessorDetailContent(
         state = ProfessorDetailState(professor = professor, isLoading = false),
         onNavigateBack = {},
@@ -356,21 +378,23 @@ private fun ProfessorDetailScreenNoSchedulePreview() {
             Student(id = 2, name = "María García", processType = "Deportivo"),
             Student(id = 3, name = "Lucas Rodríguez", processType = "Salud"),
         )
-    val professor = Professor(
-        id = 1,
-        name = "Prof. Macarena",
-        isWorking = true,
-        students = students,
-        studentsSchedule = mapOf(
-            DayOfWeek.MONDAY to mapOf(),
-            DayOfWeek.TUESDAY to mapOf(),
-            DayOfWeek.WEDNESDAY to mapOf(),
-            DayOfWeek.THURSDAY to mapOf(),
-            DayOfWeek.FRIDAY to mapOf(),
-            DayOfWeek.SATURDAY to mapOf(),
-            DayOfWeek.SUNDAY to mapOf(),
-        ),
-    )
+    val professor =
+        Professor(
+            id = 1,
+            name = "Prof. Macarena",
+            isWorking = true,
+            students = students,
+            studentsSchedule =
+                mapOf(
+                    DayOfWeek.MONDAY to mapOf(),
+                    DayOfWeek.TUESDAY to mapOf(),
+                    DayOfWeek.WEDNESDAY to mapOf(),
+                    DayOfWeek.THURSDAY to mapOf(),
+                    DayOfWeek.FRIDAY to mapOf(),
+                    DayOfWeek.SATURDAY to mapOf(),
+                    DayOfWeek.SUNDAY to mapOf(),
+                ),
+        )
     ProfessorDetailContent(
         state = ProfessorDetailState(professor = professor, isLoading = false),
         onNavigateBack = {},

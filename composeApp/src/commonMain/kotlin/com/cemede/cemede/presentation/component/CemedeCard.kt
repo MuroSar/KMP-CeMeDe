@@ -78,12 +78,14 @@ import com.cemede.cemede.presentation.theme.padding_12
 import com.cemede.cemede.presentation.theme.padding_16
 import com.cemede.cemede.presentation.theme.padding_2
 import com.cemede.cemede.presentation.theme.padding_8
+import com.cemede.cemede.presentation.theme.size_0
 import com.cemede.cemede.presentation.theme.size_14
 import com.cemede.cemede.presentation.theme.size_16
 import com.cemede.cemede.presentation.theme.size_18
 import com.cemede.cemede.presentation.theme.size_20
 import com.cemede.cemede.presentation.theme.size_44
 import com.cemede.cemede.presentation.theme.size_56
+import com.cemede.cemede.presentation.theme.size_80
 import com.cemede.cemede.presentation.theme.space_12
 import com.cemede.cemede.presentation.theme.space_16
 import com.cemede.cemede.presentation.theme.space_4
@@ -222,7 +224,7 @@ object CemedeCard {
         onMessageButtonClick: () -> Unit,
     ) {
         Card(
-            shape = RoundedCornerShape(0.dp),
+            shape = RoundedCornerShape(size_0),
             elevation = CardDefaults.cardElevation(elevation_2),
             modifier = modifier.fillMaxWidth(),
         ) {
@@ -242,10 +244,14 @@ object CemedeCard {
                             contentDescription = "Profile picture of ${professor.name}",
                             modifier =
                                 Modifier
-                                    .size(80.dp)
+                                    .size(size_80)
                                     .clip(CircleShape)
-                                    .border(2.dp, MaterialTheme.colorScheme.secondary, CircleShape)
-                                    .padding(2.dp)
+                                    .border(
+                                        width = width_2,
+                                        color = MaterialTheme.colorScheme.secondary,
+                                        shape = CircleShape,
+                                        )
+                                    .padding(padding_2)
                                     .clip(CircleShape),
                             contentScale = ContentScale.Crop,
                         )

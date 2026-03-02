@@ -28,13 +28,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.em
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import cemede.composeapp.generated.resources.Res
 import cemede.composeapp.generated.resources.close
-import cemede.composeapp.generated.resources.construction_banner_button
 import cemede.composeapp.generated.resources.student
 import cemede.composeapp.generated.resources.student_dialog_schedule
 import cemede.composeapp.generated.resources.students
@@ -44,8 +40,11 @@ import com.cemede.cemede.presentation.theme.ALPHA_0_7
 import com.cemede.cemede.presentation.theme.CemedeTheme
 import com.cemede.cemede.presentation.theme.WEIGHT_1
 import com.cemede.cemede.presentation.theme.elevation_8
+import com.cemede.cemede.presentation.theme.font_size_12
+import com.cemede.cemede.presentation.theme.letter_spacing_0_2
 import com.cemede.cemede.presentation.theme.padding_16
 import com.cemede.cemede.presentation.theme.padding_24
+import com.cemede.cemede.presentation.theme.padding_8
 import com.cemede.cemede.presentation.theme.size_16
 import com.cemede.cemede.presentation.theme.size_32
 import com.cemede.cemede.presentation.theme.space_12
@@ -69,9 +68,10 @@ object CemedeDialog {
                     Column {
                         // Header
                         Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(padding_16),
+                            modifier =
+                                Modifier
+                                    .fillMaxWidth()
+                                    .padding(padding_16),
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically,
                         ) {
@@ -89,9 +89,10 @@ object CemedeDialog {
                                 )
                             }
                             Box(
-                                modifier = Modifier
-                                    .background(MaterialTheme.colorScheme.secondary.copy(alpha = ALPHA_0_2), CircleShape)
-                                    .padding(8.dp),
+                                modifier =
+                                    Modifier
+                                        .background(MaterialTheme.colorScheme.secondary.copy(alpha = ALPHA_0_2), CircleShape)
+                                        .padding(padding_8),
                             ) {
                                 Icon(
                                     imageVector = if (students.size == 1) Icons.Default.Person else Icons.Default.Groups,
@@ -103,10 +104,11 @@ object CemedeDialog {
 
                         // Student List
                         LazyColumn(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .weight(WEIGHT_1, fill = false)
-                                .padding(padding_16),
+                            modifier =
+                                Modifier
+                                    .fillMaxWidth()
+                                    .weight(WEIGHT_1, fill = false)
+                                    .padding(padding_16),
                             verticalArrangement = Arrangement.spacedBy(space_12),
                         ) {
                             items(students) { student ->
@@ -127,11 +129,11 @@ object CemedeDialog {
                             ) {
                                 Text(
                                     text = stringResource(Res.string.close).uppercase(),
-                                    modifier = Modifier.padding(vertical = 8.dp),
+                                    modifier = Modifier.padding(vertical = padding_8),
                                     color = Color.White,
                                     fontWeight = FontWeight.Bold,
-                                    fontSize = 12.sp,
-                                    style = TextStyle(letterSpacing = 0.2.em),
+                                    fontSize = font_size_12,
+                                    style = TextStyle(letterSpacing = letter_spacing_0_2),
                                 )
                             }
                         }

@@ -58,6 +58,7 @@
     <string name="professor_detail_screen_header_title">Detalle del profesor</string>
     <string name="professor_detail_screen_search_bar">Buscar alumno..</string>
     <string name="professor_detail_screen_loading">Cargando detalle del profesor</string>
+    <string name="professor_detail_screen_professor_not_found">No se encontró el profesor.</string>
     <string name="professor_detail_screen_empty_state_title">No se encontraron alumnos</string>
     <string name="professor_detail_screen_student_list">Alumnos asignados</string>
     <string name="professor_detail_screen_daily_schedule">Cronograma Diario</string>
