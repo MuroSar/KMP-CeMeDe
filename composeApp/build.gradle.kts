@@ -30,6 +30,7 @@ kotlin {
     }
 
     listOf(
+        iosX64(),
         iosArm64(), // Dispositivo real
         iosSimulatorArm64(), // Simulador en Mac Apple Silicon
     ).forEach { iosTarget ->
@@ -62,14 +63,15 @@ kotlin {
             implementation(libs.compose.ui)
             implementation(libs.compose.components.resources)
             implementation(libs.compose.uiToolingPreview)
-            implementation(libs.androidx.lifecycle.viewmodel)
-            implementation(libs.androidx.lifecycle.runtime.compose)
 
             // General
             implementation(libs.kotlinx.serialization.json)
 
             // ViewModel
-            implementation(libs.lifecycle.viewmodel)
+            implementation(libs.androidx.lifecycle.viewmodel)
+            implementation(libs.androidx.lifecycle.runtime.compose)
+            implementation(libs.androidx.lifecycle.viewmodel.compose)
+            implementation(libs.androidx.lifecycle.viewmodel.savedstate)
             implementation(libs.kotlinx.coroutines.core)
 
             // Navigation
