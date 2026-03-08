@@ -7,10 +7,12 @@ import com.cemede.cemede.data.repository.ProfessorRepositoryImpl
 import com.cemede.cemede.domain.data_base.CemedeDataBase
 import com.cemede.cemede.domain.data_source.CSVDataSource
 import com.cemede.cemede.domain.repository.ProfessorRepository
-import com.cemede.cemede.domain.use_case.GetAllProfessorsUseCase
-import com.cemede.cemede.domain.use_case.GetAllProfessorsUseCaseImpl
-import com.cemede.cemede.domain.use_case.GetProfessorDetailUseCase
-import com.cemede.cemede.domain.use_case.GetProfessorDetailUseCaseImpl
+import com.cemede.cemede.domain.use_case.GetAllProfessorsFlowUseCase
+import com.cemede.cemede.domain.use_case.GetAllProfessorsFlowUseCaseImpl
+import com.cemede.cemede.domain.use_case.GetProfessorDetailFlowUseCase
+import com.cemede.cemede.domain.use_case.GetProfessorDetailFlowUseCaseImpl
+import com.cemede.cemede.domain.use_case.SyncProfessorScheduleUseCase
+import com.cemede.cemede.domain.use_case.SyncProfessorScheduleUseCaseImpl
 import com.cemede.cemede.domain.use_case.SyncProfessorsUseCase
 import com.cemede.cemede.domain.use_case.SyncProfessorsUseCaseImpl
 import com.cemede.cemede.presentation.screen.professor_detail.ProfessorDetailViewModel
@@ -46,9 +48,10 @@ val sharedModule =
 
 val useCaseModule =
     module {
-        singleOf(::GetAllProfessorsUseCaseImpl).bind<GetAllProfessorsUseCase>()
-        singleOf(::GetProfessorDetailUseCaseImpl).bind<GetProfessorDetailUseCase>()
+        singleOf(::GetAllProfessorsFlowUseCaseImpl).bind<GetAllProfessorsFlowUseCase>()
+        singleOf(::GetProfessorDetailFlowUseCaseImpl).bind<GetProfessorDetailFlowUseCase>()
         singleOf(::SyncProfessorsUseCaseImpl).bind<SyncProfessorsUseCase>()
+        singleOf(::SyncProfessorScheduleUseCaseImpl).bind<SyncProfessorScheduleUseCase>()
     }
 
 val repositoryModule =

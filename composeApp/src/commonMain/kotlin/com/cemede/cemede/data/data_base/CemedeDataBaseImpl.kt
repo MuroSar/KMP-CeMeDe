@@ -4,15 +4,17 @@ import com.cemede.cemede.data.data_base.dao.CemedeDao
 import com.cemede.cemede.data.data_base.model.ProfessorEntity
 import com.cemede.cemede.data.data_base.model.StudentEntity
 import com.cemede.cemede.data.mapper.mapToProfessor
+import com.cemede.cemede.data.mapper.mapToStudent
 import com.cemede.cemede.domain.data_base.CemedeDataBase
 import com.cemede.cemede.domain.model.Professor
+import com.cemede.cemede.domain.model.Student
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 class CemedeDataBaseImpl(
     private val cemedeDao: CemedeDao,
 ) : CemedeDataBase {
-    override fun getAllProfessors(): Flow<List<Professor>> =
+    override suspend fun getAllProfessorsFlow(): Flow<List<Professor>> =
         cemedeDao.getAllProfessorsAndStudents().map { professorsAndStudents ->
             println("✅ getAllProfessors from DB, $professorsAndStudents ,SUCCESS")
             professorsAndStudents.map { professorAndStudents ->
@@ -20,15 +22,28 @@ class CemedeDataBaseImpl(
             }
         }
 
-    override fun getProfessorDetail(id: Int): Flow<Professor> =
-        cemedeDao.getProfessorDetail(id).map { professorAndStudents ->
+    override suspend fun getProfessorDetailFlow(id: Int): Flow<Professor> =
+        cemedeDao.getProfessorDetailFlow(id).map { professorAndStudents ->
             println("✅ getProfessorDetail from DB, $professorAndStudents , SUCCESS")
             professorAndStudents.mapToProfessor()
         }
 
-    override suspend fun upsertAllProfessors(professors: MutableList<ProfessorEntity>) {
-        cemedeDao.upsertAllProfessors(professors)
-        println("✅ upsertAllProfessors into DB, SUCCESS")
+    override suspend fun getProfessorDetail(id: Int): Professor {
+        val professorAndStudents = cemedeDao.getProfessorDetail(id)
+        println("✅ getProfessorDetail from DB, $professorAndStudents , SUCCESS")
+        return professorAndStudents.mapToProfessor()
+    }
+
+    override suspend fun getStudentByName(name: String): Student? {
+        val student = cemedeDao.getStudentByName(name)
+        println("✅ getStudentByName from DB, $student , SUCCESS")
+        return student?.mapToStudent()
+    }
+
+    override suspend fun upsertProfessor(professor: ProfessorEntity): Long {
+        val professorId = cemedeDao.upsertProfessor(professor)
+        println("✅ upsertProfessor into DB, $professorId - $professor , SUCCESS")
+        return professorId
     }
 
     override suspend fun upsertAllStudents(allStudents: MutableList<StudentEntity>) {

@@ -18,7 +18,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.cemede.cemede.presentation.theme.CemedeTheme
 import com.cemede.cemede.presentation.theme.font_size_16
 import com.cemede.cemede.presentation.theme.padding_16
-import com.cemede.cemede.presentation.theme.padding_8
 import com.cemede.cemede.presentation.theme.space_16
 
 object CemedeSearchBar {
@@ -33,9 +32,7 @@ object CemedeSearchBar {
     ) {
         TextField(
             modifier =
-                modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = padding_16, vertical = padding_8),
+                modifier.fillMaxWidth(),
             enabled = enabled,
             value = searchQuery,
             onValueChange = onSearchQueryChange,

@@ -1,25 +1,32 @@
 package com.cemede.cemede.presentation.screen.professor_detail
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -30,92 +37,389 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import cemede.composeapp.generated.resources.Res
-import cemede.composeapp.generated.resources.accept
-import cemede.composeapp.generated.resources.error
+import cemede.composeapp.generated.resources.back
+import cemede.composeapp.generated.resources.clear_search
+import cemede.composeapp.generated.resources.empty_state_subtitle
+import cemede.composeapp.generated.resources.filter
+import cemede.composeapp.generated.resources.professor_detail_screen_daily_schedule
+import cemede.composeapp.generated.resources.professor_detail_screen_daily_schedule_empty_state
+import cemede.composeapp.generated.resources.professor_detail_screen_empty_state_title
+import cemede.composeapp.generated.resources.professor_detail_screen_header_title
+import cemede.composeapp.generated.resources.professor_detail_screen_loading
+import cemede.composeapp.generated.resources.professor_detail_screen_professor_not_found
 import cemede.composeapp.generated.resources.professor_detail_screen_search_bar
+import cemede.composeapp.generated.resources.professor_detail_screen_student_list
+import cemede.composeapp.generated.resources.synchronizing_data
+import com.cemede.cemede.domain.model.DayOfWeek
 import com.cemede.cemede.domain.model.Professor
+import com.cemede.cemede.domain.model.Student
+import com.cemede.cemede.domain.util.DateTimeHandler
+import com.cemede.cemede.presentation.component.CemedeBanner
+import com.cemede.cemede.presentation.component.CemedeCard
+import com.cemede.cemede.presentation.component.CemedeDialog
+import com.cemede.cemede.presentation.component.CemedeEmptyState
+import com.cemede.cemede.presentation.component.CemedeLoader
+import com.cemede.cemede.presentation.component.CemedeSearchBar
+import com.cemede.cemede.presentation.component.CemedeTopAppBar
+import com.cemede.cemede.presentation.theme.ALPHA_0_2
+import com.cemede.cemede.presentation.theme.ALPHA_0_7
+import com.cemede.cemede.presentation.theme.CemedeTheme
+import com.cemede.cemede.presentation.theme.height_16
+import com.cemede.cemede.presentation.theme.height_8
 import com.cemede.cemede.presentation.theme.padding_16
+import com.cemede.cemede.presentation.theme.padding_24
 import com.cemede.cemede.presentation.theme.padding_8
+import com.cemede.cemede.presentation.theme.size_16
+import com.cemede.cemede.presentation.theme.space_12
+import com.cemede.cemede.presentation.theme.width_4
+import com.cemede.cemede.presentation.util.AnimationUtils.smoothScrollTo
+import kotlinx.datetime.LocalTime
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
+import org.koin.core.parameter.parametersOf
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfessorDetailScreen(
     professor: Professor,
-    onBack: () -> Unit,
-    viewModel: ProfessorDetailViewModel = koinInject(),
+    onNavigateBack: () -> Unit,
+    onNavigateToStudentDetail: (Student) -> Unit,
+    viewModel: ProfessorDetailViewModel = koinInject(parameters = { parametersOf(professor) }),
 ) {
     val state by viewModel.state.collectAsState()
-    var searchQuery by remember { mutableStateOf("") }
 
-    LaunchedEffect(professor.id) {
-        viewModel.getProfessor(professor.id)
-    }
+    ProfessorDetailContent(
+        state = state,
+        onNavigateBack = onNavigateBack,
+        onNavigateToStudentDetail = onNavigateToStudentDetail,
+    )
+}
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text("${professor.id} - ${professor.name}") },
-                navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
-                    }
-                },
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ProfessorDetailContent(
+    state: ProfessorDetailState,
+    onNavigateBack: () -> Unit,
+    onNavigateToStudentDetail: (Student) -> Unit,
+) {
+    var showConstructionBanner by remember { mutableStateOf(false) }
+    var selectedSchedule by remember { mutableStateOf<Pair<LocalTime, List<Student>>?>(null) }
+
+    CemedeTheme {
+        selectedSchedule?.let {
+            CemedeDialog.StudentListDialog(
+                time = it.first,
+                students = it.second,
+                onStudentClicked = { student -> onNavigateToStudentDetail(student) },
+                onDismiss = { selectedSchedule = null },
             )
-        },
-    ) {
-        Column(modifier = Modifier.padding(it).padding(padding_16)) {
-            state.professor?.let { professor ->
-                TextField(
-                    value = searchQuery,
-                    onValueChange = { searchQuery = it },
-                    modifier = Modifier.fillMaxWidth(),
-                    placeholder = { Text(stringResource(Res.string.professor_detail_screen_search_bar)) },
-                )
+        }
 
-                LazyColumn {
-                    items(professor.students.filter { student -> student.name.contains(searchQuery, ignoreCase = true) }) {
-                        Text(text = it.name, modifier = Modifier.padding(padding_8))
-                    }
-                }
-            }
-
-            if (state.isLoading) {
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    CircularProgressIndicator()
-                }
-            }
-
-            state.error?.let { error ->
-                if (state.professor == null) {
-                    // Empty state
-                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                        Text(text = "No hay datos disponibles. Conéctate a internet para descargar los datos.")
-                    }
-                } else {
-                    // Warning banner
-                    Box(
-                        modifier = Modifier.fillMaxWidth().background(Color.Red).padding(padding_8),
-                        contentAlignment = Alignment.Center,
-                    ) {
-                        Text(text = "Esta información puede no estar actualizada", color = Color.White)
-                    }
-                }
-
-                // Error dialog
-                AlertDialog(
-                    onDismissRequest = { /* TODO */ },
-                    title = { Text(stringResource(Res.string.error)) },
-                    text = { Text("Ha ocurrido un error inesperado. Por favor, inténtalo más tarde.") },
-                    confirmButton = {
-                        Button(onClick = onBack) {
-                            Text(stringResource(Res.string.accept))
+        Scaffold(
+            topBar = {
+                CemedeTopAppBar.TopAppBar(
+                    title = stringResource(Res.string.professor_detail_screen_header_title),
+                    navigationIcon = {
+                        IconButton(onClick = onNavigateBack) {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                contentDescription = stringResource(Res.string.back),
+                            )
                         }
                     },
+                )
+            },
+        ) { paddingValues ->
+            Box(modifier = Modifier.fillMaxSize()) {
+                if (state.isLoading) {
+                    CemedeLoader(
+                        title = stringResource(Res.string.synchronizing_data),
+                        subtitle = stringResource(Res.string.professor_detail_screen_loading),
+                    )
+                } else if (state.professor != null) {
+                    Column(modifier = Modifier.padding(paddingValues)) {
+                        CemedeCard.ProfessorDetailCard(
+                            modifier = Modifier.fillMaxWidth(),
+                            professor = state.professor,
+                            onCallButtonClick = { showConstructionBanner = true },
+                            onMessageButtonClick = { showConstructionBanner = true },
+                        )
+                        DailySchedule(
+                            studentsSchedule = state.professor.studentsSchedule,
+                            onScheduleClick = { time, students ->
+                                selectedSchedule = time to students
+                            },
+                        )
+                        AssignedStudents(
+                            students = state.professor.students,
+                            onNavigateToStudentDetail = { showConstructionBanner = true },
+                        )
+                    }
+                } else {
+                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        Text(state.error ?: stringResource(Res.string.professor_detail_screen_professor_not_found))
+                    }
+                }
+
+                CemedeBanner.ConstructionBanner(
+                    modifier =
+                        Modifier
+                            .align(Alignment.BottomCenter)
+                            .padding(bottom = padding_16, start = padding_16, end = padding_16),
+                    showBanner = showConstructionBanner,
+                    onDismiss = { showConstructionBanner = false },
                 )
             }
         }
     }
+}
+
+@Composable
+private fun DailySchedule(
+    studentsSchedule: Map<DayOfWeek, Map<LocalTime, List<Student>>>,
+    onScheduleClick: (LocalTime, List<Student>) -> Unit,
+) {
+    val now = DateTimeHandler.getCurrentDateTimeInfo()
+    val today = DayOfWeek.valueOf(now.dayOfWeek.name)
+
+    val scrollState = rememberLazyListState()
+
+    val scheduleForToday = studentsSchedule[today]?.entries?.toList()?.sortedBy { it.key }
+    val upcomingAppointmentIndex =
+        scheduleForToday?.indexOfFirst { (time, _) -> time >= now.time } ?: -1
+
+    // Tip: Cambié la key a `upcomingAppointmentIndex`.
+    // Así, si el índice cambia mientras el usuario tiene la app abierta, volverá a animar.
+    LaunchedEffect(upcomingAppointmentIndex) {
+        if (upcomingAppointmentIndex != -1) {
+            // Llamamos a nuestra nueva función mágica
+            scrollState.smoothScrollTo(upcomingAppointmentIndex)
+        }
+    }
+
+    Column(
+        modifier =
+            Modifier
+                .background(Color.White.copy(alpha = ALPHA_0_2))
+                .padding(vertical = padding_24),
+    ) {
+        Row(
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = padding_16),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Text(
+                stringResource(Res.string.professor_detail_screen_daily_schedule),
+                style = MaterialTheme.typography.labelMedium,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.primary,
+            )
+            Text(
+                text = "${DateTimeHandler.getSpanishMonth(now.month)} ${now.year}",
+                style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.colorScheme.secondary,
+            )
+        }
+        Spacer(modifier = Modifier.height(height_16))
+
+        if (studentsSchedule[today].isNullOrEmpty()) {
+            Text(
+                modifier = Modifier.fillMaxWidth(),
+                text = stringResource(Res.string.professor_detail_screen_daily_schedule_empty_state),
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = ALPHA_0_7),
+                textAlign = TextAlign.Center,
+            )
+        } else {
+            LazyRow(
+                state = scrollState,
+                contentPadding = PaddingValues(horizontal = padding_16),
+                horizontalArrangement = Arrangement.spacedBy(space_12),
+            ) {
+                studentsSchedule[today]?.let {
+                    items(it.entries.toList()) { (time, students) ->
+                        CemedeCard.WeeklyScheduleCard(
+                            time = time,
+                            students = students,
+                            now = now,
+                            onCardClick = { onScheduleClick(time, students) },
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun AssignedStudents(
+    students: List<Student>,
+    onNavigateToStudentDetail: (Student) -> Unit,
+) {
+    var searchQuery by remember { mutableStateOf("") }
+    var showSearchBar by remember { mutableStateOf(false) }
+
+    Column(modifier = Modifier.padding(horizontal = padding_16)) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Text(
+                text = stringResource(Res.string.professor_detail_screen_student_list),
+                style = MaterialTheme.typography.labelMedium,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.primary,
+            )
+            TextButton(
+                onClick = { showSearchBar = !showSearchBar },
+                enabled = students.isNotEmpty(),
+            ) {
+                Icon(
+                    imageVector = Icons.Default.FilterList,
+                    contentDescription = "Ícono de filtrar",
+                    modifier = Modifier.size(size_16),
+                )
+                Spacer(modifier = Modifier.width(width_4))
+                Text(
+                    text = stringResource(Res.string.filter),
+                    style = MaterialTheme.typography.labelSmall,
+                )
+            }
+        }
+        Spacer(modifier = Modifier.height(height_8))
+
+        if (showSearchBar) {
+            CemedeSearchBar.SearchBar(
+                modifier = Modifier.padding(vertical = padding_8),
+                placeholder = stringResource(Res.string.professor_detail_screen_search_bar),
+                searchQuery = searchQuery,
+                onSearchQueryChange = { searchQuery = it },
+            )
+        }
+
+        if (students.isEmpty()) {
+            CemedeEmptyState.EmptyState(
+                title = stringResource(Res.string.professor_detail_screen_empty_state_title),
+            )
+        } else {
+            val filteredStudents =
+                students.filter { student ->
+                    student.name.contains(searchQuery, ignoreCase = true)
+                }
+
+            if (filteredStudents.isEmpty() && searchQuery.isNotEmpty()) {
+                CemedeEmptyState.EmptyState(
+                    title = stringResource(Res.string.professor_detail_screen_empty_state_title),
+                    subtitle = stringResource(Res.string.empty_state_subtitle),
+                    actionText = stringResource(Res.string.clear_search),
+                    onActionClick = { searchQuery = "" },
+                )
+            } else {
+                LazyColumn {
+                    items(filteredStudents) { student ->
+                        CemedeCard.StudentCard(
+                            student = student,
+                            onCardClick = { onNavigateToStudentDetail(student) },
+                        )
+                        Spacer(modifier = Modifier.height(height_16))
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Preview(showSystemUi = true)
+@Composable
+private fun ProfessorDetailScreenPreview() {
+    val students =
+        listOf(
+            Student(id = 1, name = "Juan Pérez", processType = "Readaptacion"),
+            Student(id = 2, name = "María García", processType = "Deportivo"),
+            Student(id = 3, name = "Lucas Rodríguez", processType = "Salud"),
+        )
+    val professor =
+        Professor(
+            id = 1,
+            name = "Prof. Macarena",
+            isWorking = true,
+            students = students,
+            studentsSchedule =
+                mapOf(
+                    DayOfWeek.MONDAY to mapOf(DateTimeHandler.parseTime("12:00:00 PM") to students),
+                    DayOfWeek.TUESDAY to mapOf(DateTimeHandler.parseTime("12:00:00 PM") to students),
+                    DayOfWeek.WEDNESDAY to mapOf(DateTimeHandler.parseTime("12:00:00 PM") to students),
+                    DayOfWeek.THURSDAY to mapOf(DateTimeHandler.parseTime("12:00:00 PM") to students),
+                    DayOfWeek.FRIDAY to mapOf(DateTimeHandler.parseTime("12:00:00 PM") to students),
+                    DayOfWeek.SATURDAY to mapOf(DateTimeHandler.parseTime("21:00:00 PM") to students),
+                    DayOfWeek.SUNDAY to mapOf(DateTimeHandler.parseTime("12:00:00 PM") to students),
+                ),
+        )
+    ProfessorDetailContent(
+        state = ProfessorDetailState(professor = professor, isLoading = false),
+        onNavigateBack = {},
+        onNavigateToStudentDetail = {},
+    )
+}
+
+@Preview(showSystemUi = true)
+@Composable
+private fun ProfessorDetailScreenNoSchedulePreview() {
+    val students =
+        listOf(
+            Student(id = 1, name = "Juan Pérez", processType = "Readaptacion"),
+            Student(id = 2, name = "María García", processType = "Deportivo"),
+            Student(id = 3, name = "Lucas Rodríguez", processType = "Salud"),
+        )
+    val professor =
+        Professor(
+            id = 1,
+            name = "Prof. Macarena",
+            isWorking = true,
+            students = students,
+            studentsSchedule =
+                mapOf(
+                    DayOfWeek.MONDAY to mapOf(),
+                    DayOfWeek.TUESDAY to mapOf(),
+                    DayOfWeek.WEDNESDAY to mapOf(),
+                    DayOfWeek.THURSDAY to mapOf(),
+                    DayOfWeek.FRIDAY to mapOf(),
+                    DayOfWeek.SATURDAY to mapOf(),
+                    DayOfWeek.SUNDAY to mapOf(),
+                ),
+        )
+    ProfessorDetailContent(
+        state = ProfessorDetailState(professor = professor, isLoading = false),
+        onNavigateBack = {},
+        onNavigateToStudentDetail = {},
+    )
+}
+
+@Preview(showSystemUi = true, name = "Loading Preview")
+@Composable
+private fun ProfessorDetailScreenLoadingPreview() {
+    ProfessorDetailContent(
+        state = ProfessorDetailState(isLoading = true),
+        onNavigateBack = {},
+        onNavigateToStudentDetail = {},
+    )
+}
+
+@Preview(showSystemUi = true, name = "No students Preview")
+@Composable
+private fun ProfessorDetailScreenNoStudentsPreview() {
+    val professor = Professor(1, "Prof. Macarena", true, students = emptyList())
+
+    ProfessorDetailContent(
+        state = ProfessorDetailState(professor = professor, isLoading = false),
+        onNavigateBack = {},
+        onNavigateToStudentDetail = {},
+    )
 }

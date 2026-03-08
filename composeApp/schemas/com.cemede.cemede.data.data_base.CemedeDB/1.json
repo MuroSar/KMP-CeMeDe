@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "1c9d16d25dc3b5f555ef36a03f246063",
+    "identityHash": "a291529e4ba1bbd1fd7ad18801539957",
     "entities": [
       {
         "tableName": "professors",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `isWorking` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `isWorking` INTEGER NOT NULL, `studentsSchedule` TEXT NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -24,6 +24,12 @@
             "fieldPath": "isWorking",
             "columnName": "isWorking",
             "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "studentsSchedule",
+            "columnName": "studentsSchedule",
+            "affinity": "TEXT",
             "notNull": true
           }
         ],
@@ -47,7 +53,7 @@
       },
       {
         "tableName": "students",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `professorId` INTEGER NOT NULL, FOREIGN KEY(`professorId`) REFERENCES `professors`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `processType` TEXT NOT NULL, `professorId` INTEGER NOT NULL, FOREIGN KEY(`professorId`) REFERENCES `professors`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -58,6 +64,12 @@
           {
             "fieldPath": "name",
             "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "processType",
+            "columnName": "processType",
             "affinity": "TEXT",
             "notNull": true
           },
@@ -102,7 +114,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '1c9d16d25dc3b5f555ef36a03f246063')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'a291529e4ba1bbd1fd7ad18801539957')"
     ]
   }
 }

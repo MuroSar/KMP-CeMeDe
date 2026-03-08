@@ -36,9 +36,9 @@ object CemedeEmptyState {
     fun EmptyState(
         modifier: Modifier = Modifier,
         title: String,
-        subtitle: String,
-        actionText: String,
-        onActionClick: () -> Unit,
+        subtitle: String = "",
+        actionText: String = "",
+        onActionClick: () -> Unit = { },
     ) {
         Column(
             modifier = modifier.fillMaxSize().padding(start = padding_16, end = padding_16, bottom = padding_16),
@@ -73,25 +73,27 @@ object CemedeEmptyState {
                 textAlign = TextAlign.Center,
             )
             Spacer(modifier = Modifier.padding(top = padding_16))
-            Button(
-                onClick = onActionClick,
-                colors =
-                    ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.primary,
-                        contentColor = MaterialTheme.colorScheme.onPrimary,
-                    ),
-            ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(
-                        imageVector = Icons.Default.Refresh,
-                        contentDescription = "Ícono de recargar",
-                    )
-                    Spacer(modifier = Modifier.width(padding_8))
-                    Text(
-                        text = actionText,
-                        style = MaterialTheme.typography.bodyLarge,
-                        fontWeight = FontWeight.Bold,
-                    )
+            if (onActionClick != { } && actionText.isNotEmpty()) {
+                Button(
+                    onClick = onActionClick,
+                    colors =
+                        ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.primary,
+                            contentColor = MaterialTheme.colorScheme.onPrimary,
+                        ),
+                ) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(
+                            imageVector = Icons.Default.Refresh,
+                            contentDescription = "Ícono de recargar",
+                        )
+                        Spacer(modifier = Modifier.width(padding_8))
+                        Text(
+                            text = actionText,
+                            style = MaterialTheme.typography.bodyLarge,
+                            fontWeight = FontWeight.Bold,
+                        )
+                    }
                 }
             }
         }
@@ -100,13 +102,23 @@ object CemedeEmptyState {
 
 @Preview
 @Composable
-private fun EmptyStatePreview() {
+private fun EmptyStateWithActionPreview() {
     CemedeTheme {
         CemedeEmptyState.EmptyState(
             title = "No se encontraron profesores",
             subtitle = "Intenta con otro nombre o verifica la ortografía del instructor buscado.",
             actionText = "Limpiar búsqueda",
             onActionClick = {},
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun EmptyStateWithoutActionPreview() {
+    CemedeTheme {
+        CemedeEmptyState.EmptyState(
+            title = "No se encontraron profesores",
         )
     }
 }

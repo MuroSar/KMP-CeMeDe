@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface CemedeDao {
     @Upsert
-    suspend fun upsertAllProfessors(professors: List<ProfessorEntity>)
+    suspend fun upsertProfessor(professors: ProfessorEntity): Long
 
     @Upsert
     suspend fun upsertAllStudents(students: List<StudentEntity>)
@@ -23,5 +23,12 @@ interface CemedeDao {
 
     @Transaction
     @Query("SELECT * FROM professors WHERE id = :id")
-    fun getProfessorDetail(id: Int): Flow<ProfessorAndStudents>
+    fun getProfessorDetailFlow(id: Int): Flow<ProfessorAndStudents>
+
+    @Transaction
+    @Query("SELECT * FROM professors WHERE id = :id")
+    fun getProfessorDetail(id: Int): ProfessorAndStudents
+
+    @Query("SELECT * FROM students WHERE name = :name LIMIT 1")
+    suspend fun getStudentByName(name: String): StudentEntity?
 }

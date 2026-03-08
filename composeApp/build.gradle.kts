@@ -93,6 +93,9 @@ kotlin {
 
             // Compottie (Lottie KMP lib) --> https://github.com/alexzhirkevich/compottie/tree/standalone-main
             implementation(libs.compottie)
+
+            // Clock
+            implementation(libs.kotlinx.datetime)
         }
         commonTest.dependencies {
             // Unit testing

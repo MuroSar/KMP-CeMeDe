@@ -20,5 +20,6 @@ import androidx.room.PrimaryKey
 data class StudentEntity(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val name: String,
+    val processType: String,
     val professorId: Int,
 )

@@ -57,6 +57,9 @@ coreKtx = "1.6.1"
 # ktlint
 ktlint = "12.2.0"
 
+# Clock
+kotlinx-datetime = "0.7.1"
+
 # Compottie (Lottie KMP lib) --> https://github.com/alexzhirkevich/compottie/tree/standalone-main
 compottie = "2.0.0-rc04"
 
@@ -132,6 +135,9 @@ core-ktx = { group = "androidx.test", name = "core-ktx", version.ref = "coreKtx"
 
 # Compottie (Lottie KMP lib) --> https://github.com/alexzhirkevich/compottie/tree/standalone-main
 compottie = { group = "io.github.alexzhirkevich", name = "compottie", version.ref = "compottie" }
+
+# Clock
+kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinx-datetime" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

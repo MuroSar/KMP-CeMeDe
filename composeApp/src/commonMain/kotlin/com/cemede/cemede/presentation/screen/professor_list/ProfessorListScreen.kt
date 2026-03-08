@@ -27,7 +27,7 @@ import androidx.compose.ui.unit.dp
 import cemede.composeapp.generated.resources.Res
 import cemede.composeapp.generated.resources.back
 import cemede.composeapp.generated.resources.clear_search
-import cemede.composeapp.generated.resources.professor_list_screen_empty_state_subtitle
+import cemede.composeapp.generated.resources.empty_state_subtitle
 import cemede.composeapp.generated.resources.professor_list_screen_empty_state_title
 import cemede.composeapp.generated.resources.professor_list_screen_header_title
 import cemede.composeapp.generated.resources.professor_list_screen_loading
@@ -42,6 +42,7 @@ import com.cemede.cemede.presentation.component.CemedeSearchBar
 import com.cemede.cemede.presentation.component.CemedeTopAppBar
 import com.cemede.cemede.presentation.theme.CemedeTheme
 import com.cemede.cemede.presentation.theme.padding_16
+import com.cemede.cemede.presentation.theme.padding_8
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
@@ -82,8 +83,8 @@ fun ProfessorListContent(
                     searchBarEnabled = !isLoading,
                 )
             },
-        ) {
-            Box(modifier = Modifier.padding(it).fillMaxSize()) {
+        ) { paddingValues ->
+            Box(modifier = Modifier.padding(paddingValues).fillMaxSize()) {
                 if (isLoading) {
                     CemedeLoader(
                         title = stringResource(Res.string.synchronizing_data),
@@ -98,7 +99,7 @@ fun ProfessorListContent(
                     if (filteredProfessors.isEmpty() && searchQuery.isNotEmpty()) {
                         CemedeEmptyState.EmptyState(
                             title = stringResource(Res.string.professor_list_screen_empty_state_title),
-                            subtitle = stringResource(Res.string.professor_list_screen_empty_state_subtitle),
+                            subtitle = stringResource(Res.string.empty_state_subtitle),
                             actionText = stringResource(Res.string.clear_search),
                             onActionClick = { searchQuery = "" },
                         )
@@ -152,6 +153,7 @@ private fun ProfessorListTopAppBar(
         )
 
         CemedeSearchBar.SearchBar(
+            modifier = Modifier.padding(horizontal = padding_16, vertical = padding_8),
             placeholder = stringResource(Res.string.professor_list_screen_search_bar),
             searchQuery = searchQuery,
             onSearchQueryChange = onSearchQueryChange,
