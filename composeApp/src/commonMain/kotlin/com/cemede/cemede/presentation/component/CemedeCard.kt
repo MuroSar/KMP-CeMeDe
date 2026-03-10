@@ -44,7 +44,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import cemede.composeapp.generated.resources.Res
 import cemede.composeapp.generated.resources.cemede_logo
 import cemede.composeapp.generated.resources.professor_card_action_call
@@ -58,6 +57,7 @@ import cemede.composeapp.generated.resources.professor_detail_screen_daily_sched
 import cemede.composeapp.generated.resources.professor_detail_screen_daily_schedule_overloaded_capacity
 import cemede.composeapp.generated.resources.professor_detail_screen_individual_student
 import cemede.composeapp.generated.resources.professor_detail_screen_multiple_students
+import com.cemede.cemede.domain.model.DayOfWeek
 import com.cemede.cemede.domain.model.Professor
 import com.cemede.cemede.domain.model.Student
 import com.cemede.cemede.domain.util.DateTimeHandler
@@ -108,6 +108,11 @@ object CemedeCard {
         onMessageButtonClick: () -> Unit,
         onScheduleButtonClick: () -> Unit,
     ) {
+        val now = DateTimeHandler.getCurrentDateTimeInfo()
+        val today = DayOfWeek.valueOf(now.dayOfWeek.name)
+
+        val isWorkingInThisMoment = professor.professorWorkingSchedule[today]?.contains(now.time)
+
         Card(
             onClick = onCardClick,
             shape = RoundedCornerShape(size_16),
@@ -133,19 +138,20 @@ object CemedeCard {
                                         shape = CircleShape,
                                     ),
                         )
-                        if (professor.isWorking) {
-                            Box(
-                                modifier =
-                                    Modifier
-                                        .size(size_16)
-                                        .background(Color.Green, CircleShape)
-                                        .border(
-                                            width = width_2,
-                                            color = MaterialTheme.colorScheme.surface,
-                                            shape = CircleShape,
-                                        ).align(Alignment.BottomEnd),
-                            )
-                        }
+                        Box(
+                            modifier =
+                                Modifier
+                                    .size(size_16)
+                                    .background(
+                                        color = if (isWorkingInThisMoment == true) Color.Green else Color.Red,
+                                        shape = CircleShape,
+                                    )
+                                    .border(
+                                        width = width_2,
+                                        color = MaterialTheme.colorScheme.surface,
+                                        shape = CircleShape,
+                                    ).align(Alignment.BottomEnd),
+                        )
                     }
                     Spacer(modifier = Modifier.padding(horizontal = padding_8))
                     Column {
@@ -223,6 +229,11 @@ object CemedeCard {
         onCallButtonClick: () -> Unit,
         onMessageButtonClick: () -> Unit,
     ) {
+        val now = DateTimeHandler.getCurrentDateTimeInfo()
+        val today = DayOfWeek.valueOf(now.dayOfWeek.name)
+
+        val isWorkingInThisMoment = professor.professorWorkingSchedule[today]?.contains(now.time)
+
         Card(
             shape = RoundedCornerShape(size_0),
             elevation = CardDefaults.cardElevation(elevation_2),
@@ -250,24 +261,26 @@ object CemedeCard {
                                         width = width_2,
                                         color = MaterialTheme.colorScheme.secondary,
                                         shape = CircleShape,
-                                        )
+                                    )
                                     .padding(padding_2)
                                     .clip(CircleShape),
                             contentScale = ContentScale.Crop,
                         )
-                        if (professor.isWorking) {
-                            Box(
-                                modifier =
-                                    Modifier
-                                        .size(size_20)
-                                        .background(Color.Green, CircleShape)
-                                        .border(
-                                            width = width_2,
-                                            color = MaterialTheme.colorScheme.surface,
-                                            shape = CircleShape,
-                                        ).align(Alignment.BottomEnd),
-                            )
-                        }
+
+                        Box(
+                            modifier =
+                                Modifier
+                                    .size(size_20)
+                                    .background(
+                                        color = if (isWorkingInThisMoment == true) Color.Green else Color.Red,
+                                        shape = CircleShape,
+                                    )
+                                    .border(
+                                        width = width_2,
+                                        color = MaterialTheme.colorScheme.surface,
+                                        shape = CircleShape,
+                                    ).align(Alignment.BottomEnd),
+                        )
                     }
 
                     Column(modifier = Modifier.weight(WEIGHT_1)) {
@@ -462,7 +475,6 @@ private fun ProfessorCardPreview() {
                 Professor(
                     id = 4090,
                     name = "Amelia Caldwell",
-                    isWorking = true,
                 ),
             onCardClick = {},
             onCallButtonClick = {},
@@ -481,7 +493,6 @@ private fun ProfessorDetailCardPreview() {
                 Professor(
                     id = 4090,
                     name = "Amelia Caldwell",
-                    isWorking = true,
                 ),
             onCallButtonClick = {},
             onMessageButtonClick = {},

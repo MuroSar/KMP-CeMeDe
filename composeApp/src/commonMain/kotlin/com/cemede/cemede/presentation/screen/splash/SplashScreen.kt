@@ -1,6 +1,8 @@
 package com.cemede.cemede.presentation.screen.splash
 
 import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -20,6 +22,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -43,7 +47,6 @@ import com.cemede.cemede.presentation.theme.ALPHA_0_1
 import com.cemede.cemede.presentation.theme.ALPHA_0_2
 import com.cemede.cemede.presentation.theme.ALPHA_0_3
 import com.cemede.cemede.presentation.theme.ALPHA_0_4
-import com.cemede.cemede.presentation.theme.ALPHA_0_5
 import com.cemede.cemede.presentation.theme.ALPHA_0_6
 import com.cemede.cemede.presentation.theme.ALPHA_0_8
 import com.cemede.cemede.presentation.theme.CemedeTheme
@@ -74,19 +77,32 @@ import com.cemede.cemede.presentation.theme.width_24
 import com.cemede.cemede.presentation.theme.width_4
 import com.cemede.cemede.presentation.theme.width_48
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.viewmodel.koinViewModel
 
 private const val ANIMATION_DURATION: Int = 2000
 
 @Composable
-fun SplashScreen(onSplashFinished: () -> Unit) {
+fun SplashScreen(
+    onSplashFinished: () -> Unit,
+    viewModel: SplashViewModel = koinViewModel(),
+) {
+    val state by viewModel.state.collectAsState()
     val pulse = remember { Animatable(1f) }
 
-    LaunchedEffect(Unit) {
-        pulse.animateTo(
-            targetValue = 1.1f,
-            animationSpec = tween(durationMillis = ANIMATION_DURATION),
-        )
-        onSplashFinished()
+    LaunchedEffect(state.isLoading) {
+        if (state.isLoading) {
+            // Ejecuta la animación de forma infinita mientras isLoading sea true
+            pulse.animateTo(
+                targetValue = 1.1f,
+                animationSpec = infiniteRepeatable(
+                    animation = tween(durationMillis = ANIMATION_DURATION),
+                    repeatMode = RepeatMode.Reverse // Esto hace que el valor vaya de 1.1f de vuelta al valor original
+                )
+            )
+        } else {
+            // Cuando isLoading pasa a false, el LaunchedEffect se cancela, interrumpe la animación y entra aquí
+            onSplashFinished()
+        }
     }
 
     CemedeTheme {

@@ -11,12 +11,14 @@ import com.cemede.cemede.domain.use_case.GetAllProfessorsFlowUseCase
 import com.cemede.cemede.domain.use_case.GetAllProfessorsFlowUseCaseImpl
 import com.cemede.cemede.domain.use_case.GetProfessorDetailFlowUseCase
 import com.cemede.cemede.domain.use_case.GetProfessorDetailFlowUseCaseImpl
-import com.cemede.cemede.domain.use_case.SyncProfessorScheduleUseCase
-import com.cemede.cemede.domain.use_case.SyncProfessorScheduleUseCaseImpl
-import com.cemede.cemede.domain.use_case.SyncProfessorsUseCase
-import com.cemede.cemede.domain.use_case.SyncProfessorsUseCaseImpl
+import com.cemede.cemede.domain.use_case.SyncProfessorInfoUseCase
+import com.cemede.cemede.domain.use_case.SyncProfessorInfoUseCaseImpl
+import com.cemede.cemede.domain.use_case.SyncProfessorsWorkingScheduleUseCase
+import com.cemede.cemede.domain.use_case.SyncProfessorsWorkingScheduleUseCaseImpl
+import com.cemede.cemede.presentation.screen.main.MainViewModel
 import com.cemede.cemede.presentation.screen.professor_detail.ProfessorDetailViewModel
 import com.cemede.cemede.presentation.screen.professor_list.ProfessorListViewModel
+import com.cemede.cemede.presentation.screen.splash.SplashViewModel
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.plugins.DefaultRequest
@@ -42,6 +44,8 @@ expect val platformModule: Module
 val sharedModule =
     module {
         factory { Dispatchers.IO }
+        viewModelOf(::SplashViewModel)
+        viewModelOf(::MainViewModel)
         viewModelOf(::ProfessorListViewModel)
         viewModelOf(::ProfessorDetailViewModel)
     }
@@ -50,8 +54,8 @@ val useCaseModule =
     module {
         singleOf(::GetAllProfessorsFlowUseCaseImpl).bind<GetAllProfessorsFlowUseCase>()
         singleOf(::GetProfessorDetailFlowUseCaseImpl).bind<GetProfessorDetailFlowUseCase>()
-        singleOf(::SyncProfessorsUseCaseImpl).bind<SyncProfessorsUseCase>()
-        singleOf(::SyncProfessorScheduleUseCaseImpl).bind<SyncProfessorScheduleUseCase>()
+        singleOf(::SyncProfessorInfoUseCaseImpl).bind<SyncProfessorInfoUseCase>()
+        singleOf(::SyncProfessorsWorkingScheduleUseCaseImpl).bind<SyncProfessorsWorkingScheduleUseCase>()
     }
 
 val repositoryModule =

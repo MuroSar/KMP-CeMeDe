@@ -9,7 +9,7 @@ interface ProfessorRepository {
 
     suspend fun getProfessorDetailFlow(id: Int): Flow<Professor>
 
-    suspend fun syncProfessors(): CoroutineResult<Unit>
+    suspend fun syncProfessorInfo(professor: Professor): CoroutineResult<Unit>
 
-    suspend fun syncProfessorSchedule(professor: Professor): CoroutineResult<Unit>
+    suspend fun syncProfessorsWorkingSchedule(): CoroutineResult<Unit>
 }

@@ -4,10 +4,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.cemede.cemede.domain.model.Professor
 import com.cemede.cemede.domain.use_case.GetProfessorDetailFlowUseCase
-import com.cemede.cemede.domain.use_case.SyncProfessorScheduleUseCase
+import com.cemede.cemede.domain.use_case.SyncProfessorInfoUseCase
 import com.cemede.cemede.domain.util.CoroutineResult
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -15,19 +16,19 @@ import kotlinx.coroutines.launch
 class ProfessorDetailViewModel(
     private val professor: Professor,
     private val getProfessorDetailFlowUseCase: GetProfessorDetailFlowUseCase,
-    private val syncProfessorScheduleUseCase: SyncProfessorScheduleUseCase,
+    private val syncProfessorInfoUseCase: SyncProfessorInfoUseCase,
 ) : ViewModel() {
     private val _state = MutableStateFlow(ProfessorDetailState())
     val state = _state.asStateFlow()
 
     init {
-        syncProfessorSchedule()
+        syncProfessorInfo()
     }
 
-    fun syncProfessorSchedule() =
+    fun syncProfessorInfo() =
         viewModelScope.launch {
             _state.value = _state.value.copy(isLoading = true)
-            when (val result = syncProfessorScheduleUseCase(professor)) {
+            when (val result = syncProfessorInfoUseCase(professor)) {
                 is CoroutineResult.Success -> {
                     _state.value = _state.value.copy(isLoading = false)
                     getProfessorDetail(professor.id)
@@ -49,6 +50,8 @@ class ProfessorDetailViewModel(
             getProfessorDetailFlowUseCase(id)
                 .onEach { professor ->
                     _state.value = _state.value.copy(professor = professor, isLoading = false)
+                }.catch { error ->
+                    _state.value = _state.value.copy(isLoading = false, error = error.message)
                 }.launchIn(viewModelScope)
         }
 }

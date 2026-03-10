@@ -9,8 +9,14 @@ import kotlinx.serialization.json.Json
 
 class NestedMapConverter {
     @TypeConverter
-    fun fromString(value: String): Map<DayOfWeek, Map<LocalTime, List<Student>>> = Json.decodeFromString(value)
+    fun fromStudentsScheduleString(value: String): Map<DayOfWeek, Map<LocalTime, List<Student>>> = Json.decodeFromString(value)
 
     @TypeConverter
-    fun fromMap(map: Map<DayOfWeek, Map<LocalTime, List<Student>>>): String = Json.encodeToString(map)
+    fun fromStudentsScheduleMap(map: Map<DayOfWeek, Map<LocalTime, List<Student>>>): String = Json.encodeToString(map)
+
+    @TypeConverter
+    fun fromProfessorWorkingScheduleString(value: String): Map<DayOfWeek, List<LocalTime>> = Json.decodeFromString(value)
+
+    @TypeConverter
+    fun fromProfessorWorkingScheduleMap(map: Map<DayOfWeek, List<LocalTime>>): String = Json.encodeToString(map)
 }

@@ -35,7 +35,6 @@ fun NavGraphBuilder.addCeMeDeScreenGraph(navController: NavController) {
                     NavRoutes.ProfessorDetail(
                         professorId = professor.id,
                         professorName = professor.name,
-                        professorIsWorking = professor.isWorking,
                     ),
                 )
             },
@@ -48,7 +47,6 @@ fun NavGraphBuilder.addCeMeDeScreenGraph(navController: NavController) {
                 Professor(
                     id = professorDetail.professorId,
                     name = professorDetail.professorName,
-                    isWorking = professorDetail.professorIsWorking,
                 ),
             onNavigateBack = { navController.popBackStack() },
             onNavigateToStudentDetail = { },

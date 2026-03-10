@@ -11,8 +11,6 @@ interface CemedeDataBase {
 
     suspend fun getProfessorDetailFlow(id: Int): Flow<Professor>
 
-    suspend fun getProfessorDetail(id: Int): Professor
-
     suspend fun getStudentByName(name: String): Student?
 
     suspend fun upsertProfessor(professor: ProfessorEntity): Long

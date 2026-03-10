@@ -167,10 +167,10 @@ private fun ProfessorListTopAppBar(
 private fun ProfessorListScreenPreview() {
     val sampleProfessors =
         listOf(
-            Professor(1, "Macarena", true),
-            Professor(2, "Juan", true),
-            Professor(3, "Sofia", false),
-            Professor(4, "Carlos", true),
+            Professor(1, "Macarena"),
+            Professor(2, "Tomas"),
+            Professor(3, "Gonzalo"),
+            Professor(4, "Santiago"),
         )
     ProfessorListContent(
         isLoading = false,
@@ -196,8 +196,8 @@ private fun ProfessorListScreenLoadingPreview() {
 private fun ProfessorListScreenEmptySearchPreview() {
     val sampleProfessors =
         listOf(
-            Professor(1, "Macarena", true),
-            Professor(2, "Juan", true),
+            Professor(1, "Macarena"),
+            Professor(2, "Tomas"),
         )
     ProfessorListContent(
         isLoading = false,

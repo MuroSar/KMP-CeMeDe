@@ -1,4 +1,4 @@
-package com.cemede.cemede.presentation.screen.professor_list
+package com.cemede.cemede.presentation.screen.main
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -11,10 +11,10 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
-class ProfessorListViewModel(
+class MainViewModel(
     private val getAllProfessorsFlowUseCase: GetAllProfessorsFlowUseCase,
 ) : ViewModel() {
-    private val _state = MutableStateFlow(ProfessorListState())
+    private val _state = MutableStateFlow(MainState())
     val state = _state.asStateFlow()
 
     init {
@@ -25,20 +25,17 @@ class ProfessorListViewModel(
         viewModelScope.launch {
             getAllProfessorsFlowUseCase()
                 .onEach { professors ->
-                    _state.value =
-                        _state.value.copy(
-                            isLoading = false,
-                            professors = professors,
-                        )
+                    _state.value = _state.value.copy(professors = professors)
                 }.catch { error ->
-                    _state.value = _state.value.copy(isLoading = false, error = error.message)
+                    _state.value = _state.value.copy(error = error.message)
                 }.launchIn(viewModelScope)
         }
     }
 }
 
-data class ProfessorListState(
+data class MainState(
     val professors: List<Professor> = emptyList(),
+    // TODO: REVISAR
     val isLoading: Boolean = true,
     val error: String? = null,
 )

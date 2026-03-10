@@ -9,11 +9,9 @@ fun ProfessorAndStudents.mapToProfessor() =
     Professor(
         id = professor.id,
         name = professor.name,
-        isWorking = professor.isWorking,
-        students =
-            students.map {
-                it.mapToStudent()
-            },
+        students = students.map { it.mapToStudent() },
+        studentsSchedule = professor.studentsSchedule,
+        professorWorkingSchedule = professor.professorWorkingSchedule,
     )
 
 fun StudentEntity.mapToStudent() =

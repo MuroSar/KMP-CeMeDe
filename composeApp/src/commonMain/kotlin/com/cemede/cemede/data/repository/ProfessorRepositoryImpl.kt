@@ -14,6 +14,7 @@ import com.cemede.cemede.domain.util.CoroutineResult
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
 import kotlinx.datetime.LocalTime
 
@@ -25,67 +26,100 @@ class ProfessorRepositoryImpl(
 
     override suspend fun getProfessorDetailFlow(id: Int): Flow<Professor> = cemedeDataBase.getProfessorDetailFlow(id)
 
-    override suspend fun syncProfessors(): CoroutineResult<Unit> {
+    override suspend fun syncProfessorInfo(professor: Professor): CoroutineResult<Unit> {
+        val professorTabUrl = UrlProvider.professorTabs[professor.name] ?: ""
+        val professorScheduleTabUrl = UrlProvider.professorScheduleTabs[professor.name] ?: ""
+
         val allStudents = mutableListOf<StudentEntity>()
 
-        for ((name, url) in UrlProvider.professorUrls) {
-            when (val result = csvDataSource.getProfessorData(url)) {
-                is CoroutineResult.Success -> {
-                    // TODO: Revisar el mapeo de isWorking, tendríamos que primero consumir la lista de horarios
-                    val professorEntity = ProfessorEntity(name = name, isWorking = true)
-                    val newProfessorId = cemedeDataBase.upsertProfessor(professorEntity)
-                    val students = CsvParser.parseStudents(result.data, newProfessorId.toInt())
-                    allStudents.addAll(students)
-                }
+        when (val professorTabResult = csvDataSource.getProfessorData(professorTabUrl)) {
+            is CoroutineResult.Success -> {
+                // Agrego todos los estudiantes
+                val students = CsvParser.parseStudents(professorTabResult.data, professor.id)
+                allStudents.addAll(students)
+                cemedeDataBase.upsertAllStudents(allStudents)
 
-                is CoroutineResult.Error -> {
-                    return result
+                when (val professorScheduleTabResult = csvDataSource.getProfessorScheduleData(professorScheduleTabUrl)) {
+                    is CoroutineResult.Success -> {
+                        // Obtengo el professor completo de la DB
+                        val professorFromDb = withContext(Dispatchers.IO) { cemedeDataBase.getProfessorDetailFlow(professor.id).first() }
+
+                        // Parseo todos los horarios de cada estudiante
+                        val studentsScheduleWithNames = CsvParser.parseStudentsSchedule(professorScheduleTabResult.data)
+                        val studentsSchedule = mutableMapOf<DayOfWeek, Map<LocalTime, List<Student>>>()
+
+                        studentsScheduleWithNames.forEach { (day, timeMap) ->
+                            val newTimeMap = mutableMapOf<LocalTime, List<Student>>()
+                            timeMap.forEach { (time, studentNames) ->
+                                val students =
+                                    studentNames.mapNotNull { studentName ->
+                                        cemedeDataBase.getStudentByName(studentName)
+                                    }
+                                newTimeMap[time] = students
+                            }
+                            studentsSchedule[day] = newTimeMap
+                        }
+
+                        val professorWithSchedule =
+                            ProfessorEntity(
+                                id = professorFromDb.id,
+                                name = professorFromDb.name,
+                                studentsSchedule = studentsSchedule,
+                                professorWorkingSchedule = professorFromDb.professorWorkingSchedule,
+                            )
+
+                        cemedeDataBase.upsertProfessor(professorWithSchedule)
+                    }
+
+                    is CoroutineResult.Error -> {
+                        return professorScheduleTabResult
+                    }
                 }
             }
-        }
 
-        cemedeDataBase.upsertAllStudents(allStudents)
+            is CoroutineResult.Error -> {
+                return professorTabResult
+            }
+        }
 
         return CoroutineResult.Success(Unit)
     }
 
-    override suspend fun syncProfessorSchedule(professor: Professor): CoroutineResult<Unit> {
-        val url = UrlProvider.professorSchedule[professor.name] ?: ""
+    override suspend fun syncProfessorsWorkingSchedule(): CoroutineResult<Unit> {
+        val url = UrlProvider.professorsWorkingScheduleTab
 
         when (val result = csvDataSource.getProfessorScheduleData(url)) {
             is CoroutineResult.Success -> {
-                val professorFromDb = withContext(Dispatchers.IO) { cemedeDataBase.getProfessorDetail(professor.id) }
-
-                val studentsScheduleWithNames = CsvParser.parseStudentsSchedule(result.data)
-                val studentsSchedule = mutableMapOf<DayOfWeek, Map<LocalTime, List<Student>>>()
-
-                studentsScheduleWithNames.forEach { (day, timeMap) ->
-                    val newTimeMap = mutableMapOf<LocalTime, List<Student>>()
-                    timeMap.forEach { (time, studentNames) ->
-                        val students =
-                            studentNames.mapNotNull { studentName ->
-                                cemedeDataBase.getStudentByName(studentName)
-                            }
-                        newTimeMap[time] = students
+                val schedulesByName = CsvParser.parseProfessorsWorkingSchedule(result.data)
+                val existingProfessors =
+                    withContext(Dispatchers.IO) {
+                        cemedeDataBase.getAllProfessorsFlow().first()
                     }
-                    studentsSchedule[day] = newTimeMap
+
+                schedulesByName.forEach { (name, workingSchedule) ->
+                    val professor = existingProfessors.find { it.name == name }
+                    val professorEntity =
+                        if (professor != null) {
+                            ProfessorEntity(
+                                id = professor.id,
+                                name = name,
+                                studentsSchedule = professor.studentsSchedule,
+                                professorWorkingSchedule = workingSchedule,
+                            )
+                        } else {
+                            ProfessorEntity(
+                                name = name,
+                                professorWorkingSchedule = workingSchedule,
+                            )
+                        }
+                    cemedeDataBase.upsertProfessor(professorEntity)
                 }
-
-                val professorWithSchedule =
-                    ProfessorEntity(
-                        id = professorFromDb.id,
-                        name = professorFromDb.name,
-                        isWorking = professorFromDb.isWorking,
-                        studentsSchedule = studentsSchedule,
-                    )
-
-                cemedeDataBase.upsertProfessor(professorWithSchedule)
+                return CoroutineResult.Success(Unit)
             }
 
             is CoroutineResult.Error -> {
                 return result
             }
         }
-        return CoroutineResult.Success(Unit)
     }
 }
