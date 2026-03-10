@@ -28,12 +28,6 @@ class CemedeDataBaseImpl(
             professorAndStudents.mapToProfessor()
         }
 
-    override suspend fun getProfessorDetail(id: Int): Professor {
-        val professorAndStudents = cemedeDao.getProfessorDetail(id)
-        println("✅ getProfessorDetail from DB, $professorAndStudents , SUCCESS")
-        return professorAndStudents.mapToProfessor()
-    }
-
     override suspend fun getStudentByName(name: String): Student? {
         val student = cemedeDao.getStudentByName(name)
         println("✅ getStudentByName from DB, $student , SUCCESS")

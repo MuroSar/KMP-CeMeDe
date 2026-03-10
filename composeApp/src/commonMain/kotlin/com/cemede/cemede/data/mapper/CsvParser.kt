@@ -92,4 +92,50 @@ object CsvParser {
         }
         return studentsSchedule
     }
+
+    /**
+     * Parses a CSV string representing the professors' working schedule.
+     * Returns a map of Professor Name to their working schedule (Day -> List of Times).
+     */
+    fun parseProfessorsWorkingSchedule(csvData: String): Map<String, Map<DayOfWeek, List<LocalTime>>> {
+        val lines = csvData.lines().filter { it.isNotBlank() }
+        if (lines.isEmpty()) return emptyMap()
+
+        val header = lines.first().split(',')
+        val dayHeaders = header.subList(1, 6)
+        val days = dayHeaders.map { DayOfWeek.fromDisplayName(it.trim()) }
+
+        val professorWorkingSchedules = mutableMapOf<String, MutableMap<DayOfWeek, MutableList<LocalTime>>>()
+
+        lines.drop(1).forEach { line ->
+            val columns = line.split(',')
+            val timeLabel = columns.firstOrNull()?.trim() ?: return@forEach
+            val time = DateTimeHandler.parseTime(
+                timeLabel
+                    .replace("a. m.", "AM")
+                    .replace("p. m.", "PM")
+            )
+
+            days.forEachIndexed { index, day ->
+                if (day == null) return@forEachIndexed
+                val cellContent = columns.getOrNull(index + 1)?.trim() ?: ""
+                
+                if (cellContent.isNotBlank() && cellContent != NOT_AN_ANSWER) {
+                    // Professors names in cell can be separated by newline or semicolon. 
+                    // Based on the image, they are on separate lines, so \n is likely.
+                    val professorNames = cellContent
+                        .split("\n", ";")
+                        .map { it.trim() }
+                        .filter { it.isNotBlank() }
+
+                    professorNames.forEach { name ->
+                        val schedule = professorWorkingSchedules.getOrPut(name) { mutableMapOf() }
+                        val times = schedule.getOrPut(day) { mutableListOf() }
+                        times.add(time)
+                    }
+                }
+            }
+        }
+        return professorWorkingSchedules
+    }
 }

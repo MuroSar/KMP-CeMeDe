@@ -30,6 +30,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -73,10 +74,15 @@ import com.cemede.cemede.presentation.theme.size_40
 import com.cemede.cemede.presentation.theme.size_8
 import com.cemede.cemede.presentation.theme.space_16
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen(onNavigateToProfessorList: () -> Unit) {
+fun MainScreen(
+    onNavigateToProfessorList: () -> Unit,
+    viewModel: MainViewModel = koinViewModel(),
+) {
+    val state by viewModel.state.collectAsState()
     var showConstructionBanner by remember { mutableStateOf(false) }
 
     CemedeTheme {
@@ -119,6 +125,7 @@ fun MainScreen(onNavigateToProfessorList: () -> Unit) {
                     }
                     item {
                         DailySummary(
+                            state = state,
                             onShowConstructionBanner = { showConstructionBanner = true },
                         )
                     }
@@ -188,7 +195,10 @@ private fun ActionButtonsGrid(
 }
 
 @Composable
-private fun DailySummary(onShowConstructionBanner: () -> Unit) {
+private fun DailySummary(
+    state: MainState,
+    onShowConstructionBanner: () -> Unit,
+) {
     Column {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -217,45 +227,53 @@ private fun DailySummary(onShowConstructionBanner: () -> Unit) {
             }
         }
         Spacer(modifier = Modifier.padding(vertical = padding_8))
-        Card(
-            modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(size_16),
-            elevation = CardDefaults.cardElevation(defaultElevation = elevation_2),
-        ) {
-            Row(
-                modifier = Modifier.padding(padding_16),
-                verticalAlignment = Alignment.CenterVertically,
+
+        if (state.error != null) {
+            Text(
+                text = state.error,
+                color = MaterialTheme.colorScheme.error,
+            )
+        } else {
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(size_16),
+                elevation = CardDefaults.cardElevation(defaultElevation = elevation_2),
             ) {
-                Box(
-                    modifier =
-                        Modifier
-                            .size(size_40)
-                            .background(
-                                MaterialTheme.colorScheme.primary.copy(alpha = ALPHA_0_1),
-                                CircleShape,
-                            ),
-                    contentAlignment = Alignment.Center,
+                Row(
+                    modifier = Modifier.padding(padding_16),
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    Icon(
-                        imageVector = Icons.Default.CalendarToday,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.size(size_24),
-                    )
-                }
-                Spacer(modifier = Modifier.padding(horizontal = padding_8))
-                Column {
-                    Text(
-                        text = "12 Sesiones hoy",
-                        style = MaterialTheme.typography.bodyLarge,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onSurface,
-                    )
-                    Text(
-                        text = "Próxima: 10:30 AM",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = ALPHA_0_6),
-                    )
+                    Box(
+                        modifier =
+                            Modifier
+                                .size(size_40)
+                                .background(
+                                    MaterialTheme.colorScheme.primary.copy(alpha = ALPHA_0_1),
+                                    CircleShape,
+                                ),
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.CalendarToday,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.size(size_24),
+                        )
+                    }
+                    Spacer(modifier = Modifier.padding(horizontal = padding_8))
+                    Column {
+                        Text(
+                            text = "12 Sesiones hoy",
+                            style = MaterialTheme.typography.bodyLarge,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.onSurface,
+                        )
+                        Text(
+                            text = "Próxima: 10:30 AM",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = ALPHA_0_6),
+                        )
+                    }
                 }
             }
         }

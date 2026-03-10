@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "a291529e4ba1bbd1fd7ad18801539957",
+    "identityHash": "6076d6851f538331481f0a01af9188b5",
     "entities": [
       {
         "tableName": "professors",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `isWorking` INTEGER NOT NULL, `studentsSchedule` TEXT NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `studentsSchedule` TEXT NOT NULL, `professorWorkingSchedule` TEXT NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -21,14 +21,14 @@
             "notNull": true
           },
           {
-            "fieldPath": "isWorking",
-            "columnName": "isWorking",
-            "affinity": "INTEGER",
+            "fieldPath": "studentsSchedule",
+            "columnName": "studentsSchedule",
+            "affinity": "TEXT",
             "notNull": true
           },
           {
-            "fieldPath": "studentsSchedule",
-            "columnName": "studentsSchedule",
+            "fieldPath": "professorWorkingSchedule",
+            "columnName": "professorWorkingSchedule",
             "affinity": "TEXT",
             "notNull": true
           }
@@ -114,7 +114,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'a291529e4ba1bbd1fd7ad18801539957')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '6076d6851f538331481f0a01af9188b5')"
     ]
   }
 }

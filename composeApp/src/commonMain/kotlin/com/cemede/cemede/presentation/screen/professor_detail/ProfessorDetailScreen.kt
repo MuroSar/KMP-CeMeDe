@@ -349,7 +349,6 @@ private fun ProfessorDetailScreenPreview() {
         Professor(
             id = 1,
             name = "Prof. Macarena",
-            isWorking = true,
             students = students,
             studentsSchedule =
                 mapOf(
@@ -382,7 +381,6 @@ private fun ProfessorDetailScreenNoSchedulePreview() {
         Professor(
             id = 1,
             name = "Prof. Macarena",
-            isWorking = true,
             students = students,
             studentsSchedule =
                 mapOf(
@@ -415,7 +413,7 @@ private fun ProfessorDetailScreenLoadingPreview() {
 @Preview(showSystemUi = true, name = "No students Preview")
 @Composable
 private fun ProfessorDetailScreenNoStudentsPreview() {
-    val professor = Professor(1, "Prof. Macarena", true, students = emptyList())
+    val professor = Professor(1, "Prof. Macarena", students = emptyList())
 
     ProfessorDetailContent(
         state = ProfessorDetailState(professor = professor, isLoading = false),
