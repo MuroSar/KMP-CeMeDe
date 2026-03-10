@@ -7,6 +7,7 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
+import kotlinx.datetime.format.Padding
 import kotlinx.datetime.format.char
 
 object DateTimeHandler {
@@ -32,7 +33,7 @@ object DateTimeHandler {
     fun parseTime(timeLabel: String): LocalTime =
         try {
             val customFormat = LocalTime.Format {
-                amPmHour() // Maneja automáticamente 1 o 2 dígitos (7 o 12)
+                amPmHour(padding = Padding.NONE) // Maneja automáticamente 1 o 2 dígitos (7 o 12)
                 char(':')
                 minute()
                 char(':')

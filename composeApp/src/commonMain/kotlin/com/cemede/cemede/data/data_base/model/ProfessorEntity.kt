@@ -14,6 +14,6 @@ import kotlinx.datetime.LocalTime
 data class ProfessorEntity(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val name: String,
-    val isWorking: Boolean,
     val studentsSchedule: Map<DayOfWeek, Map<LocalTime, List<Student>>> = emptyMap(),
+    val professorWorkingSchedule: Map<DayOfWeek, List<LocalTime>> = emptyMap(),
 )

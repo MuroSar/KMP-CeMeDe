@@ -25,10 +25,6 @@ interface CemedeDao {
     @Query("SELECT * FROM professors WHERE id = :id")
     fun getProfessorDetailFlow(id: Int): Flow<ProfessorAndStudents>
 
-    @Transaction
-    @Query("SELECT * FROM professors WHERE id = :id")
-    suspend fun getProfessorDetail(id: Int): ProfessorAndStudents
-
     @Query("SELECT * FROM students WHERE name = :name LIMIT 1")
     suspend fun getStudentByName(name: String): StudentEntity?
 }
