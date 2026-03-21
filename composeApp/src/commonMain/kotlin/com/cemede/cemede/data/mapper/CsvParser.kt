@@ -6,6 +6,7 @@ import com.cemede.cemede.domain.util.DateTimeHandler
 import kotlinx.datetime.LocalTime
 
 object CsvParser {
+    private const val PROFESSOR_TAB_ROW_STARTS: Int = 1
     private const val STUDENTS_ROW_STARTS: Int = 1
     private const val STUDENTS_SCHEDULE_ROW_STARTS: Int = 1
     private const val NOT_AN_ANSWER: String = "#N/A"
@@ -14,7 +15,7 @@ object CsvParser {
         csvData: String,
         professorId: Int,
     ): List<StudentEntity> {
-        val lines = csvData.lines()
+        val lines = csvData.lines().drop(PROFESSOR_TAB_ROW_STARTS)
         val studentNameListIndex = lines.first().split(',').indexOfFirst { it.equals("Listado de alumnos", ignoreCase = true) }
         val processTypeListIndex = lines.first().split(',').indexOfFirst { it.equals("Tipo de proceso", ignoreCase = true) }
 
