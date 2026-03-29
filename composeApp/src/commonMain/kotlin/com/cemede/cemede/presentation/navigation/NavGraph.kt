@@ -4,10 +4,11 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
-import com.cemede.cemede.domain.model.Professor
+import com.cemede.cemede.domain.model.StaffMember
 import com.cemede.cemede.presentation.screen.main.MainScreen
-import com.cemede.cemede.presentation.screen.professor_detail.ProfessorDetailScreen
-import com.cemede.cemede.presentation.screen.professor_list.ProfessorListScreen
+import com.cemede.cemede.presentation.screen.partner_list.PartnerListScreen
+import com.cemede.cemede.presentation.screen.staff_member_detail.StaffMemberDetailScreen
+import com.cemede.cemede.presentation.screen.staff_member_list.StaffMemberListScreen
 import com.cemede.cemede.presentation.screen.splash.SplashScreen
 
 fun NavGraphBuilder.addCeMeDeScreenGraph(navController: NavController) {
@@ -25,31 +26,40 @@ fun NavGraphBuilder.addCeMeDeScreenGraph(navController: NavController) {
         )
     }
     composable<NavRoutes.Main> {
-        MainScreen(onNavigateToProfessorList = { navController.navigate(NavRoutes.ProfessorList) })
+        MainScreen(
+            onNavigateToStaffMemberList = { navController.navigate(NavRoutes.StaffMemberList) },
+            onNavigateToPartnerList = { navController.navigate(NavRoutes.PartnerList) }
+        )
     }
-    composable<NavRoutes.ProfessorList> {
-        ProfessorListScreen(
+    composable<NavRoutes.StaffMemberList> {
+        StaffMemberListScreen(
             onNavigateBack = { navController.popBackStack() },
-            onNavigateToProfessorDetail = { professor ->
+            onNavigateToStaffMemberDetail = { staffMember ->
                 navController.navigate(
-                    NavRoutes.ProfessorDetail(
-                        professorId = professor.id,
-                        professorName = professor.name,
+                    NavRoutes.StaffMemberDetail(
+                        staffMemberId = staffMember.id,
+                        staffMemberName = staffMember.name,
                     ),
                 )
             },
         )
     }
-    composable<NavRoutes.ProfessorDetail> { backStackEntry ->
-        val professorDetail: NavRoutes.ProfessorDetail = backStackEntry.toRoute()
-        ProfessorDetailScreen(
-            professor =
-                Professor(
-                    id = professorDetail.professorId,
-                    name = professorDetail.professorName,
+    composable<NavRoutes.StaffMemberDetail> { backStackEntry ->
+        val staffMemberDetail: NavRoutes.StaffMemberDetail = backStackEntry.toRoute()
+        StaffMemberDetailScreen(
+            staffMember =
+                StaffMember(
+                    id = staffMemberDetail.staffMemberId,
+                    name = staffMemberDetail.staffMemberName,
                 ),
             onNavigateBack = { navController.popBackStack() },
-            onNavigateToStudentDetail = { },
+            onNavigateToPartnerDetail = { },
+        )
+    }
+    composable<NavRoutes.PartnerList> {
+        PartnerListScreen(
+            onNavigateToPartnerDetail = { partner -> },
+            onNavigateBack = { navController.popBackStack() }
         )
     }
 }

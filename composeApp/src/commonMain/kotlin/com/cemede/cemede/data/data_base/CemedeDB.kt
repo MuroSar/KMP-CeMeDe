@@ -7,13 +7,13 @@ import androidx.room.RoomDatabaseConstructor
 import androidx.room.TypeConverters
 import com.cemede.cemede.data.data_base.converter.NestedMapConverter
 import com.cemede.cemede.data.data_base.dao.CemedeDao
-import com.cemede.cemede.data.data_base.model.ProfessorEntity
-import com.cemede.cemede.data.data_base.model.StudentEntity
+import com.cemede.cemede.data.data_base.model.StaffMemberEntity
+import com.cemede.cemede.data.data_base.model.PartnerEntity
 
 @Database(
     entities = [
-        ProfessorEntity::class,
-        StudentEntity::class,
+        StaffMemberEntity::class,
+        PartnerEntity::class,
     ],
     version = 1,
 )

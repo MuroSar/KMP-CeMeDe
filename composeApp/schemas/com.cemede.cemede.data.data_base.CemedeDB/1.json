@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "6076d6851f538331481f0a01af9188b5",
+    "identityHash": "7c27dcd832406e50de6797d104872d20",
     "entities": [
       {
-        "tableName": "professors",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `studentsSchedule` TEXT NOT NULL, `professorWorkingSchedule` TEXT NOT NULL)",
+        "tableName": "staff_members",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `partnersSchedule` TEXT NOT NULL, `staffMemberWorkingSchedule` TEXT NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -21,14 +21,14 @@
             "notNull": true
           },
           {
-            "fieldPath": "studentsSchedule",
-            "columnName": "studentsSchedule",
+            "fieldPath": "partnersSchedule",
+            "columnName": "partnersSchedule",
             "affinity": "TEXT",
             "notNull": true
           },
           {
-            "fieldPath": "professorWorkingSchedule",
-            "columnName": "professorWorkingSchedule",
+            "fieldPath": "staffMemberWorkingSchedule",
+            "columnName": "staffMemberWorkingSchedule",
             "affinity": "TEXT",
             "notNull": true
           }
@@ -41,19 +41,19 @@
         },
         "indices": [
           {
-            "name": "index_professors_name",
+            "name": "index_staff_members_name",
             "unique": true,
             "columnNames": [
               "name"
             ],
             "orders": [],
-            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_professors_name` ON `${TABLE_NAME}` (`name`)"
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_staff_members_name` ON `${TABLE_NAME}` (`name`)"
           }
         ]
       },
       {
-        "tableName": "students",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `processType` TEXT NOT NULL, `professorId` INTEGER NOT NULL, FOREIGN KEY(`professorId`) REFERENCES `professors`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "tableName": "partners",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `processType` TEXT NOT NULL, `staffMemberId` INTEGER NOT NULL, FOREIGN KEY(`staffMemberId`) REFERENCES `staff_members`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -74,8 +74,8 @@
             "notNull": true
           },
           {
-            "fieldPath": "professorId",
-            "columnName": "professorId",
+            "fieldPath": "staffMemberId",
+            "columnName": "staffMemberId",
             "affinity": "INTEGER",
             "notNull": true
           }
@@ -88,22 +88,22 @@
         },
         "indices": [
           {
-            "name": "index_students_name",
+            "name": "index_partners_name",
             "unique": true,
             "columnNames": [
               "name"
             ],
             "orders": [],
-            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_students_name` ON `${TABLE_NAME}` (`name`)"
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_partners_name` ON `${TABLE_NAME}` (`name`)"
           }
         ],
         "foreignKeys": [
           {
-            "table": "professors",
+            "table": "staff_members",
             "onDelete": "CASCADE",
             "onUpdate": "NO ACTION",
             "columns": [
-              "professorId"
+              "staffMemberId"
             ],
             "referencedColumns": [
               "id"
@@ -114,7 +114,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '6076d6851f538331481f0a01af9188b5')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '7c27dcd832406e50de6797d104872d20')"
     ]
   }
 }

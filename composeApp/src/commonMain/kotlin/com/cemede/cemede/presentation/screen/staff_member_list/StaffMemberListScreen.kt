@@ -1,4 +1,4 @@
-package com.cemede.cemede.presentation.screen.professor_list
+package com.cemede.cemede.presentation.screen.staff_member_list
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -28,12 +28,12 @@ import cemede.composeapp.generated.resources.Res
 import cemede.composeapp.generated.resources.back
 import cemede.composeapp.generated.resources.clear_search
 import cemede.composeapp.generated.resources.empty_state_subtitle
-import cemede.composeapp.generated.resources.professor_list_screen_empty_state_title
-import cemede.composeapp.generated.resources.professor_list_screen_header_title
-import cemede.composeapp.generated.resources.professor_list_screen_loading
-import cemede.composeapp.generated.resources.professor_list_screen_search_bar
+import cemede.composeapp.generated.resources.staff_member_list_screen_empty_state_title
+import cemede.composeapp.generated.resources.staff_member_list_screen_header_title
+import cemede.composeapp.generated.resources.staff_member_list_screen_loading
+import cemede.composeapp.generated.resources.staff_member_list_screen_search_bar
 import cemede.composeapp.generated.resources.synchronizing_data
-import com.cemede.cemede.domain.model.Professor
+import com.cemede.cemede.domain.model.StaffMember
 import com.cemede.cemede.presentation.component.CemedeBanner
 import com.cemede.cemede.presentation.component.CemedeCard
 import com.cemede.cemede.presentation.component.CemedeEmptyState
@@ -47,28 +47,28 @@ import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
 @Composable
-fun ProfessorListScreen(
+fun StaffMemberListScreen(
     onNavigateBack: () -> Unit,
-    onNavigateToProfessorDetail: (Professor) -> Unit,
-    viewModel: ProfessorListViewModel = koinInject(),
+    onNavigateToStaffMemberDetail: (StaffMember) -> Unit,
+    viewModel: StaffMemberListViewModel = koinInject(),
 ) {
     val state by viewModel.state.collectAsState()
 
-    ProfessorListContent(
+    StaffMemberListContent(
         isLoading = state.isLoading,
-        professors = state.professors,
+        staffMembers = state.staffMembers,
         onNavigateBack = onNavigateBack,
-        onNavigateToProfessorDetail = onNavigateToProfessorDetail,
+        onNavigateToStaffMemberDetail = onNavigateToStaffMemberDetail,
     )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProfessorListContent(
+fun StaffMemberListContent(
     isLoading: Boolean,
-    professors: List<Professor>,
+    staffMembers: List<StaffMember>,
     onNavigateBack: () -> Unit,
-    onNavigateToProfessorDetail: (Professor) -> Unit,
+    onNavigateToStaffMemberDetail: (StaffMember) -> Unit,
 ) {
     var searchQuery by remember { mutableStateOf("") }
     var showConstructionBanner by remember { mutableStateOf(false) }
@@ -76,7 +76,7 @@ fun ProfessorListContent(
     CemedeTheme {
         Scaffold(
             topBar = {
-                ProfessorListTopAppBar(
+                StaffMemberListTopAppBar(
                     onNavigateBack = onNavigateBack,
                     searchQuery = searchQuery,
                     onSearchQueryChange = { searchQuery = it },
@@ -88,27 +88,27 @@ fun ProfessorListContent(
                 if (isLoading) {
                     CemedeLoader(
                         title = stringResource(Res.string.synchronizing_data),
-                        subtitle = stringResource(Res.string.professor_list_screen_loading),
+                        subtitle = stringResource(Res.string.staff_member_list_screen_loading),
                     )
                 } else {
-                    val filteredProfessors =
-                        professors.filter { prof ->
+                    val filteredStaffMembers =
+                        staffMembers.filter { prof ->
                             prof.name.contains(searchQuery, ignoreCase = true)
                         }
 
-                    if (filteredProfessors.isEmpty() && searchQuery.isNotEmpty()) {
+                    if (filteredStaffMembers.isEmpty() && searchQuery.isNotEmpty()) {
                         CemedeEmptyState.EmptyState(
-                            title = stringResource(Res.string.professor_list_screen_empty_state_title),
+                            title = stringResource(Res.string.staff_member_list_screen_empty_state_title),
                             subtitle = stringResource(Res.string.empty_state_subtitle),
                             actionText = stringResource(Res.string.clear_search),
                             onActionClick = { searchQuery = "" },
                         )
                     } else {
                         LazyColumn(modifier = Modifier.padding(horizontal = padding_16)) {
-                            items(filteredProfessors) { professor ->
-                                CemedeCard.ProfessorCard(
-                                    professor = professor,
-                                    onCardClick = { onNavigateToProfessorDetail(professor) },
+                            items(filteredStaffMembers) { staffMember ->
+                                CemedeCard.StaffMemberCard(
+                                    staffMember = staffMember,
+                                    onCardClick = { onNavigateToStaffMemberDetail(staffMember) },
                                     onCallButtonClick = { showConstructionBanner = true },
                                     onMessageButtonClick = { showConstructionBanner = true },
                                     onScheduleButtonClick = { showConstructionBanner = true },
@@ -133,7 +133,7 @@ fun ProfessorListContent(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun ProfessorListTopAppBar(
+private fun StaffMemberListTopAppBar(
     onNavigateBack: () -> Unit,
     searchQuery: String,
     onSearchQueryChange: (String) -> Unit,
@@ -141,7 +141,7 @@ private fun ProfessorListTopAppBar(
 ) {
     Column {
         CemedeTopAppBar.TopAppBar(
-            title = stringResource(Res.string.professor_list_screen_header_title),
+            title = stringResource(Res.string.staff_member_list_screen_header_title),
             navigationIcon = {
                 IconButton(onClick = onNavigateBack) {
                     Icon(
@@ -154,7 +154,7 @@ private fun ProfessorListTopAppBar(
 
         CemedeSearchBar.SearchBar(
             modifier = Modifier.padding(horizontal = padding_16, vertical = padding_8),
-            placeholder = stringResource(Res.string.professor_list_screen_search_bar),
+            placeholder = stringResource(Res.string.staff_member_list_screen_search_bar),
             searchQuery = searchQuery,
             onSearchQueryChange = onSearchQueryChange,
             enabled = searchBarEnabled,
@@ -164,45 +164,18 @@ private fun ProfessorListTopAppBar(
 
 @Preview(showSystemUi = true, name = "Default Preview")
 @Composable
-private fun ProfessorListScreenPreview() {
-    val sampleProfessors =
+private fun StaffMemberListScreenPreview() {
+    val sampleStaffMembers =
         listOf(
-            Professor(1, "Macarena"),
-            Professor(2, "Tomas"),
-            Professor(3, "Gonzalo"),
-            Professor(4, "Santiago"),
+            StaffMember(1, "Macarena"),
+            StaffMember(2, "Tomas"),
+            StaffMember(3, "Gonzalo"),
+            StaffMember(4, "Santiago"),
         )
-    ProfessorListContent(
+    StaffMemberListContent(
         isLoading = false,
-        professors = sampleProfessors,
+        staffMembers = sampleStaffMembers,
         onNavigateBack = {},
-        onNavigateToProfessorDetail = {},
-    )
-}
-
-@Preview(showSystemUi = true, name = "Loading Preview")
-@Composable
-private fun ProfessorListScreenLoadingPreview() {
-    ProfessorListContent(
-        isLoading = true,
-        professors = emptyList(),
-        onNavigateBack = {},
-        onNavigateToProfessorDetail = {},
-    )
-}
-
-@Preview(showSystemUi = true, name = "Empty Search Preview")
-@Composable
-private fun ProfessorListScreenEmptySearchPreview() {
-    val sampleProfessors =
-        listOf(
-            Professor(1, "Macarena"),
-            Professor(2, "Tomas"),
-        )
-    ProfessorListContent(
-        isLoading = false,
-        professors = sampleProfessors,
-        onNavigateBack = {},
-        onNavigateToProfessorDetail = {},
+        onNavigateToStaffMemberDetail = {},
     )
 }

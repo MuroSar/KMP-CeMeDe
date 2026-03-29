@@ -2,29 +2,26 @@ package com.cemede.cemede.presentation.screen.splash
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.cemede.cemede.domain.model.Professor
-import com.cemede.cemede.domain.use_case.SyncProfessorsWorkingScheduleUseCase
+import com.cemede.cemede.domain.use_case.SyncStaffMembersWorkingScheduleUseCase
 import com.cemede.cemede.domain.util.CoroutineResult
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 class SplashViewModel(
-    private val syncProfessorsWorkingScheduleUseCase: SyncProfessorsWorkingScheduleUseCase,
+    private val syncStaffMembersWorkingScheduleUseCase: SyncStaffMembersWorkingScheduleUseCase,
 ) : ViewModel() {
     private val _state = MutableStateFlow(SplashState())
     val state = _state.asStateFlow()
 
     init {
-        syncProfessorsWorkingSchedule()
+        syncStaffMembersWorkingSchedule()
     }
 
-    private fun syncProfessorsWorkingSchedule() {
+    private fun syncStaffMembersWorkingSchedule() {
         viewModelScope.launch {
             _state.value = _state.value.copy(isLoading = true)
-            when (val result = syncProfessorsWorkingScheduleUseCase()) {
+            when (val result = syncStaffMembersWorkingScheduleUseCase()) {
                 is CoroutineResult.Success -> {
                     _state.value = _state.value.copy(isLoading = false)
                 }

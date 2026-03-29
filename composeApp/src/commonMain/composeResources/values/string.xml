@@ -11,8 +11,8 @@
     <string name="clear_search">Limpiar búsqueda</string>
     <string name="empty_state_subtitle">Intenta con otro nombre o verifica la que esté bien escrito.</string>
     <string name="filter">Filtrar</string>
-    <string name="student">Alumno</string>
-    <string name="students">Alumnos</string>
+    <string name="partner">Socio</string>
+    <string name="partners">Socios</string>
 
     <!--Splash screen-->
     <string name="splash_screen_title_ce">CE.</string>
@@ -40,35 +40,35 @@
     <string name="construction_banner_subtitle">Esta funcionalidad estará disponible próximamente.</string>
     <string name="construction_banner_button">Cerrar</string>
 
-    <!--Professor card-->
-    <string name="professor_card_photo_content_description">Foto de perfil de %1$s</string>
-    <string name="professor_card_name">Prof. %1$s</string>
-    <string name="professor_card_id">ID %1$s</string>
-    <string name="professor_card_action_call">Llamar</string>
-    <string name="professor_card_action_message">Mensaje</string>
-    <string name="professor_card_action_schedule">Horario</string>
+    <!--Staff member card-->
+    <string name="staff_member_card_photo_content_description">Foto de perfil de %1$s</string>
+    <string name="staff_member_card_name">Prof. %1$s</string>
+    <string name="staff_member_card_id">ID %1$s</string>
+    <string name="staff_member_card_action_call">Llamar</string>
+    <string name="staff_member_card_action_message">Mensaje</string>
+    <string name="staff_member_card_action_schedule">Horario</string>
 
-    <!--Professor list screen-->
-    <string name="professor_list_screen_header_title">Staff</string>
-    <string name="professor_list_screen_search_bar">Buscar profesor..</string>
-    <string name="professor_list_screen_loading">Actualizando listado de profes</string>
-    <string name="professor_list_screen_empty_state_title">No se encontraron profesores</string>
+    <!--Staff member list screen-->
+    <string name="staff_member_list_screen_header_title">Staff</string>
+    <string name="staff_member_list_screen_search_bar">Buscar profesor..</string>
+    <string name="staff_member_list_screen_loading">Actualizando listado de profes</string>
+    <string name="staff_member_list_screen_empty_state_title">No se encontraron profesores</string>
 
-    <!--Professor detail screen-->
-    <string name="professor_detail_screen_header_title">Detalle del profesor</string>
-    <string name="professor_detail_screen_search_bar">Buscar alumno..</string>
-    <string name="professor_detail_screen_loading">Cargando detalle del profesor</string>
-    <string name="professor_detail_screen_professor_not_found">No se encontró el profesor.</string>
-    <string name="professor_detail_screen_empty_state_title">No se encontraron alumnos</string>
-    <string name="professor_detail_screen_student_list">Alumnos asignados</string>
-    <string name="professor_detail_screen_daily_schedule">Cronograma Diario</string>
-    <string name="professor_detail_screen_individual_student">%1$s Alumno</string>
-    <string name="professor_detail_screen_multiple_students">%1$s Alumnos</string>
-    <string name="professor_detail_screen_daily_schedule_normal_capacity">Normal</string>
-    <string name="professor_detail_screen_daily_schedule_charged_capacity">Cargado</string>
-    <string name="professor_detail_screen_daily_schedule_overloaded_capacity">Saturado</string>
-    <string name="professor_detail_screen_daily_schedule_empty_state">No hay clases programadas hoy</string>
+    <!--Staff member detail screen-->
+    <string name="staff_member_detail_screen_header_title">Detalle del profesor</string>
+    <string name="staff_member_detail_screen_search_bar">Buscar socio..</string>
+    <string name="staff_member_detail_screen_loading">Cargando detalle del profesor</string>
+    <string name="staff_member_detail_screen_staff_member_not_found">No se encontró el profesor.</string>
+    <string name="staff_member_detail_screen_empty_state_title">No se encontraron socios</string>
+    <string name="staff_member_detail_screen_partner_list">Socios asignados</string>
+    <string name="staff_member_detail_screen_daily_schedule">Cronograma Diario</string>
+    <string name="staff_member_detail_screen_individual_partner">%1$s Socio</string>
+    <string name="staff_member_detail_screen_multiple_partners">%1$s Socios</string>
+    <string name="staff_member_detail_screen_daily_schedule_normal_capacity">Normal</string>
+    <string name="staff_member_detail_screen_daily_schedule_charged_capacity">Cargado</string>
+    <string name="staff_member_detail_screen_daily_schedule_overloaded_capacity">Saturado</string>
+    <string name="staff_member_detail_screen_daily_schedule_empty_state">No hay clases programadas hoy</string>
 
-    <!--Student dialog-->
-    <string name="student_dialog_schedule">Turno %1$s</string>
+    <!--Partner dialog-->
+    <string name="partner_dialog_schedule">Turno %1$s</string>
 </resources>

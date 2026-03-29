@@ -11,11 +11,14 @@ sealed interface NavRoutes {
     data object Main : NavRoutes
 
     @Serializable
-    data object ProfessorList : NavRoutes
+    data object StaffMemberList : NavRoutes
 
     @Serializable
-    data class ProfessorDetail(
-        val professorId: Int,
-        val professorName: String,
+    data object PartnerList : NavRoutes
+
+    @Serializable
+    data class StaffMemberDetail(
+        val staffMemberId: Int,
+        val staffMemberName: String,
     ) : NavRoutes
 }

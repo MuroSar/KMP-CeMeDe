@@ -1,16 +1,16 @@
 package com.cemede.cemede.data
 
 object UrlProvider {
-    val studentsTab =
+    val partnersTab =
         "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ3hvq3Qa5mXc3EusVsf7W4hol8N-73EEi5Obdo6PiqHo-YivlJByelUNfE6YvzWRIaAsNWUzU4X7R_/pub?gid=1094196425&single=true&output=csv"
 
     val protocolsTab =
         "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ3hvq3Qa5mXc3EusVsf7W4hol8N-73EEi5Obdo6PiqHo-YivlJByelUNfE6YvzWRIaAsNWUzU4X7R_/pub?gid=336008188&single=true&output=csv"
 
-    val professorsWorkingScheduleTab =
+    val staffMembersWorkingScheduleTab =
         "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ3hvq3Qa5mXc3EusVsf7W4hol8N-73EEi5Obdo6PiqHo-YivlJByelUNfE6YvzWRIaAsNWUzU4X7R_/pub?gid=2069095849&single=true&output=csv"
 
-    val professorTabs =
+    val staffMemberTabs =
         mapOf(
             "Tomas" to
                 "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ3hvq3Qa5mXc3EusVsf7W4hol8N-73EEi5Obdo6PiqHo-YivlJByelUNfE6YvzWRIaAsNWUzU4X7R_/pub?gid=437089319&single=true&output=csv",
@@ -26,7 +26,7 @@ object UrlProvider {
                 "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ3hvq3Qa5mXc3EusVsf7W4hol8N-73EEi5Obdo6PiqHo-YivlJByelUNfE6YvzWRIaAsNWUzU4X7R_/pub?gid=1161548379&single=true&output=csv",
         )
 
-    val professorScheduleTabs =
+    val staffMemberScheduleTabs =
         mapOf(
             "Tomas" to
                 "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ3hvq3Qa5mXc3EusVsf7W4hol8N-73EEi5Obdo6PiqHo-YivlJByelUNfE6YvzWRIaAsNWUzU4X7R_/pub?gid=244000281&single=true&output=csv",

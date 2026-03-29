@@ -46,20 +46,20 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import cemede.composeapp.generated.resources.Res
 import cemede.composeapp.generated.resources.cemede_logo
-import cemede.composeapp.generated.resources.professor_card_action_call
-import cemede.composeapp.generated.resources.professor_card_action_message
-import cemede.composeapp.generated.resources.professor_card_action_schedule
-import cemede.composeapp.generated.resources.professor_card_id
-import cemede.composeapp.generated.resources.professor_card_name
-import cemede.composeapp.generated.resources.professor_card_photo_content_description
-import cemede.composeapp.generated.resources.professor_detail_screen_daily_schedule_charged_capacity
-import cemede.composeapp.generated.resources.professor_detail_screen_daily_schedule_normal_capacity
-import cemede.composeapp.generated.resources.professor_detail_screen_daily_schedule_overloaded_capacity
-import cemede.composeapp.generated.resources.professor_detail_screen_individual_student
-import cemede.composeapp.generated.resources.professor_detail_screen_multiple_students
+import cemede.composeapp.generated.resources.staff_member_card_action_call
+import cemede.composeapp.generated.resources.staff_member_card_action_message
+import cemede.composeapp.generated.resources.staff_member_card_action_schedule
+import cemede.composeapp.generated.resources.staff_member_card_id
+import cemede.composeapp.generated.resources.staff_member_card_name
+import cemede.composeapp.generated.resources.staff_member_card_photo_content_description
+import cemede.composeapp.generated.resources.staff_member_detail_screen_daily_schedule_charged_capacity
+import cemede.composeapp.generated.resources.staff_member_detail_screen_daily_schedule_normal_capacity
+import cemede.composeapp.generated.resources.staff_member_detail_screen_daily_schedule_overloaded_capacity
+import cemede.composeapp.generated.resources.staff_member_detail_screen_individual_partner
+import cemede.composeapp.generated.resources.staff_member_detail_screen_multiple_partners
 import com.cemede.cemede.domain.model.DayOfWeek
-import com.cemede.cemede.domain.model.Professor
-import com.cemede.cemede.domain.model.Student
+import com.cemede.cemede.domain.model.StaffMember
+import com.cemede.cemede.domain.model.Partner
 import com.cemede.cemede.domain.util.DateTimeHandler
 import com.cemede.cemede.presentation.theme.ALPHA_0_2
 import com.cemede.cemede.presentation.theme.ALPHA_0_5
@@ -100,9 +100,9 @@ import org.jetbrains.compose.resources.stringResource
 
 object CemedeCard {
     @Composable
-    fun ProfessorCard(
+    fun StaffMemberCard(
         modifier: Modifier = Modifier,
-        professor: Professor,
+        staffMember: StaffMember,
         onCardClick: () -> Unit,
         onCallButtonClick: () -> Unit,
         onMessageButtonClick: () -> Unit,
@@ -111,7 +111,7 @@ object CemedeCard {
         val now = DateTimeHandler.getCurrentDateTimeInfo()
         val today = DayOfWeek.valueOf(now.dayOfWeek.name)
 
-        val isWorkingInThisMoment = professor.professorWorkingSchedule[today]?.contains(now.time)
+        val isWorkingInThisMoment = staffMember.staffMemberWorkingSchedule[today]?.contains(now.time)
 
         Card(
             onClick = onCardClick,
@@ -127,7 +127,7 @@ object CemedeCard {
                     Box {
                         Image(
                             painter = painterResource(Res.drawable.cemede_logo),
-                            contentDescription = stringResource(Res.string.professor_card_photo_content_description, professor.name),
+                            contentDescription = stringResource(Res.string.staff_member_card_photo_content_description, staffMember.name),
                             modifier =
                                 Modifier
                                     .size(size_56)
@@ -156,12 +156,12 @@ object CemedeCard {
                     Spacer(modifier = Modifier.padding(horizontal = padding_8))
                     Column {
                         Text(
-                            text = stringResource(Res.string.professor_card_name, professor.name),
+                            text = stringResource(Res.string.staff_member_card_name, staffMember.name),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold,
                         )
                         Text(
-                            text = stringResource(Res.string.professor_card_id, professor.id),
+                            text = stringResource(Res.string.staff_member_card_id, staffMember.id),
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurface.copy(alpha = ALPHA_0_7),
                         )
@@ -177,7 +177,7 @@ object CemedeCard {
                         )
                         Spacer(modifier = Modifier.padding(horizontal = padding_2))
                         Text(
-                            text = stringResource(Res.string.professor_card_action_call),
+                            text = stringResource(Res.string.staff_member_card_action_call),
                             style = MaterialTheme.typography.bodySmall,
                         )
                     }
@@ -195,7 +195,7 @@ object CemedeCard {
                         )
                         Spacer(modifier = Modifier.padding(horizontal = padding_2))
                         Text(
-                            text = stringResource(Res.string.professor_card_action_message),
+                            text = stringResource(Res.string.staff_member_card_action_message),
                             style = MaterialTheme.typography.bodySmall,
                         )
                     }
@@ -213,7 +213,7 @@ object CemedeCard {
                         )
                         Spacer(modifier = Modifier.padding(horizontal = padding_2))
                         Text(
-                            text = stringResource(Res.string.professor_card_action_schedule),
+                            text = stringResource(Res.string.staff_member_card_action_schedule),
                             style = MaterialTheme.typography.bodySmall,
                         )
                     }
@@ -223,16 +223,16 @@ object CemedeCard {
     }
 
     @Composable
-    fun ProfessorDetailCard(
+    fun StaffMemberDetailCard(
         modifier: Modifier = Modifier,
-        professor: Professor,
+        staffMember: StaffMember,
         onCallButtonClick: () -> Unit,
         onMessageButtonClick: () -> Unit,
     ) {
         val now = DateTimeHandler.getCurrentDateTimeInfo()
         val today = DayOfWeek.valueOf(now.dayOfWeek.name)
 
-        val isWorkingInThisMoment = professor.professorWorkingSchedule[today]?.contains(now.time)
+        val isWorkingInThisMoment = staffMember.staffMemberWorkingSchedule[today]?.contains(now.time)
 
         Card(
             shape = RoundedCornerShape(size_0),
@@ -252,7 +252,7 @@ object CemedeCard {
                     Box {
                         Image(
                             painter = painterResource(Res.drawable.cemede_logo), // Placeholder
-                            contentDescription = "Profile picture of ${professor.name}",
+                            contentDescription = "Profile picture of ${staffMember.name}",
                             modifier =
                                 Modifier
                                     .size(size_80)
@@ -285,14 +285,14 @@ object CemedeCard {
 
                     Column(modifier = Modifier.weight(WEIGHT_1)) {
                         Text(
-                            text = stringResource(Res.string.professor_card_name, professor.name),
+                            text = stringResource(Res.string.staff_member_card_name, staffMember.name),
                             style = MaterialTheme.typography.headlineSmall,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.primary,
                         )
                         Text(
                             modifier = Modifier.padding(bottom = padding_12),
-                            text = stringResource(Res.string.professor_card_id, professor.id),
+                            text = stringResource(Res.string.staff_member_card_id, staffMember.id),
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurface.copy(alpha = ALPHA_0_7),
                         )
@@ -310,7 +310,7 @@ object CemedeCard {
                                 )
                                 Spacer(Modifier.width(width_4))
                                 Text(
-                                    text = stringResource(Res.string.professor_card_action_message).uppercase(),
+                                    text = stringResource(Res.string.staff_member_card_action_message).uppercase(),
                                     style = MaterialTheme.typography.labelSmall,
                                 )
                             }
@@ -331,7 +331,7 @@ object CemedeCard {
                                 )
                                 Spacer(Modifier.width(width_4))
                                 Text(
-                                    text = stringResource(Res.string.professor_card_action_call).uppercase(),
+                                    text = stringResource(Res.string.staff_member_card_action_call).uppercase(),
                                     style = MaterialTheme.typography.labelSmall,
                                 )
                             }
@@ -343,14 +343,14 @@ object CemedeCard {
     }
 
     @Composable
-    fun StudentCard(
+    fun PartnerCard(
         modifier: Modifier = Modifier,
-        student: Student,
-        onCardClick: (Student) -> Unit,
+        partner: Partner,
+        onCardClick: (Partner) -> Unit,
     ) {
         Card(
             modifier = modifier.fillMaxWidth(),
-            onClick = { onCardClick(student) },
+            onClick = { onCardClick(partner) },
         ) {
             Row(
                 modifier = Modifier.padding(padding_12),
@@ -359,17 +359,17 @@ object CemedeCard {
             ) {
                 Image(
                     painter = painterResource(Res.drawable.cemede_logo),
-                    contentDescription = "Foto de perfil de ${student.name}",
+                    contentDescription = "Foto de perfil de ${partner.name}",
                     modifier = Modifier.size(size_44).clip(CircleShape),
                 )
                 Column(modifier = Modifier.weight(WEIGHT_1)) {
                     Text(
-                        text = student.name,
+                        text = partner.name,
                         style = MaterialTheme.typography.bodyMedium,
                         fontWeight = FontWeight.Bold,
                     )
                     Text(
-                        text = student.processType,
+                        text = partner.processType,
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.secondary,
                     ) // Mock data
@@ -385,9 +385,9 @@ object CemedeCard {
     @Composable
     fun WeeklyScheduleCard(
         time: LocalTime,
-        students: List<Student>,
+        partners: List<Partner>,
         now: LocalDateTime,
-        onCardClick: (students: List<Student>) -> Unit,
+        onCardClick: (partners: List<Partner>) -> Unit,
     ) {
         val currentHour = now.hour
         val isActive = time.hour == currentHour
@@ -401,7 +401,7 @@ object CemedeCard {
             modifier = Modifier.width(width_110),
             colors = CardDefaults.cardColors(containerColor = backgroundColor),
             elevation = CardDefaults.cardElevation(if (isActive) elevation_4 else elevation_1),
-            onClick = { onCardClick(students) },
+            onClick = { onCardClick(partners) },
         ) {
             Column(
                 modifier = Modifier.padding(padding_12),
@@ -417,17 +417,17 @@ object CemedeCard {
                     horizontalArrangement = Arrangement.spacedBy(space_4),
                 ) {
                     Icon(
-                        imageVector = if (students.size == 1) Icons.Default.Person else Icons.Default.Groups,
+                        imageVector = if (partners.size == 1) Icons.Default.Person else Icons.Default.Groups,
                         contentDescription = null,
                         tint = MaterialTheme.colorScheme.secondary,
                         modifier = Modifier.size(size_16),
                     )
                     Text(
                         text =
-                            if (students.size == 1) {
-                                stringResource(Res.string.professor_detail_screen_individual_student, students.size)
+                            if (partners.size == 1) {
+                                stringResource(Res.string.staff_member_detail_screen_individual_partner, partners.size)
                             } else {
-                                stringResource(Res.string.professor_detail_screen_multiple_students, students.size)
+                                stringResource(Res.string.staff_member_detail_screen_multiple_partners, partners.size)
                             },
                         style = MaterialTheme.typography.labelMedium,
                         fontWeight = FontWeight.Bold,
@@ -437,11 +437,10 @@ object CemedeCard {
                 }
                 Column {
                     LinearProgressIndicator(
-                        // Calcula el progreso de 0.0 a 1.0. El coerceIn evita que se pase de 1f si hay 9 o 10 alumnos.
-                        progress = (students.size / 8f).coerceIn(0f, 1f),
+                        progress = (partners.size / 8f).coerceIn(0f, 1f),
                         modifier = Modifier.fillMaxWidth(),
                         color =
-                            when (students.size) {
+                            when (partners.size) {
                                 in 0..5 -> GreenNormalCapacity
                                 6, 7 -> YellowChargedCapacity
                                 else -> RedOverloadedCapacity
@@ -451,10 +450,10 @@ object CemedeCard {
                     Text(
                         modifier = Modifier.fillMaxWidth(),
                         text =
-                            when (students.size) {
-                                in 0..5 -> stringResource(Res.string.professor_detail_screen_daily_schedule_normal_capacity)
-                                6, 7 -> stringResource(Res.string.professor_detail_screen_daily_schedule_charged_capacity)
-                                else -> stringResource(Res.string.professor_detail_screen_daily_schedule_overloaded_capacity)
+                            when (partners.size) {
+                                in 0..5 -> stringResource(Res.string.staff_member_detail_screen_daily_schedule_normal_capacity)
+                                6, 7 -> stringResource(Res.string.staff_member_detail_screen_daily_schedule_charged_capacity)
+                                else -> stringResource(Res.string.staff_member_detail_screen_daily_schedule_overloaded_capacity)
                             },
                         style = MaterialTheme.typography.labelSmall,
                         color = subContentColor,
@@ -468,11 +467,11 @@ object CemedeCard {
 
 @Preview
 @Composable
-private fun ProfessorCardPreview() {
+private fun StaffMemberCardPreview() {
     CemedeTheme {
-        CemedeCard.ProfessorCard(
-            professor =
-                Professor(
+        CemedeCard.StaffMemberCard(
+            staffMember =
+                StaffMember(
                     id = 4090,
                     name = "Amelia Caldwell",
                 ),
@@ -486,11 +485,11 @@ private fun ProfessorCardPreview() {
 
 @Preview
 @Composable
-private fun ProfessorDetailCardPreview() {
+private fun StaffMemberDetailCardPreview() {
     CemedeTheme {
-        CemedeCard.ProfessorDetailCard(
-            professor =
-                Professor(
+        CemedeCard.StaffMemberDetailCard(
+            staffMember =
+                StaffMember(
                     id = 4090,
                     name = "Amelia Caldwell",
                 ),
@@ -502,11 +501,11 @@ private fun ProfessorDetailCardPreview() {
 
 @Preview
 @Composable
-private fun StudentCardPreview() {
+private fun PartnerCardPreview() {
     CemedeTheme {
-        CemedeCard.StudentCard(
-            student =
-                Student(
+        CemedeCard.PartnerCard(
+            partner =
+                Partner(
                     id = 4090,
                     name = "Amelia Caldwell",
                     processType = "Readaptacion",
@@ -528,18 +527,18 @@ private fun WeeklyScheduleCard() {
             ) {
                 CemedeCard.WeeklyScheduleCard(
                     time = LocalTime(12, 0, 0),
-                    students =
+                    partners =
                         listOf(
-                            Student(id = 1, name = "Juan Pérez", processType = "Readaptacion"),
+                            Partner(id = 1, name = "Juan Pérez", processType = "Readaptacion"),
                         ),
                     now = DateTimeHandler.getCurrentDateTimeInfo(),
                     onCardClick = {},
                 )
                 CemedeCard.WeeklyScheduleCard(
                     time = LocalTime(DateTimeHandler.getCurrentDateTimeInfo().time.hour, 0, 0),
-                    students =
+                    partners =
                         listOf(
-                            Student(id = 1, name = "Juan Pérez", processType = "Readaptacion"),
+                            Partner(id = 1, name = "Juan Pérez", processType = "Readaptacion"),
                         ),
                     now = DateTimeHandler.getCurrentDateTimeInfo(),
                     onCardClick = {},
@@ -550,28 +549,28 @@ private fun WeeklyScheduleCard() {
             ) {
                 CemedeCard.WeeklyScheduleCard(
                     time = LocalTime(12, 0, 0),
-                    students =
+                    partners =
                         listOf(
-                            Student(id = 1, name = "Juan Pérez", processType = "Readaptacion"),
-                            Student(id = 1, name = "Juan Pérez", processType = "Readaptacion"),
-                            Student(id = 1, name = "Juan Pérez", processType = "Readaptacion"),
-                            Student(id = 1, name = "Juan Pérez", processType = "Readaptacion"),
-                            Student(id = 1, name = "Juan Pérez", processType = "Readaptacion"),
-                            Student(id = 1, name = "Juan Pérez", processType = "Readaptacion"),
+                            Partner(id = 1, name = "Juan Pérez", processType = "Readaptacion"),
+                            Partner(id = 1, name = "Juan Pérez", processType = "Readaptacion"),
+                            Partner(id = 1, name = "Juan Pérez", processType = "Readaptacion"),
+                            Partner(id = 1, name = "Juan Pérez", processType = "Readaptacion"),
+                            Partner(id = 1, name = "Juan Pérez", processType = "Readaptacion"),
+                            Partner(id = 1, name = "Juan Pérez", processType = "Readaptacion"),
                         ),
                     now = DateTimeHandler.getCurrentDateTimeInfo(),
                     onCardClick = {},
                 )
                 CemedeCard.WeeklyScheduleCard(
                     time = LocalTime(DateTimeHandler.getCurrentDateTimeInfo().time.hour, 0, 0),
-                    students =
+                    partners =
                         listOf(
-                            Student(id = 1, name = "Juan Pérez", processType = "Readaptacion"),
-                            Student(id = 1, name = "Juan Pérez", processType = "Readaptacion"),
-                            Student(id = 1, name = "Juan Pérez", processType = "Readaptacion"),
-                            Student(id = 1, name = "Juan Pérez", processType = "Readaptacion"),
-                            Student(id = 1, name = "Juan Pérez", processType = "Readaptacion"),
-                            Student(id = 1, name = "Juan Pérez", processType = "Readaptacion"),
+                            Partner(id = 1, name = "Juan Pérez", processType = "Readaptacion"),
+                            Partner(id = 1, name = "Juan Pérez", processType = "Readaptacion"),
+                            Partner(id = 1, name = "Juan Pérez", processType = "Readaptacion"),
+                            Partner(id = 1, name = "Juan Pérez", processType = "Readaptacion"),
+                            Partner(id = 1, name = "Juan Pérez", processType = "Readaptacion"),
+                            Partner(id = 1, name = "Juan Pérez", processType = "Readaptacion"),
                         ),
                     now = DateTimeHandler.getCurrentDateTimeInfo(),
                     onCardClick = {},
@@ -582,34 +581,34 @@ private fun WeeklyScheduleCard() {
             ) {
                 CemedeCard.WeeklyScheduleCard(
                     time = LocalTime(12, 0, 0),
-                    students =
+                    partners =
                         listOf(
-                            Student(id = 1, name = "Juan Pérez", processType = "Readaptacion"),
-                            Student(id = 1, name = "Juan Pérez", processType = "Readaptacion"),
-                            Student(id = 1, name = "Juan Pérez", processType = "Readaptacion"),
-                            Student(id = 1, name = "Juan Pérez", processType = "Readaptacion"),
-                            Student(id = 1, name = "Juan Pérez", processType = "Readaptacion"),
-                            Student(id = 1, name = "Juan Pérez", processType = "Readaptacion"),
-                            Student(id = 1, name = "Juan Pérez", processType = "Readaptacion"),
-                            Student(id = 1, name = "Juan Pérez", processType = "Readaptacion"),
-                            Student(id = 1, name = "Juan Pérez", processType = "Readaptacion"),
+                            Partner(id = 1, name = "Juan Pérez", processType = "Readaptacion"),
+                            Partner(id = 1, name = "Juan Pérez", processType = "Readaptacion"),
+                            Partner(id = 1, name = "Juan Pérez", processType = "Readaptacion"),
+                            Partner(id = 1, name = "Juan Pérez", processType = "Readaptacion"),
+                            Partner(id = 1, name = "Juan Pérez", processType = "Readaptacion"),
+                            Partner(id = 1, name = "Juan Pérez", processType = "Readaptacion"),
+                            Partner(id = 1, name = "Juan Pérez", processType = "Readaptacion"),
+                            Partner(id = 1, name = "Juan Pérez", processType = "Readaptacion"),
+                            Partner(id = 1, name = "Juan Pérez", processType = "Readaptacion"),
                         ),
                     now = DateTimeHandler.getCurrentDateTimeInfo(),
                     onCardClick = {},
                 )
                 CemedeCard.WeeklyScheduleCard(
                     time = LocalTime(DateTimeHandler.getCurrentDateTimeInfo().time.hour, 0, 0),
-                    students =
+                    partners =
                         listOf(
-                            Student(id = 1, name = "Juan Pérez", processType = "Readaptacion"),
-                            Student(id = 1, name = "Juan Pérez", processType = "Readaptacion"),
-                            Student(id = 1, name = "Juan Pérez", processType = "Readaptacion"),
-                            Student(id = 1, name = "Juan Pérez", processType = "Readaptacion"),
-                            Student(id = 1, name = "Juan Pérez", processType = "Readaptacion"),
-                            Student(id = 1, name = "Juan Pérez", processType = "Readaptacion"),
-                            Student(id = 1, name = "Juan Pérez", processType = "Readaptacion"),
-                            Student(id = 1, name = "Juan Pérez", processType = "Readaptacion"),
-                            Student(id = 1, name = "Juan Pérez", processType = "Readaptacion"),
+                            Partner(id = 1, name = "Juan Pérez", processType = "Readaptacion"),
+                            Partner(id = 1, name = "Juan Pérez", processType = "Readaptacion"),
+                            Partner(id = 1, name = "Juan Pérez", processType = "Readaptacion"),
+                            Partner(id = 1, name = "Juan Pérez", processType = "Readaptacion"),
+                            Partner(id = 1, name = "Juan Pérez", processType = "Readaptacion"),
+                            Partner(id = 1, name = "Juan Pérez", processType = "Readaptacion"),
+                            Partner(id = 1, name = "Juan Pérez", processType = "Readaptacion"),
+                            Partner(id = 1, name = "Juan Pérez", processType = "Readaptacion"),
+                            Partner(id = 1, name = "Juan Pérez", processType = "Readaptacion"),
                         ),
                     now = DateTimeHandler.getCurrentDateTimeInfo(),
                     onCardClick = {},
