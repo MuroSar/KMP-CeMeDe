@@ -1,4 +1,4 @@
-package com.cemede.cemede.presentation.screen.professor_detail
+package com.cemede.cemede.presentation.screen.staff_member_detail
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -45,18 +45,18 @@ import cemede.composeapp.generated.resources.back
 import cemede.composeapp.generated.resources.clear_search
 import cemede.composeapp.generated.resources.empty_state_subtitle
 import cemede.composeapp.generated.resources.filter
-import cemede.composeapp.generated.resources.professor_detail_screen_daily_schedule
-import cemede.composeapp.generated.resources.professor_detail_screen_daily_schedule_empty_state
-import cemede.composeapp.generated.resources.professor_detail_screen_empty_state_title
-import cemede.composeapp.generated.resources.professor_detail_screen_header_title
-import cemede.composeapp.generated.resources.professor_detail_screen_loading
-import cemede.composeapp.generated.resources.professor_detail_screen_professor_not_found
-import cemede.composeapp.generated.resources.professor_detail_screen_search_bar
-import cemede.composeapp.generated.resources.professor_detail_screen_student_list
+import cemede.composeapp.generated.resources.staff_member_detail_screen_daily_schedule
+import cemede.composeapp.generated.resources.staff_member_detail_screen_daily_schedule_empty_state
+import cemede.composeapp.generated.resources.staff_member_detail_screen_empty_state_title
+import cemede.composeapp.generated.resources.staff_member_detail_screen_header_title
+import cemede.composeapp.generated.resources.staff_member_detail_screen_loading
+import cemede.composeapp.generated.resources.staff_member_detail_screen_partner_list
+import cemede.composeapp.generated.resources.staff_member_detail_screen_search_bar
+import cemede.composeapp.generated.resources.staff_member_detail_screen_staff_member_not_found
 import cemede.composeapp.generated.resources.synchronizing_data
 import com.cemede.cemede.domain.model.DayOfWeek
-import com.cemede.cemede.domain.model.Professor
-import com.cemede.cemede.domain.model.Student
+import com.cemede.cemede.domain.model.Partner
+import com.cemede.cemede.domain.model.StaffMember
 import com.cemede.cemede.domain.util.DateTimeHandler
 import com.cemede.cemede.presentation.component.CemedeBanner
 import com.cemede.cemede.presentation.component.CemedeCard
@@ -83,37 +83,37 @@ import org.koin.compose.koinInject
 import org.koin.core.parameter.parametersOf
 
 @Composable
-fun ProfessorDetailScreen(
-    professor: Professor,
+fun StaffMemberDetailScreen(
+    staffMember: StaffMember,
     onNavigateBack: () -> Unit,
-    onNavigateToStudentDetail: (Student) -> Unit,
-    viewModel: ProfessorDetailViewModel = koinInject(parameters = { parametersOf(professor) }),
+    onNavigateToPartnerDetail: (Partner) -> Unit,
+    viewModel: StaffMemberDetailViewModel = koinInject(parameters = { parametersOf(staffMember) }),
 ) {
     val state by viewModel.state.collectAsState()
 
-    ProfessorDetailContent(
+    StaffMemberDetailContent(
         state = state,
         onNavigateBack = onNavigateBack,
-        onNavigateToStudentDetail = onNavigateToStudentDetail,
+        onNavigateToPartnerDetail = onNavigateToPartnerDetail,
     )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProfessorDetailContent(
-    state: ProfessorDetailState,
+fun StaffMemberDetailContent(
+    state: StaffMemberDetailState,
     onNavigateBack: () -> Unit,
-    onNavigateToStudentDetail: (Student) -> Unit,
+    onNavigateToPartnerDetail: (Partner) -> Unit,
 ) {
     var showConstructionBanner by remember { mutableStateOf(false) }
-    var selectedSchedule by remember { mutableStateOf<Pair<LocalTime, List<Student>>?>(null) }
+    var selectedSchedule by remember { mutableStateOf<Pair<LocalTime, List<Partner>>?>(null) }
 
     CemedeTheme {
         selectedSchedule?.let {
-            CemedeDialog.StudentListDialog(
+            CemedeDialog.PartnerListDialog(
                 time = it.first,
-                students = it.second,
-                onStudentClicked = { student -> onNavigateToStudentDetail(student) },
+                partners = it.second,
+                onPartnerClicked = { partner -> onNavigateToPartnerDetail(partner) },
                 onDismiss = { selectedSchedule = null },
             )
         }
@@ -121,7 +121,7 @@ fun ProfessorDetailContent(
         Scaffold(
             topBar = {
                 CemedeTopAppBar.TopAppBar(
-                    title = stringResource(Res.string.professor_detail_screen_header_title),
+                    title = stringResource(Res.string.staff_member_detail_screen_header_title),
                     navigationIcon = {
                         IconButton(onClick = onNavigateBack) {
                             Icon(
@@ -137,30 +137,30 @@ fun ProfessorDetailContent(
                 if (state.isLoading) {
                     CemedeLoader(
                         title = stringResource(Res.string.synchronizing_data),
-                        subtitle = stringResource(Res.string.professor_detail_screen_loading),
+                        subtitle = stringResource(Res.string.staff_member_detail_screen_loading),
                     )
-                } else if (state.professor != null) {
+                } else if (state.staffMember != null) {
                     Column(modifier = Modifier.padding(paddingValues)) {
-                        CemedeCard.ProfessorDetailCard(
+                        CemedeCard.StaffMemberDetailCard(
                             modifier = Modifier.fillMaxWidth(),
-                            professor = state.professor,
+                            staffMember = state.staffMember,
                             onCallButtonClick = { showConstructionBanner = true },
                             onMessageButtonClick = { showConstructionBanner = true },
                         )
                         DailySchedule(
-                            studentsSchedule = state.professor.studentsSchedule,
-                            onScheduleClick = { time, students ->
-                                selectedSchedule = time to students
+                            partnersSchedule = state.staffMember.partnersSchedule,
+                            onScheduleClick = { time, partners ->
+                                selectedSchedule = time to partners
                             },
                         )
-                        AssignedStudents(
-                            students = state.professor.students,
-                            onNavigateToStudentDetail = { showConstructionBanner = true },
+                        AssignedPartners(
+                            partners = state.staffMember.partners,
+                            onNavigateToPartnerDetail = { showConstructionBanner = true },
                         )
                     }
                 } else {
                     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                        Text(state.error ?: stringResource(Res.string.professor_detail_screen_professor_not_found))
+                        Text(state.error ?: stringResource(Res.string.staff_member_detail_screen_staff_member_not_found))
                     }
                 }
 
@@ -179,23 +179,20 @@ fun ProfessorDetailContent(
 
 @Composable
 private fun DailySchedule(
-    studentsSchedule: Map<DayOfWeek, Map<LocalTime, List<Student>>>,
-    onScheduleClick: (LocalTime, List<Student>) -> Unit,
+    partnersSchedule: Map<DayOfWeek, Map<LocalTime, List<Partner>>>,
+    onScheduleClick: (LocalTime, List<Partner>) -> Unit,
 ) {
     val now = DateTimeHandler.getCurrentDateTimeInfo()
     val today = DayOfWeek.valueOf(now.dayOfWeek.name)
 
     val scrollState = rememberLazyListState()
 
-    val scheduleForToday = studentsSchedule[today]?.entries?.toList()?.sortedBy { it.key }
+    val scheduleForToday = partnersSchedule[today]?.entries?.toList()?.sortedBy { it.key }
     val upcomingAppointmentIndex =
         scheduleForToday?.indexOfFirst { (time, _) -> time >= now.time } ?: -1
 
-    // Tip: Cambié la key a `upcomingAppointmentIndex`.
-    // Así, si el índice cambia mientras el usuario tiene la app abierta, volverá a animar.
     LaunchedEffect(upcomingAppointmentIndex) {
         if (upcomingAppointmentIndex != -1) {
-            // Llamamos a nuestra nueva función mágica
             scrollState.smoothScrollTo(upcomingAppointmentIndex)
         }
     }
@@ -215,7 +212,7 @@ private fun DailySchedule(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
-                stringResource(Res.string.professor_detail_screen_daily_schedule),
+                stringResource(Res.string.staff_member_detail_screen_daily_schedule),
                 style = MaterialTheme.typography.labelMedium,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.primary,
@@ -228,10 +225,10 @@ private fun DailySchedule(
         }
         Spacer(modifier = Modifier.height(height_16))
 
-        if (studentsSchedule[today].isNullOrEmpty()) {
+        if (partnersSchedule[today].isNullOrEmpty()) {
             Text(
                 modifier = Modifier.fillMaxWidth(),
-                text = stringResource(Res.string.professor_detail_screen_daily_schedule_empty_state),
+                text = stringResource(Res.string.staff_member_detail_screen_daily_schedule_empty_state),
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = ALPHA_0_7),
                 textAlign = TextAlign.Center,
@@ -242,13 +239,13 @@ private fun DailySchedule(
                 contentPadding = PaddingValues(horizontal = padding_16),
                 horizontalArrangement = Arrangement.spacedBy(space_12),
             ) {
-                studentsSchedule[today]?.let {
-                    items(it.entries.toList()) { (time, students) ->
+                partnersSchedule[today]?.let {
+                    items(it.entries.toList()) { (time, partners) ->
                         CemedeCard.WeeklyScheduleCard(
                             time = time,
-                            students = students,
+                            partners = partners,
                             now = now,
-                            onCardClick = { onScheduleClick(time, students) },
+                            onCardClick = { onScheduleClick(time, partners) },
                         )
                     }
                 }
@@ -258,9 +255,9 @@ private fun DailySchedule(
 }
 
 @Composable
-private fun AssignedStudents(
-    students: List<Student>,
-    onNavigateToStudentDetail: (Student) -> Unit,
+private fun AssignedPartners(
+    partners: List<Partner>,
+    onNavigateToPartnerDetail: (Partner) -> Unit,
 ) {
     var searchQuery by remember { mutableStateOf("") }
     var showSearchBar by remember { mutableStateOf(false) }
@@ -272,14 +269,14 @@ private fun AssignedStudents(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
-                text = stringResource(Res.string.professor_detail_screen_student_list),
+                text = stringResource(Res.string.staff_member_detail_screen_partner_list),
                 style = MaterialTheme.typography.labelMedium,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.primary,
             )
             TextButton(
                 onClick = { showSearchBar = !showSearchBar },
-                enabled = students.isNotEmpty(),
+                enabled = partners.isNotEmpty(),
             ) {
                 Icon(
                     imageVector = Icons.Default.FilterList,
@@ -298,35 +295,35 @@ private fun AssignedStudents(
         if (showSearchBar) {
             CemedeSearchBar.SearchBar(
                 modifier = Modifier.padding(vertical = padding_8),
-                placeholder = stringResource(Res.string.professor_detail_screen_search_bar),
+                placeholder = stringResource(Res.string.staff_member_detail_screen_search_bar),
                 searchQuery = searchQuery,
                 onSearchQueryChange = { searchQuery = it },
             )
         }
 
-        if (students.isEmpty()) {
+        if (partners.isEmpty()) {
             CemedeEmptyState.EmptyState(
-                title = stringResource(Res.string.professor_detail_screen_empty_state_title),
+                title = stringResource(Res.string.staff_member_detail_screen_empty_state_title),
             )
         } else {
-            val filteredStudents =
-                students.filter { student ->
-                    student.name.contains(searchQuery, ignoreCase = true)
+            val filteredPartners =
+                partners.filter { partner ->
+                    partner.name.contains(searchQuery, ignoreCase = true)
                 }
 
-            if (filteredStudents.isEmpty() && searchQuery.isNotEmpty()) {
+            if (filteredPartners.isEmpty() && searchQuery.isNotEmpty()) {
                 CemedeEmptyState.EmptyState(
-                    title = stringResource(Res.string.professor_detail_screen_empty_state_title),
+                    title = stringResource(Res.string.staff_member_detail_screen_empty_state_title),
                     subtitle = stringResource(Res.string.empty_state_subtitle),
                     actionText = stringResource(Res.string.clear_search),
                     onActionClick = { searchQuery = "" },
                 )
             } else {
                 LazyColumn {
-                    items(filteredStudents) { student ->
-                        CemedeCard.StudentCard(
-                            student = student,
-                            onCardClick = { onNavigateToStudentDetail(student) },
+                    items(filteredPartners) { partner ->
+                        CemedeCard.PartnerCard(
+                            partner = partner,
+                            onCardClick = { onNavigateToPartnerDetail(partner) },
                         )
                         Spacer(modifier = Modifier.height(height_16))
                     }
@@ -338,86 +335,32 @@ private fun AssignedStudents(
 
 @Preview(showSystemUi = true)
 @Composable
-private fun ProfessorDetailScreenPreview() {
-    val students =
+private fun StaffMemberDetailScreenPreview() {
+    val partners =
         listOf(
-            Student(id = 1, name = "Juan Pérez", processType = "Readaptacion"),
-            Student(id = 2, name = "María García", processType = "Deportivo"),
-            Student(id = 3, name = "Lucas Rodríguez", processType = "Salud"),
+            Partner(id = 1, name = "Juan Pérez", processType = "Readaptacion"),
+            Partner(id = 2, name = "María García", processType = "Deportivo"),
+            Partner(id = 3, name = "Lucas Rodríguez", processType = "Salud"),
         )
-    val professor =
-        Professor(
+    val staffMember =
+        StaffMember(
             id = 1,
             name = "Prof. Macarena",
-            students = students,
-            studentsSchedule =
+            partners = partners,
+            partnersSchedule =
                 mapOf(
-                    DayOfWeek.MONDAY to mapOf(DateTimeHandler.parseTime("12:00:00 PM") to students),
-                    DayOfWeek.TUESDAY to mapOf(DateTimeHandler.parseTime("12:00:00 PM") to students),
-                    DayOfWeek.WEDNESDAY to mapOf(DateTimeHandler.parseTime("12:00:00 PM") to students),
-                    DayOfWeek.THURSDAY to mapOf(DateTimeHandler.parseTime("12:00:00 PM") to students),
-                    DayOfWeek.FRIDAY to mapOf(DateTimeHandler.parseTime("12:00:00 PM") to students),
-                    DayOfWeek.SATURDAY to mapOf(DateTimeHandler.parseTime("21:00:00 PM") to students),
-                    DayOfWeek.SUNDAY to mapOf(DateTimeHandler.parseTime("12:00:00 PM") to students),
+                    DayOfWeek.MONDAY to mapOf(DateTimeHandler.parseTime("12:00:00 PM") to partners),
+                    DayOfWeek.TUESDAY to mapOf(DateTimeHandler.parseTime("12:00:00 PM") to partners),
+                    DayOfWeek.WEDNESDAY to mapOf(DateTimeHandler.parseTime("12:00:00 PM") to partners),
+                    DayOfWeek.THURSDAY to mapOf(DateTimeHandler.parseTime("12:00:00 PM") to partners),
+                    DayOfWeek.FRIDAY to mapOf(DateTimeHandler.parseTime("12:00:00 PM") to partners),
+                    DayOfWeek.SATURDAY to mapOf(DateTimeHandler.parseTime("21:00:00 PM") to partners),
+                    DayOfWeek.SUNDAY to mapOf(DateTimeHandler.parseTime("12:00:00 PM") to partners),
                 ),
         )
-    ProfessorDetailContent(
-        state = ProfessorDetailState(professor = professor, isLoading = false),
+    StaffMemberDetailContent(
+        state = StaffMemberDetailState(staffMember = staffMember, isLoading = false),
         onNavigateBack = {},
-        onNavigateToStudentDetail = {},
-    )
-}
-
-@Preview(showSystemUi = true)
-@Composable
-private fun ProfessorDetailScreenNoSchedulePreview() {
-    val students =
-        listOf(
-            Student(id = 1, name = "Juan Pérez", processType = "Readaptacion"),
-            Student(id = 2, name = "María García", processType = "Deportivo"),
-            Student(id = 3, name = "Lucas Rodríguez", processType = "Salud"),
-        )
-    val professor =
-        Professor(
-            id = 1,
-            name = "Prof. Macarena",
-            students = students,
-            studentsSchedule =
-                mapOf(
-                    DayOfWeek.MONDAY to mapOf(),
-                    DayOfWeek.TUESDAY to mapOf(),
-                    DayOfWeek.WEDNESDAY to mapOf(),
-                    DayOfWeek.THURSDAY to mapOf(),
-                    DayOfWeek.FRIDAY to mapOf(),
-                    DayOfWeek.SATURDAY to mapOf(),
-                    DayOfWeek.SUNDAY to mapOf(),
-                ),
-        )
-    ProfessorDetailContent(
-        state = ProfessorDetailState(professor = professor, isLoading = false),
-        onNavigateBack = {},
-        onNavigateToStudentDetail = {},
-    )
-}
-
-@Preview(showSystemUi = true, name = "Loading Preview")
-@Composable
-private fun ProfessorDetailScreenLoadingPreview() {
-    ProfessorDetailContent(
-        state = ProfessorDetailState(isLoading = true),
-        onNavigateBack = {},
-        onNavigateToStudentDetail = {},
-    )
-}
-
-@Preview(showSystemUi = true, name = "No students Preview")
-@Composable
-private fun ProfessorDetailScreenNoStudentsPreview() {
-    val professor = Professor(1, "Prof. Macarena", students = emptyList())
-
-    ProfessorDetailContent(
-        state = ProfessorDetailState(professor = professor, isLoading = false),
-        onNavigateBack = {},
-        onNavigateToStudentDetail = {},
+        onNavigateToPartnerDetail = {},
     )
 }

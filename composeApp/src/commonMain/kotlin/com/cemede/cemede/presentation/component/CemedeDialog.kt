@@ -31,10 +31,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.window.Dialog
 import cemede.composeapp.generated.resources.Res
 import cemede.composeapp.generated.resources.close
-import cemede.composeapp.generated.resources.student
-import cemede.composeapp.generated.resources.student_dialog_schedule
-import cemede.composeapp.generated.resources.students
-import com.cemede.cemede.domain.model.Student
+import cemede.composeapp.generated.resources.partner
+import cemede.composeapp.generated.resources.partner_dialog_schedule
+import cemede.composeapp.generated.resources.partners
+import com.cemede.cemede.domain.model.Partner
 import com.cemede.cemede.presentation.theme.ALPHA_0_2
 import com.cemede.cemede.presentation.theme.ALPHA_0_7
 import com.cemede.cemede.presentation.theme.CemedeTheme
@@ -53,10 +53,10 @@ import org.jetbrains.compose.resources.stringResource
 
 object CemedeDialog {
     @Composable
-    fun StudentListDialog(
+    fun PartnerListDialog(
         time: LocalTime,
-        students: List<Student>,
-        onStudentClicked: (Student) -> Unit,
+        partners: List<Partner>,
+        onPartnerClicked: (Partner) -> Unit,
         onDismiss: () -> Unit,
     ) {
         Dialog(onDismissRequest = onDismiss) {
@@ -77,13 +77,13 @@ object CemedeDialog {
                         ) {
                             Column {
                                 Text(
-                                    text = stringResource(if (students.size == 1) Res.string.student else Res.string.students),
+                                    text = stringResource(if (partners.size == 1) Res.string.partner else Res.string.partners),
                                     color = MaterialTheme.colorScheme.primary,
                                     fontWeight = FontWeight.Bold,
                                     style = MaterialTheme.typography.titleMedium,
                                 )
                                 Text(
-                                    text = stringResource(Res.string.student_dialog_schedule, time.toString()),
+                                    text = stringResource(Res.string.partner_dialog_schedule, time.toString()),
                                     color = MaterialTheme.colorScheme.onSurface.copy(alpha = ALPHA_0_7),
                                     style = MaterialTheme.typography.bodyMedium,
                                 )
@@ -95,14 +95,14 @@ object CemedeDialog {
                                         .padding(padding_8),
                             ) {
                                 Icon(
-                                    imageVector = if (students.size == 1) Icons.Default.Person else Icons.Default.Groups,
-                                    contentDescription = "Alumnos",
+                                    imageVector = if (partners.size == 1) Icons.Default.Person else Icons.Default.Groups,
+                                    contentDescription = "Socios",
                                     tint = MaterialTheme.colorScheme.secondary,
                                 )
                             }
                         }
 
-                        // Student List
+                        // Partner List
                         LazyColumn(
                             modifier =
                                 Modifier
@@ -111,10 +111,10 @@ object CemedeDialog {
                                     .padding(padding_16),
                             verticalArrangement = Arrangement.spacedBy(space_12),
                         ) {
-                            items(students) { student ->
-                                CemedeCard.StudentCard(
-                                    student = student,
-                                    onCardClick = { student -> onStudentClicked(student) },
+                            items(partners) { partner ->
+                                CemedeCard.PartnerCard(
+                                    partner = partner,
+                                    onCardClick = { p -> onPartnerClicked(p) },
                                 )
                             }
                         }
@@ -146,18 +146,18 @@ object CemedeDialog {
 
 @Preview
 @Composable
-private fun StudentListDialogPreview() {
-    val students =
+private fun PartnerListDialogPreview() {
+    val partners =
         listOf(
-            Student(id = 1, name = "Juan Pérez", processType = "Readaptacion"),
-            Student(id = 2, name = "María García", processType = "Deportivo"),
-            Student(id = 3, name = "Lucas Rodríguez", processType = "Salud"),
+            Partner(id = 1, name = "Juan Pérez", processType = "Readaptacion"),
+            Partner(id = 2, name = "María García", processType = "Deportivo"),
+            Partner(id = 3, name = "Lucas Rodríguez", processType = "Salud"),
         )
     CemedeTheme {
-        CemedeDialog.StudentListDialog(
+        CemedeDialog.PartnerListDialog(
             time = LocalTime(7, 0, 0),
-            students = students,
-            onStudentClicked = {},
+            partners = partners,
+            onPartnerClicked = {},
             onDismiss = {},
         )
     }

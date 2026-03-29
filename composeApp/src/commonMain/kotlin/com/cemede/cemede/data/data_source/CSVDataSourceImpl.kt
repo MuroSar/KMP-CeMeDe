@@ -9,23 +9,23 @@ import io.ktor.client.statement.bodyAsText
 class CSVDataSourceImpl(
     private val httpClient: HttpClient,
 ) : CSVDataSource {
-    override suspend fun getProfessorData(url: String): CoroutineResult<String> =
+    override suspend fun getStaffMemberData(url: String): CoroutineResult<String> =
         try {
             val response = httpClient.get(url)
-            println("✅ getProfessorData from $url, SUCCESS")
+            println("✅ getStaffMemberData from $url, SUCCESS")
             CoroutineResult.Success(response.bodyAsText())
         } catch (e: Exception) {
-            println("❌ getProfessorData from $url, ERROR")
+            println("❌ getStaffMemberData from $url, ERROR")
             CoroutineResult.Error("Error downloading CSV from $url", e)
         }
 
-    override suspend fun getProfessorScheduleData(url: String): CoroutineResult<String> =
+    override suspend fun getStaffMemberScheduleData(url: String): CoroutineResult<String> =
         try {
             val response = httpClient.get(url)
-            println("✅ getProfessorScheduleData from $url, SUCCESS")
+            println("✅ getStaffMemberScheduleData from $url, SUCCESS")
             CoroutineResult.Success(response.bodyAsText())
         } catch (e: Exception) {
-            println("❌ getProfessorScheduleData from $url, ERROR")
+            println("❌ getStaffMemberScheduleData from $url, ERROR")
             CoroutineResult.Error("Error downloading CSV from $url", e)
         }
 }

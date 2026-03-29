@@ -1,19 +1,19 @@
 package com.cemede.cemede.domain.data_base
 
-import com.cemede.cemede.data.data_base.model.ProfessorEntity
-import com.cemede.cemede.data.data_base.model.StudentEntity
-import com.cemede.cemede.domain.model.Professor
-import com.cemede.cemede.domain.model.Student
+import com.cemede.cemede.data.data_base.model.PartnerEntity
+import com.cemede.cemede.data.data_base.model.StaffMemberEntity
+import com.cemede.cemede.domain.model.Partner
+import com.cemede.cemede.domain.model.StaffMember
 import kotlinx.coroutines.flow.Flow
 
 interface CemedeDataBase {
-    suspend fun getAllProfessorsFlow(): Flow<List<Professor>>
+    suspend fun getAllStaffMembersFlow(): Flow<List<StaffMember>>
 
-    suspend fun getProfessorDetailFlow(id: Int): Flow<Professor>
+    suspend fun getStaffMemberDetailFlow(id: Int): Flow<StaffMember>
 
-    suspend fun getStudentByName(name: String): Student?
+    suspend fun getPartnerByName(name: String): Partner?
 
-    suspend fun upsertProfessor(professor: ProfessorEntity): Long
+    suspend fun upsertStaffMember(staffMember: StaffMemberEntity): Long
 
-    suspend fun upsertAllStudents(allStudents: MutableList<StudentEntity>)
+    suspend fun upsertAllPartners(allPartners: List<PartnerEntity>)
 }

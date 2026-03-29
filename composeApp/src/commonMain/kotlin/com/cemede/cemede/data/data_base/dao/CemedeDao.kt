@@ -4,27 +4,27 @@ import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Upsert
-import com.cemede.cemede.data.data_base.model.ProfessorAndStudents
-import com.cemede.cemede.data.data_base.model.ProfessorEntity
-import com.cemede.cemede.data.data_base.model.StudentEntity
+import com.cemede.cemede.data.data_base.model.PartnerEntity
+import com.cemede.cemede.data.data_base.model.StaffMemberAndPartners
+import com.cemede.cemede.data.data_base.model.StaffMemberEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface CemedeDao {
     @Upsert
-    suspend fun upsertProfessor(professors: ProfessorEntity): Long
+    suspend fun upsertStaffMember(staffMembers: StaffMemberEntity): Long
 
     @Upsert
-    suspend fun upsertAllStudents(students: List<StudentEntity>)
+    suspend fun upsertAllPartners(partners: List<PartnerEntity>)
 
     @Transaction
-    @Query("SELECT * FROM professors")
-    fun getAllProfessorsAndStudents(): Flow<List<ProfessorAndStudents>>
+    @Query("SELECT * FROM staff_members")
+    fun getAllStaffMembersAndPartners(): Flow<List<StaffMemberAndPartners>>
 
     @Transaction
-    @Query("SELECT * FROM professors WHERE id = :id")
-    fun getProfessorDetailFlow(id: Int): Flow<ProfessorAndStudents>
+    @Query("SELECT * FROM staff_members WHERE id = :id")
+    fun getStaffMemberDetailFlow(id: Int): Flow<StaffMemberAndPartners>
 
-    @Query("SELECT * FROM students WHERE name = :name LIMIT 1")
-    suspend fun getStudentByName(name: String): StudentEntity?
+    @Query("SELECT * FROM partners WHERE name = :name LIMIT 1")
+    suspend fun getPartnerByName(name: String): PartnerEntity?
 }

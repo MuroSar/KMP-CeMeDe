@@ -79,7 +79,8 @@ import org.koin.compose.viewmodel.koinViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(
-    onNavigateToProfessorList: () -> Unit,
+    onNavigateToStaffMemberList: () -> Unit,
+    onNavigateToPartnerList: () -> Unit,
     viewModel: MainViewModel = koinViewModel(),
 ) {
     val state by viewModel.state.collectAsState()
@@ -119,7 +120,8 @@ fun MainScreen(
                     }
                     item {
                         ActionButtonsGrid(
-                            onNavigateToProfessorList = onNavigateToProfessorList,
+                            onNavigateToStaffMemberList = onNavigateToStaffMemberList,
+                            onNavigateToPartnerList = onNavigateToPartnerList,
                             onShowConstructionBanner = { showConstructionBanner = true },
                         )
                     }
@@ -165,7 +167,8 @@ private fun WelcomeHeader() {
 
 @Composable
 private fun ActionButtonsGrid(
-    onNavigateToProfessorList: () -> Unit,
+    onNavigateToStaffMemberList: () -> Unit,
+    onNavigateToPartnerList: () -> Unit,
     onShowConstructionBanner: () -> Unit,
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(space_16)) {
@@ -175,14 +178,14 @@ private fun ActionButtonsGrid(
                 icon = Icons.Default.SportsSoccer,
                 title = stringResource(Res.string.main_screen_staff_button_title),
                 subtitle = stringResource(Res.string.main_screen_staff_button_subtitle),
-                onClick = onNavigateToProfessorList,
+                onClick = onNavigateToStaffMemberList,
             )
             CemedeButton.ActionButton(
                 modifier = Modifier.weight(WEIGHT_1),
                 icon = Icons.Default.Group,
                 title = stringResource(Res.string.main_screen_member_button_title),
                 subtitle = stringResource(Res.string.main_screen_member_button_subtitle),
-                onClick = onShowConstructionBanner,
+                onClick = onNavigateToPartnerList,
             )
         }
         CemedeButton.FullWidthActionButton(
@@ -283,5 +286,5 @@ private fun DailySummary(
 @Preview(showSystemUi = true)
 @Composable
 private fun MainScreenPreview() {
-    MainScreen(onNavigateToProfessorList = {})
+    MainScreen(onNavigateToStaffMemberList = {}, onNavigateToPartnerList = {})
 }

@@ -3,22 +3,23 @@ package com.cemede.cemede.di
 import com.cemede.cemede.data.data_base.CemedeDB
 import com.cemede.cemede.data.data_base.CemedeDataBaseImpl
 import com.cemede.cemede.data.data_source.CSVDataSourceImpl
-import com.cemede.cemede.data.repository.ProfessorRepositoryImpl
+import com.cemede.cemede.data.repository.StaffMemberRepositoryImpl
 import com.cemede.cemede.domain.data_base.CemedeDataBase
 import com.cemede.cemede.domain.data_source.CSVDataSource
-import com.cemede.cemede.domain.repository.ProfessorRepository
-import com.cemede.cemede.domain.use_case.GetAllProfessorsFlowUseCase
-import com.cemede.cemede.domain.use_case.GetAllProfessorsFlowUseCaseImpl
-import com.cemede.cemede.domain.use_case.GetProfessorDetailFlowUseCase
-import com.cemede.cemede.domain.use_case.GetProfessorDetailFlowUseCaseImpl
-import com.cemede.cemede.domain.use_case.SyncProfessorInfoUseCase
-import com.cemede.cemede.domain.use_case.SyncProfessorInfoUseCaseImpl
-import com.cemede.cemede.domain.use_case.SyncProfessorsWorkingScheduleUseCase
-import com.cemede.cemede.domain.use_case.SyncProfessorsWorkingScheduleUseCaseImpl
+import com.cemede.cemede.domain.repository.StaffMemberRepository
+import com.cemede.cemede.domain.use_case.GetAllStaffMembersFlowUseCase
+import com.cemede.cemede.domain.use_case.GetAllStaffMembersFlowUseCaseImpl
+import com.cemede.cemede.domain.use_case.GetStaffMemberDetailFlowUseCase
+import com.cemede.cemede.domain.use_case.GetStaffMemberDetailFlowUseCaseImpl
+import com.cemede.cemede.domain.use_case.SyncStaffMemberInfoUseCase
+import com.cemede.cemede.domain.use_case.SyncStaffMemberInfoUseCaseImpl
+import com.cemede.cemede.domain.use_case.SyncStaffMembersWorkingScheduleUseCase
+import com.cemede.cemede.domain.use_case.SyncStaffMembersWorkingScheduleUseCaseImpl
 import com.cemede.cemede.presentation.screen.main.MainViewModel
-import com.cemede.cemede.presentation.screen.professor_detail.ProfessorDetailViewModel
-import com.cemede.cemede.presentation.screen.professor_list.ProfessorListViewModel
+import com.cemede.cemede.presentation.screen.partner_list.PartnerListViewModel
 import com.cemede.cemede.presentation.screen.splash.SplashViewModel
+import com.cemede.cemede.presentation.screen.staff_member_detail.StaffMemberDetailViewModel
+import com.cemede.cemede.presentation.screen.staff_member_list.StaffMemberListViewModel
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.plugins.DefaultRequest
@@ -46,21 +47,22 @@ val sharedModule =
         factory { Dispatchers.IO }
         viewModelOf(::SplashViewModel)
         viewModelOf(::MainViewModel)
-        viewModelOf(::ProfessorListViewModel)
-        viewModelOf(::ProfessorDetailViewModel)
+        viewModelOf(::StaffMemberListViewModel)
+        viewModelOf(::StaffMemberDetailViewModel)
+        viewModelOf(::PartnerListViewModel)
     }
 
 val useCaseModule =
     module {
-        singleOf(::GetAllProfessorsFlowUseCaseImpl).bind<GetAllProfessorsFlowUseCase>()
-        singleOf(::GetProfessorDetailFlowUseCaseImpl).bind<GetProfessorDetailFlowUseCase>()
-        singleOf(::SyncProfessorInfoUseCaseImpl).bind<SyncProfessorInfoUseCase>()
-        singleOf(::SyncProfessorsWorkingScheduleUseCaseImpl).bind<SyncProfessorsWorkingScheduleUseCase>()
+        singleOf(::GetAllStaffMembersFlowUseCaseImpl).bind<GetAllStaffMembersFlowUseCase>()
+        singleOf(::GetStaffMemberDetailFlowUseCaseImpl).bind<GetStaffMemberDetailFlowUseCase>()
+        singleOf(::SyncStaffMemberInfoUseCaseImpl).bind<SyncStaffMemberInfoUseCase>()
+        singleOf(::SyncStaffMembersWorkingScheduleUseCaseImpl).bind<SyncStaffMembersWorkingScheduleUseCase>()
     }
 
 val repositoryModule =
     module {
-        singleOf(::ProfessorRepositoryImpl).bind<ProfessorRepository>()
+        singleOf(::StaffMemberRepositoryImpl).bind<StaffMemberRepository>()
     }
 
 val datasourceModule =
