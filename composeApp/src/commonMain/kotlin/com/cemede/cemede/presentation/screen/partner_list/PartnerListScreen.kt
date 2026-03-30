@@ -103,61 +103,63 @@ fun PartnerListContent(
                         subtitle = stringResource(Res.string.partner_list_screen_loading),
                     )
                 } else {
-                    // Filter Pills
-                    if (processTypes.isNotEmpty()) {
-                        LazyRow(
-                            contentPadding = PaddingValues(horizontal = padding_16, vertical = padding_8),
-                            horizontalArrangement = Arrangement.spacedBy(space_12)
-                        ) {
-                            item {
-                                CemedePill(
-                                    text = stringResource(Res.string.all),
-                                    isSelected = selectedProcessType == null,
-                                    onClick = { selectedProcessType = null }
-                                )
-                            }
-                            items(processTypes) { type ->
-                                CemedePill(
-                                    text = type,
-                                    isSelected = selectedProcessType == type,
-                                    onClick = { selectedProcessType = type }
-                                )
+                    Column {
+                        // Filter Pills
+                        if (processTypes.isNotEmpty()) {
+                            LazyRow(
+                                contentPadding = PaddingValues(horizontal = padding_16, vertical = padding_8),
+                                horizontalArrangement = Arrangement.spacedBy(space_12)
+                            ) {
+                                item {
+                                    CemedePill(
+                                        text = stringResource(Res.string.all),
+                                        isSelected = selectedProcessType == null,
+                                        onClick = { selectedProcessType = null }
+                                    )
+                                }
+                                items(processTypes) { type ->
+                                    CemedePill(
+                                        text = type,
+                                        isSelected = selectedProcessType == type,
+                                        onClick = { selectedProcessType = type }
+                                    )
+                                }
                             }
                         }
-                    }
 
-                    val filteredPartners = partners.filter { partner ->
-                        val matchesSearch = partner.name.contains(searchQuery, ignoreCase = true)
-                        val matchesType = selectedProcessType == null || partner.processType == selectedProcessType
-                        matchesSearch && matchesType
-                    }
+                        val filteredPartners = partners.filter { partner ->
+                            val matchesSearch = partner.name.contains(searchQuery, ignoreCase = true)
+                            val matchesType = selectedProcessType == null || partner.processType == selectedProcessType
+                            matchesSearch && matchesType
+                        }
 
-                    if (filteredPartners.isEmpty()) {
-                        CemedeEmptyState.EmptyState(
-                            title = stringResource(Res.string.partner_list_screen_empty_state_title),
-                            subtitle = stringResource(Res.string.empty_state_subtitle),
-                            actionText = if (searchQuery.isNotEmpty() || selectedProcessType != null) {
-                                stringResource(Res.string.clear_search)
-                            } else {
-                                ""
-                            },
-                            onActionClick = {
-                                searchQuery = ""
-                                selectedProcessType = null
-                            },
-                        )
-                    } else {
-                        LazyColumn(
-                            modifier = Modifier.padding(horizontal = padding_16),
-                            contentPadding = PaddingValues(vertical = padding_8)
-                        ) {
-                            items(filteredPartners) { partner ->
-                                CemedeCard.PartnerCard(
-                                    partner = partner,
-                                    // onCardClick = onNavigateToPartnerDetail,
-                                    onCardClick = { showConstructionBanner = true },
-                                )
-                                Spacer(modifier = Modifier.height(height_16))
+                        if (filteredPartners.isEmpty()) {
+                            CemedeEmptyState.EmptyState(
+                                title = stringResource(Res.string.partner_list_screen_empty_state_title),
+                                subtitle = stringResource(Res.string.empty_state_subtitle),
+                                actionText = if (searchQuery.isNotEmpty() || selectedProcessType != null) {
+                                    stringResource(Res.string.clear_search)
+                                } else {
+                                    ""
+                                },
+                                onActionClick = {
+                                    searchQuery = ""
+                                    selectedProcessType = null
+                                },
+                            )
+                        } else {
+                            LazyColumn(
+                                modifier = Modifier.padding(horizontal = padding_16),
+                                contentPadding = PaddingValues(vertical = padding_8)
+                            ) {
+                                items(filteredPartners) { partner ->
+                                    CemedeCard.PartnerCard(
+                                        partner = partner,
+                                        // onCardClick = onNavigateToPartnerDetail,
+                                        onCardClick = { showConstructionBanner = true },
+                                    )
+                                    Spacer(modifier = Modifier.height(height_16))
+                                }
                             }
                         }
                     }

@@ -75,12 +75,7 @@ object CsvParser {
         lines.drop(STAFF_MEMBER_WORKING_SCHEDULE_ROW_STARTS).forEach { line ->
             val columns = line.split(',')
             val timeLabel = columns.firstOrNull()?.trim() ?: return@forEach
-            val time =
-                DateTimeHandler.parseTime(
-                    timeLabel
-                        .replace("a. m.", "AM")
-                        .replace("p. m.", "PM"),
-                )
+            val time = DateTimeHandler.parseTime(timeLabel)
 
             // 3. Iterate through days and count partners in each cell
             days.forEachIndexed { index, day ->
@@ -123,12 +118,7 @@ object CsvParser {
         lines.drop(1).forEach { line ->
             val columns = line.split(',')
             val timeLabel = columns.firstOrNull()?.trim() ?: return@forEach
-            val time =
-                DateTimeHandler.parseTime(
-                    timeLabel
-                        .replace("a. m.", "AM")
-                        .replace("p. m.", "PM"),
-                )
+            val time = DateTimeHandler.parseTime(timeLabel)
 
             days.forEachIndexed { index, day ->
                 if (day == null) return@forEachIndexed
