@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "7c27dcd832406e50de6797d104872d20",
+    "identityHash": "e39e7b61be3925506e8b1676c4321038",
     "entities": [
       {
         "tableName": "staff_members",
@@ -53,7 +53,7 @@
       },
       {
         "tableName": "partners",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `processType` TEXT NOT NULL, `staffMemberId` INTEGER NOT NULL, FOREIGN KEY(`staffMemberId`) REFERENCES `staff_members`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `entryDate` TEXT, `processType` TEXT NOT NULL, `syndrome` TEXT NOT NULL, `diagnosis` TEXT NOT NULL, `staffMemberName` TEXT NOT NULL, `staffMemberId` INTEGER, `scheduleType` TEXT, `workingSchedule` TEXT NOT NULL, FOREIGN KEY(`staffMemberId`) REFERENCES `staff_members`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -68,15 +68,48 @@
             "notNull": true
           },
           {
+            "fieldPath": "entryDate",
+            "columnName": "entryDate",
+            "affinity": "TEXT"
+          },
+          {
             "fieldPath": "processType",
             "columnName": "processType",
             "affinity": "TEXT",
             "notNull": true
           },
           {
+            "fieldPath": "syndrome",
+            "columnName": "syndrome",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "diagnosis",
+            "columnName": "diagnosis",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "staffMemberName",
+            "columnName": "staffMemberName",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
             "fieldPath": "staffMemberId",
             "columnName": "staffMemberId",
-            "affinity": "INTEGER",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "scheduleType",
+            "columnName": "scheduleType",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "workingSchedule",
+            "columnName": "workingSchedule",
+            "affinity": "TEXT",
             "notNull": true
           }
         ],
@@ -114,7 +147,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '7c27dcd832406e50de6797d104872d20')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'e39e7b61be3925506e8b1676c4321038')"
     ]
   }
 }

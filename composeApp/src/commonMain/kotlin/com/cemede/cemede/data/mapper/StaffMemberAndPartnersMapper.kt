@@ -18,5 +18,11 @@ fun PartnerEntity.mapToPartner() =
     Partner(
         id = id,
         name = name,
+        entryDate = entryDate,
         processType = processType,
+        syndrome = syndrome,
+        diagnosis = diagnosis,
+        staffMemberName = staffMemberName,
+        scheduleType = scheduleType,
+        workingSchedule = workingSchedule,
     )

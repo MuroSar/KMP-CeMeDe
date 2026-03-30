@@ -1,6 +1,7 @@
 package com.cemede.cemede.presentation.screen.partner_list
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -95,11 +96,7 @@ fun PartnerListContent(
                 )
             },
         ) { paddingValues ->
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues)
-            ) {
+            Box(modifier = Modifier.padding(paddingValues).fillMaxSize()) {
                 if (isLoading) {
                     CemedeLoader(
                         title = stringResource(Res.string.synchronizing_data),
@@ -217,10 +214,10 @@ private fun PartnerListTopAppBar(
 @Composable
 private fun PartnerListScreenPreview() {
     val samplePartners = listOf(
-        Partner(1, "Juan Pérez", "Readaptacion"),
-        Partner(2, "María García", "Deportivo"),
-        Partner(3, "Lucas Rodríguez", "Salud"),
-        Partner(4, "Ana Martínez", "Readaptacion"),
+        Partner(id = 1, name = "Juan Pérez", processType = "Readaptacion"),
+        Partner(id = 2, name = "María García", processType = "Deportivo"),
+        Partner(id = 3, name = "Lucas Rodríguez", processType = "Salud"),
+        Partner(id = 4, name = "Ana Martínez", processType = "Readaptacion"),
     )
     PartnerListContent(
         isLoading = false,

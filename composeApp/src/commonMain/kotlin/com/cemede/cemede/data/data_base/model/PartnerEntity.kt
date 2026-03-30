@@ -4,6 +4,10 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import com.cemede.cemede.domain.model.DayOfWeek
+import com.cemede.cemede.domain.model.ScheduleType
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalTime
 
 @Entity(
     tableName = "partners",
@@ -20,6 +24,12 @@ import androidx.room.PrimaryKey
 data class PartnerEntity(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val name: String,
+    val entryDate: LocalDate? = null,
     val processType: String,
-    val staffMemberId: Int,
+    val syndrome: String = "",
+    val diagnosis: String = "",
+    val staffMemberName: String = "",
+    val staffMemberId: Int? = null,
+    val scheduleType: ScheduleType? = null,
+    val workingSchedule: Map<DayOfWeek, LocalTime> = emptyMap(),
 )

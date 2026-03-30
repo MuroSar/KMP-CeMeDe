@@ -34,7 +34,7 @@ class StaffMemberRepositoryImpl(
 
         when (val staffMemberTabResult = csvDataSource.getStaffMemberData(staffMemberTabUrl)) {
             is CoroutineResult.Success -> {
-                val partners = CsvParser.parsePartners(staffMemberTabResult.data, staffMember.id)
+                val partners = CsvParser.parsePartnersFromStaffMemberTab(staffMemberTabResult.data, staffMember.id)
                 allPartners.addAll(partners)
                 cemedeDataBase.upsertAllPartners(allPartners)
 
@@ -43,10 +43,10 @@ class StaffMemberRepositoryImpl(
                         val staffMemberFromDb =
                             withContext(Dispatchers.IO) { cemedeDataBase.getStaffMemberDetailFlow(staffMember.id).first() }
 
-                        val partnersScheduleWithNames = CsvParser.parsePartnersSchedule(staffMemberScheduleTabResult.data)
+                        val staffMemberScheduleWithPartnersNames = CsvParser.staffMemberSchedule(staffMemberScheduleTabResult.data)
                         val partnersSchedule = mutableMapOf<DayOfWeek, Map<LocalTime, List<Partner>>>()
 
-                        partnersScheduleWithNames.forEach { (day, timeMap) ->
+                        staffMemberScheduleWithPartnersNames.forEach { (day, timeMap) ->
                             val newTimeMap = mutableMapOf<LocalTime, List<Partner>>()
                             timeMap.forEach { (time, partnerNames) ->
                                 val partners =
