@@ -26,7 +26,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import cemede.composeapp.generated.resources.Res
 import cemede.composeapp.generated.resources.all
 import cemede.composeapp.generated.resources.back
@@ -50,6 +49,7 @@ import com.cemede.cemede.presentation.component.CemedePill
 import com.cemede.cemede.presentation.component.CemedeSearchBar
 import com.cemede.cemede.presentation.component.CemedeTopAppBar
 import com.cemede.cemede.presentation.theme.CemedeTheme
+import com.cemede.cemede.presentation.theme.height_16
 import com.cemede.cemede.presentation.theme.padding_16
 import com.cemede.cemede.presentation.theme.padding_8
 import com.cemede.cemede.presentation.theme.space_12
@@ -174,7 +174,7 @@ fun StaffMemberListContent(
                                         onMessageButtonClick = { showConstructionBanner = true },
                                         onScheduleButtonClick = { showConstructionBanner = true },
                                     )
-                                    Spacer(modifier = Modifier.height(16.dp))
+                                    Spacer(modifier = Modifier.height(height_16))
                                 }
                             }
                         }
