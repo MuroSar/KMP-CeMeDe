@@ -1,12 +1,15 @@
 package com.cemede.cemede.presentation.screen.staff_member_list
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -25,24 +28,32 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import cemede.composeapp.generated.resources.Res
+import cemede.composeapp.generated.resources.all
 import cemede.composeapp.generated.resources.back
 import cemede.composeapp.generated.resources.clear_search
 import cemede.composeapp.generated.resources.empty_state_subtitle
+import cemede.composeapp.generated.resources.resting
 import cemede.composeapp.generated.resources.staff_member_list_screen_empty_state_title
 import cemede.composeapp.generated.resources.staff_member_list_screen_header_title
 import cemede.composeapp.generated.resources.staff_member_list_screen_loading
 import cemede.composeapp.generated.resources.staff_member_list_screen_search_bar
 import cemede.composeapp.generated.resources.synchronizing_data
+import cemede.composeapp.generated.resources.working
+import com.cemede.cemede.domain.model.DayOfWeek
 import com.cemede.cemede.domain.model.StaffMember
+import com.cemede.cemede.domain.util.DateTimeHandler
 import com.cemede.cemede.presentation.component.CemedeBanner
 import com.cemede.cemede.presentation.component.CemedeCard
 import com.cemede.cemede.presentation.component.CemedeEmptyState
 import com.cemede.cemede.presentation.component.CemedeLoader
+import com.cemede.cemede.presentation.component.CemedePill
 import com.cemede.cemede.presentation.component.CemedeSearchBar
 import com.cemede.cemede.presentation.component.CemedeTopAppBar
 import com.cemede.cemede.presentation.theme.CemedeTheme
 import com.cemede.cemede.presentation.theme.padding_16
 import com.cemede.cemede.presentation.theme.padding_8
+import com.cemede.cemede.presentation.theme.space_12
+import kotlinx.datetime.LocalTime
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
@@ -62,6 +73,10 @@ fun StaffMemberListScreen(
     )
 }
 
+private enum class StaffMemberFilter {
+    ALL, WORKING, RESTING
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StaffMemberListContent(
@@ -71,7 +86,12 @@ fun StaffMemberListContent(
     onNavigateToStaffMemberDetail: (StaffMember) -> Unit,
 ) {
     var searchQuery by remember { mutableStateOf("") }
+    var selectedFilter by remember { mutableStateOf(StaffMemberFilter.ALL) }
     var showConstructionBanner by remember { mutableStateOf(false) }
+
+    val now = DateTimeHandler.getCurrentDateTimeInfo()
+    val today = DayOfWeek.valueOf(now.dayOfWeek.name)
+    val currentHour = LocalTime(now.hour, 0)
 
     CemedeTheme {
         Scaffold(
@@ -91,29 +111,71 @@ fun StaffMemberListContent(
                         subtitle = stringResource(Res.string.staff_member_list_screen_loading),
                     )
                 } else {
-                    val filteredStaffMembers =
-                        staffMembers.filter { prof ->
-                            prof.name.contains(searchQuery, ignoreCase = true)
+                    Column {
+                        LazyRow(
+                            contentPadding = PaddingValues(horizontal = padding_16, vertical = padding_8),
+                            horizontalArrangement = Arrangement.spacedBy(space_12)
+                        ) {
+                            item {
+                                CemedePill(
+                                    text = stringResource(Res.string.all),
+                                    isSelected = selectedFilter == StaffMemberFilter.ALL,
+                                    onClick = { selectedFilter = StaffMemberFilter.ALL }
+                                )
+                            }
+                            item {
+                                CemedePill(
+                                    text = stringResource(Res.string.working),
+                                    isSelected = selectedFilter == StaffMemberFilter.WORKING,
+                                    onClick = { selectedFilter = StaffMemberFilter.WORKING }
+                                )
+                            }
+                            item {
+                                CemedePill(
+                                    text = stringResource(Res.string.resting),
+                                    isSelected = selectedFilter == StaffMemberFilter.RESTING,
+                                    onClick = { selectedFilter = StaffMemberFilter.RESTING }
+                                )
+                            }
                         }
 
-                    if (filteredStaffMembers.isEmpty() && searchQuery.isNotEmpty()) {
-                        CemedeEmptyState.EmptyState(
-                            title = stringResource(Res.string.staff_member_list_screen_empty_state_title),
-                            subtitle = stringResource(Res.string.empty_state_subtitle),
-                            actionText = stringResource(Res.string.clear_search),
-                            onActionClick = { searchQuery = "" },
-                        )
-                    } else {
-                        LazyColumn(modifier = Modifier.padding(horizontal = padding_16)) {
-                            items(filteredStaffMembers) { staffMember ->
-                                CemedeCard.StaffMemberCard(
-                                    staffMember = staffMember,
-                                    onCardClick = { onNavigateToStaffMemberDetail(staffMember) },
-                                    onCallButtonClick = { showConstructionBanner = true },
-                                    onMessageButtonClick = { showConstructionBanner = true },
-                                    onScheduleButtonClick = { showConstructionBanner = true },
-                                )
-                                Spacer(modifier = Modifier.height(16.dp))
+                        val filteredStaffMembers = staffMembers.filter { prof ->
+                            val matchesSearch = prof.name.contains(searchQuery, ignoreCase = true)
+                            val isWorkingNow = prof.staffMemberWorkingSchedule[today]?.contains(currentHour) == true
+                            val matchesFilter = when (selectedFilter) {
+                                StaffMemberFilter.ALL -> true
+                                StaffMemberFilter.WORKING -> isWorkingNow
+                                StaffMemberFilter.RESTING -> !isWorkingNow
+                            }
+                            matchesSearch && matchesFilter
+                        }
+
+                        if (filteredStaffMembers.isEmpty()) {
+                            CemedeEmptyState.EmptyState(
+                                title = stringResource(Res.string.staff_member_list_screen_empty_state_title),
+                                subtitle = stringResource(Res.string.empty_state_subtitle),
+                                actionText = if (searchQuery.isNotEmpty() || selectedFilter != StaffMemberFilter.ALL) {
+                                    stringResource(Res.string.clear_search)
+                                } else {
+                                    ""
+                                },
+                                onActionClick = {
+                                    searchQuery = ""
+                                    selectedFilter = StaffMemberFilter.ALL
+                                },
+                            )
+                        } else {
+                            LazyColumn(modifier = Modifier.padding(horizontal = padding_16)) {
+                                items(filteredStaffMembers) { staffMember ->
+                                    CemedeCard.StaffMemberCard(
+                                        staffMember = staffMember,
+                                        onCardClick = { onNavigateToStaffMemberDetail(staffMember) },
+                                        onCallButtonClick = { showConstructionBanner = true },
+                                        onMessageButtonClick = { showConstructionBanner = true },
+                                        onScheduleButtonClick = { showConstructionBanner = true },
+                                    )
+                                    Spacer(modifier = Modifier.height(16.dp))
+                                }
                             }
                         }
                     }

@@ -14,6 +14,8 @@
     <string name="partner">Socio</string>
     <string name="partners">Socios</string>
     <string name="all">Todos</string>
+    <string name="working">Trabajando</string>
+    <string name="resting">Descansando</string>
 
     <!--Splash screen-->
     <string name="splash_screen_title_ce">CE.</string>
