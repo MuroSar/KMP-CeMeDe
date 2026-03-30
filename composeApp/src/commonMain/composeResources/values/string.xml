@@ -13,6 +13,7 @@
     <string name="filter">Filtrar</string>
     <string name="partner">Socio</string>
     <string name="partners">Socios</string>
+    <string name="all">Todos</string>
 
     <!--Splash screen-->
     <string name="splash_screen_title_ce">CE.</string>
@@ -68,6 +69,12 @@
     <string name="staff_member_detail_screen_daily_schedule_charged_capacity">Cargado</string>
     <string name="staff_member_detail_screen_daily_schedule_overloaded_capacity">Saturado</string>
     <string name="staff_member_detail_screen_daily_schedule_empty_state">No hay clases programadas hoy</string>
+
+    <!--Partner list screen-->
+    <string name="partner_list_screen_header_title">Socios</string>
+    <string name="partner_list_screen_search_bar">Buscar socio..</string>
+    <string name="partner_list_screen_loading">Actualizando listado de socios</string>
+    <string name="partner_list_screen_empty_state_title">No se encontraron socios</string>
 
     <!--Partner dialog-->
     <string name="partner_dialog_schedule">Turno %1$s</string>
