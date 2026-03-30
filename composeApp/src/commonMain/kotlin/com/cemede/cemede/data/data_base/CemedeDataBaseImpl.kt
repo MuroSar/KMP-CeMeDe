@@ -38,4 +38,13 @@ class CemedeDataBaseImpl(
     override suspend fun upsertAllPartners(allPartners: List<PartnerEntity>) {
         cemedeDao.upsertAllPartners(allPartners)
     }
+
+    override suspend fun getAllPartnersFlow(): Flow<List<Partner>> =
+        cemedeDao.getAllPartners().map { partners ->
+            partners.map { it.mapToPartner() }
+        }
+
+    override suspend fun getStaffMemberIdByName(name: String): Int? {
+        return cemedeDao.getStaffMemberIdByName(name)
+    }
 }

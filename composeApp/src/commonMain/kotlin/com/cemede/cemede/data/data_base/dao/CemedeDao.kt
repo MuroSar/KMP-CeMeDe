@@ -25,6 +25,12 @@ interface CemedeDao {
     @Query("SELECT * FROM staff_members WHERE id = :id")
     fun getStaffMemberDetailFlow(id: Int): Flow<StaffMemberAndPartners>
 
+    @Query("SELECT * FROM partners")
+    fun getAllPartners(): Flow<List<PartnerEntity>>
+
     @Query("SELECT * FROM partners WHERE name = :name LIMIT 1")
     suspend fun getPartnerByName(name: String): PartnerEntity?
+
+    @Query("SELECT id FROM staff_members WHERE name = :name LIMIT 1")
+    suspend fun getStaffMemberIdByName(name: String): Int?
 }

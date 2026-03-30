@@ -15,7 +15,7 @@ object UrlProvider {
             "Tomas" to
                 "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ3hvq3Qa5mXc3EusVsf7W4hol8N-73EEi5Obdo6PiqHo-YivlJByelUNfE6YvzWRIaAsNWUzU4X7R_/pub?gid=437089319&single=true&output=csv",
             "Macarena" to
-                    "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ3hvq3Qa5mXc3EusVsf7W4hol8N-73EEi5Obdo6PiqHo-YivlJByelUNfE6YvzWRIaAsNWUzU4X7R_/pub?gid=1173195328&single=true&output=csv",
+                "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ3hvq3Qa5mXc3EusVsf7W4hol8N-73EEi5Obdo6PiqHo-YivlJByelUNfE6YvzWRIaAsNWUzU4X7R_/pub?gid=1173195328&single=true&output=csv",
             "Manuel" to
                 "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ3hvq3Qa5mXc3EusVsf7W4hol8N-73EEi5Obdo6PiqHo-YivlJByelUNfE6YvzWRIaAsNWUzU4X7R_/pub?gid=1256799923&single=true&output=csv",
             "Santiago" to
@@ -31,7 +31,7 @@ object UrlProvider {
             "Tomas" to
                 "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ3hvq3Qa5mXc3EusVsf7W4hol8N-73EEi5Obdo6PiqHo-YivlJByelUNfE6YvzWRIaAsNWUzU4X7R_/pub?gid=244000281&single=true&output=csv",
             "Macarena" to
-                    "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ3hvq3Qa5mXc3EusVsf7W4hol8N-73EEi5Obdo6PiqHo-YivlJByelUNfE6YvzWRIaAsNWUzU4X7R_/pub?gid=1916387988&single=true&output=csv",
+                "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ3hvq3Qa5mXc3EusVsf7W4hol8N-73EEi5Obdo6PiqHo-YivlJByelUNfE6YvzWRIaAsNWUzU4X7R_/pub?gid=1916387988&single=true&output=csv",
             "Manuel" to
                 "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ3hvq3Qa5mXc3EusVsf7W4hol8N-73EEi5Obdo6PiqHo-YivlJByelUNfE6YvzWRIaAsNWUzU4X7R_/pub?gid=1162687633&single=true&output=csv",
             "Santiago" to

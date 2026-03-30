@@ -2,38 +2,50 @@ package com.cemede.cemede.data.mapper
 
 import com.cemede.cemede.data.data_base.model.PartnerEntity
 import com.cemede.cemede.domain.model.DayOfWeek
+import com.cemede.cemede.domain.model.ScheduleType
 import com.cemede.cemede.domain.util.DateTimeHandler
+import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalTime
 
 object CsvParser {
     private const val STAFF_MEMBER_TAB_ROW_STARTS: Int = 1
-    private const val PARTNERS_ROW_STARTS: Int = 1
-    private const val PARTNERS_SCHEDULE_ROW_STARTS: Int = 1
+    private const val STAFF_MEMBER_TAB_PARTNERS_ROW_STARTS: Int = 1
+
+    private const val PARTNERS_TAB_ROW_STARTS: Int = 1
+
+    private const val STAFF_MEMBER_WORKING_SCHEDULE_ROW_STARTS: Int = 1
+
     private const val NOT_AN_ANSWER: String = "#N/A"
 
-    fun parsePartners(
+    fun parsePartnersFromStaffMemberTab(
         csvData: String,
         staffMemberId: Int,
     ): List<PartnerEntity> {
         val lines = csvData.lines().drop(STAFF_MEMBER_TAB_ROW_STARTS)
         val partnerNameListIndex = lines.first().split(',').indexOfFirst { it.equals("Listado de alumnos", ignoreCase = true) }
+        val initialEvalDateListIndex = lines.first().split(',').indexOfFirst { it.equals("Fecha de evaluación inicial", ignoreCase = true) }
         val processTypeListIndex = lines.first().split(',').indexOfFirst { it.equals("Tipo de proceso", ignoreCase = true) }
+        val diagnosisListIndex = lines.first().split(',').indexOfFirst { it.equals("Diagnóstico", ignoreCase = true) }
 
         if (partnerNameListIndex == -1) {
             return emptyList()
         }
 
         return lines
-            .subList(PARTNERS_ROW_STARTS, lines.size)
+            .subList(STAFF_MEMBER_TAB_PARTNERS_ROW_STARTS, lines.size)
             .mapNotNull { line ->
                 val partnerName = line.split(',').elementAtOrNull(partnerNameListIndex)?.trim()
+                val initialEvalDate = line.split(',').elementAtOrNull(initialEvalDateListIndex)?.trim()
                 val processType = line.split(',').elementAtOrNull(processTypeListIndex)?.trim()
+                val diagnosis = line.split(',').elementAtOrNull(diagnosisListIndex)?.trim()
                 if (partnerName.isNullOrBlank() || partnerName == NOT_AN_ANSWER) {
                     null
                 } else {
                     PartnerEntity(
                         name = partnerName,
+                        entryDate = parseDate(initialEvalDate ?: ""),
                         processType = processType ?: "",
+                        diagnosis = diagnosis ?: "",
                         staffMemberId = staffMemberId,
                     )
                 }
@@ -48,7 +60,7 @@ object CsvParser {
      * @param csvData The raw CSV string to parse.
      * @return A map representing the schedule with partner names.
      */
-    fun parsePartnersSchedule(csvData: String): Map<DayOfWeek, Map<LocalTime, List<String>>> {
+    fun staffMemberSchedule(csvData: String): Map<DayOfWeek, Map<LocalTime, List<String>>> {
         val lines = csvData.lines().filter { it.isNotBlank() }
         if (lines.isEmpty()) return emptyMap()
 
@@ -60,7 +72,7 @@ object CsvParser {
         val partnersSchedule = mutableMapOf<DayOfWeek, MutableMap<LocalTime, List<String>>>()
 
         // 2. Iterate through schedule rows (skip header)
-        lines.drop(PARTNERS_SCHEDULE_ROW_STARTS).forEach { line ->
+        lines.drop(STAFF_MEMBER_WORKING_SCHEDULE_ROW_STARTS).forEach { line ->
             val columns = line.split(',')
             val timeLabel = columns.firstOrNull()?.trim() ?: return@forEach
             val time =
@@ -138,5 +150,83 @@ object CsvParser {
             }
         }
         return staffMemberWorkingSchedules
+    }
+
+    fun parsePartnersTab(csvData: String): List<PartnerEntity> {
+        val lines = csvData.lines().filter { it.isNotBlank() }
+        if (lines.isEmpty()) return emptyList()
+
+        // Headers: [Nombre y apellido, Fecha de ingreso, Objetivo, Sindrome, Diagnóstico, Profe, Lunes, Martes, Miercoles, Jueves, Viernes, Tipo de horario]
+        // Index:      0                   1                2         3           4          5      6      7       8         9       10           11
+
+        return lines.drop(PARTNERS_TAB_ROW_STARTS).mapNotNull { line ->
+            val columns = line.split(',')
+            val name = columns.getOrNull(0)?.trim()
+            if (name.isNullOrBlank() || name == NOT_AN_ANSWER) return@mapNotNull null
+
+            val entryDateStr = columns.getOrNull(1)?.trim() ?: ""
+            val entryDate = parseDate(entryDateStr)
+
+            val processType = columns.getOrNull(2)?.trim() ?: ""
+            val syndrome = columns.getOrNull(3)?.trim() ?: ""
+            val diagnosis = columns.getOrNull(4)?.trim() ?: ""
+            val staffMemberName = columns.getOrNull(5)?.trim() ?: ""
+
+            val workingSchedule = mutableMapOf<DayOfWeek, LocalTime>()
+            val days = listOf(DayOfWeek.MONDAY, DayOfWeek.TUESDAY, DayOfWeek.WEDNESDAY, DayOfWeek.THURSDAY, DayOfWeek.FRIDAY)
+            days.forEachIndexed { index, day ->
+                val timeStr = columns.getOrNull(6 + index)?.trim()
+                if (!timeStr.isNullOrBlank() && timeStr != NOT_AN_ANSWER) {
+                    parseSimpleTime(timeStr)?.let { workingSchedule[day] = it }
+                }
+            }
+
+            val scheduleTypeStr = columns.getOrNull(11)?.trim()
+            val scheduleType = ScheduleType.fromDisplayName(scheduleTypeStr ?: "")
+
+            PartnerEntity(
+                name = name,
+                entryDate = entryDate,
+                processType = processType,
+                syndrome = syndrome,
+                diagnosis = diagnosis,
+                staffMemberName = staffMemberName,
+                scheduleType = scheduleType,
+                workingSchedule = workingSchedule,
+            )
+        }
+    }
+
+    private fun parseDate(dateStr: String): LocalDate? {
+        if (dateStr.isEmpty() || dateStr == NOT_AN_ANSWER) return null
+        return try {
+            val parts = dateStr.split('/')
+            if (parts.size == 3) {
+                val day = parts[0].toInt()
+                val month = parts[1].toInt()
+                val year = parts[2].toInt()
+                LocalDate(year, month, day)
+            } else {
+                null
+            }
+        } catch (e: Exception) {
+            null
+        }
+    }
+
+    private fun parseSimpleTime(timeStr: String): LocalTime? {
+        if (timeStr.isEmpty() || timeStr == NOT_AN_ANSWER) return null
+        return try {
+            val parts = timeStr.split(':')
+            if (parts.size >= 2) {
+                val hour = parts[0].toInt()
+                val minute = parts[1].toInt()
+                LocalTime(hour, minute)
+            } else {
+                null
+            }
+        } catch (e: Exception) {
+            null
+        }
     }
 }

@@ -3,14 +3,20 @@ package com.cemede.cemede.di
 import com.cemede.cemede.data.data_base.CemedeDB
 import com.cemede.cemede.data.data_base.CemedeDataBaseImpl
 import com.cemede.cemede.data.data_source.CSVDataSourceImpl
+import com.cemede.cemede.data.repository.PartnerRepositoryImpl
 import com.cemede.cemede.data.repository.StaffMemberRepositoryImpl
 import com.cemede.cemede.domain.data_base.CemedeDataBase
 import com.cemede.cemede.domain.data_source.CSVDataSource
+import com.cemede.cemede.domain.repository.PartnerRepository
 import com.cemede.cemede.domain.repository.StaffMemberRepository
+import com.cemede.cemede.domain.use_case.GetAllPartnersUseCase
+import com.cemede.cemede.domain.use_case.GetAllPartnersUseCaseImpl
 import com.cemede.cemede.domain.use_case.GetAllStaffMembersFlowUseCase
 import com.cemede.cemede.domain.use_case.GetAllStaffMembersFlowUseCaseImpl
 import com.cemede.cemede.domain.use_case.GetStaffMemberDetailFlowUseCase
 import com.cemede.cemede.domain.use_case.GetStaffMemberDetailFlowUseCaseImpl
+import com.cemede.cemede.domain.use_case.SyncPartnersInfoUseCase
+import com.cemede.cemede.domain.use_case.SyncPartnersInfoUseCaseImpl
 import com.cemede.cemede.domain.use_case.SyncStaffMemberInfoUseCase
 import com.cemede.cemede.domain.use_case.SyncStaffMemberInfoUseCaseImpl
 import com.cemede.cemede.domain.use_case.SyncStaffMembersWorkingScheduleUseCase
@@ -58,11 +64,14 @@ val useCaseModule =
         singleOf(::GetStaffMemberDetailFlowUseCaseImpl).bind<GetStaffMemberDetailFlowUseCase>()
         singleOf(::SyncStaffMemberInfoUseCaseImpl).bind<SyncStaffMemberInfoUseCase>()
         singleOf(::SyncStaffMembersWorkingScheduleUseCaseImpl).bind<SyncStaffMembersWorkingScheduleUseCase>()
+        singleOf(::SyncPartnersInfoUseCaseImpl).bind<SyncPartnersInfoUseCase>()
+        singleOf(::GetAllPartnersUseCaseImpl).bind<GetAllPartnersUseCase>()
     }
 
 val repositoryModule =
     module {
         singleOf(::StaffMemberRepositoryImpl).bind<StaffMemberRepository>()
+        singleOf(::PartnerRepositoryImpl).bind<PartnerRepository>()
     }
 
 val datasourceModule =

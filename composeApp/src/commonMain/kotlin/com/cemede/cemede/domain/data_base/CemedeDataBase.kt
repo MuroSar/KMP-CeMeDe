@@ -16,4 +16,8 @@ interface CemedeDataBase {
     suspend fun upsertStaffMember(staffMember: StaffMemberEntity): Long
 
     suspend fun upsertAllPartners(allPartners: List<PartnerEntity>)
+
+    suspend fun getAllPartnersFlow(): Flow<List<Partner>>
+
+    suspend fun getStaffMemberIdByName(name: String): Int?
 }

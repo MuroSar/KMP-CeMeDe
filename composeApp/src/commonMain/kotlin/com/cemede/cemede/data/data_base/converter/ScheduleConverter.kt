@@ -7,7 +7,7 @@ import kotlinx.datetime.LocalTime
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
-class NestedMapConverter {
+class ScheduleConverter {
     @TypeConverter
     fun fromPartnersScheduleString(value: String): Map<DayOfWeek, Map<LocalTime, List<Partner>>> = Json.decodeFromString(value)
 
@@ -19,4 +19,10 @@ class NestedMapConverter {
 
     @TypeConverter
     fun fromStaffMemberWorkingScheduleMap(map: Map<DayOfWeek, List<LocalTime>>): String = Json.encodeToString(map)
+
+    @TypeConverter
+    fun fromWorkingScheduleString(value: String): Map<DayOfWeek, LocalTime> = Json.decodeFromString(value)
+
+    @TypeConverter
+    fun fromWorkingScheduleMap(map: Map<DayOfWeek, LocalTime>): String = Json.encodeToString(map)
 }

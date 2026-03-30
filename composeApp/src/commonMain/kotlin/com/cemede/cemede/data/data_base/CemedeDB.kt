@@ -5,7 +5,9 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.RoomDatabaseConstructor
 import androidx.room.TypeConverters
-import com.cemede.cemede.data.data_base.converter.NestedMapConverter
+import com.cemede.cemede.data.data_base.converter.DateTimeConverter
+import com.cemede.cemede.data.data_base.converter.ScheduleConverter
+import com.cemede.cemede.data.data_base.converter.ScheduleTypeConverter
 import com.cemede.cemede.data.data_base.dao.CemedeDao
 import com.cemede.cemede.data.data_base.model.StaffMemberEntity
 import com.cemede.cemede.data.data_base.model.PartnerEntity
@@ -18,7 +20,11 @@ import com.cemede.cemede.data.data_base.model.PartnerEntity
     version = 1,
 )
 @ConstructedBy(MyDatabaseCtor::class)
-@TypeConverters(NestedMapConverter::class)
+@TypeConverters(
+    ScheduleConverter::class,
+    DateTimeConverter::class,
+    ScheduleTypeConverter::class,
+)
 abstract class CemedeDB : RoomDatabase() {
     abstract fun cemedeDao(): CemedeDao
 
