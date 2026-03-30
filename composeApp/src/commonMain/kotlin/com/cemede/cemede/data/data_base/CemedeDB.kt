@@ -5,12 +5,15 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.RoomDatabaseConstructor
 import androidx.room.TypeConverters
-import com.cemede.cemede.data.data_base.converter.DateTimeConverter
-import com.cemede.cemede.data.data_base.converter.ScheduleConverter
+import com.cemede.cemede.data.data_base.converter.LocalDateConverter
+import com.cemede.cemede.data.data_base.converter.LocalTimeConverter
+import com.cemede.cemede.data.data_base.converter.PartnersScheduleConverter
 import com.cemede.cemede.data.data_base.converter.ScheduleTypeConverter
+import com.cemede.cemede.data.data_base.converter.StaffMemberWorkingScheduleConverter
+import com.cemede.cemede.data.data_base.converter.WorkingScheduleConverter
 import com.cemede.cemede.data.data_base.dao.CemedeDao
-import com.cemede.cemede.data.data_base.model.StaffMemberEntity
 import com.cemede.cemede.data.data_base.model.PartnerEntity
+import com.cemede.cemede.data.data_base.model.StaffMemberEntity
 
 @Database(
     entities = [
@@ -21,9 +24,12 @@ import com.cemede.cemede.data.data_base.model.PartnerEntity
 )
 @ConstructedBy(MyDatabaseCtor::class)
 @TypeConverters(
-    ScheduleConverter::class,
-    DateTimeConverter::class,
+    LocalDateConverter::class,
+    LocalTimeConverter::class,
+    PartnersScheduleConverter::class,
     ScheduleTypeConverter::class,
+    StaffMemberWorkingScheduleConverter::class,
+    WorkingScheduleConverter::class,
 )
 abstract class CemedeDB : RoomDatabase() {
     abstract fun cemedeDao(): CemedeDao
