@@ -109,9 +109,10 @@ object CemedeCard {
         onScheduleButtonClick: () -> Unit,
     ) {
         val now = DateTimeHandler.getCurrentDateTimeInfo()
+        val hourOnly = LocalTime(now.time.hour, 0)
         val today = DayOfWeek.valueOf(now.dayOfWeek.name)
 
-        val isWorkingInThisMoment = staffMember.staffMemberWorkingSchedule[today]?.contains(now.time)
+        val isWorkingInThisMoment = staffMember.staffMemberWorkingSchedule[today]?.contains(hourOnly)
 
         Card(
             onClick = onCardClick,
@@ -230,9 +231,10 @@ object CemedeCard {
         onMessageButtonClick: () -> Unit,
     ) {
         val now = DateTimeHandler.getCurrentDateTimeInfo()
+        val hourOnly = LocalTime(now.time.hour, 0)
         val today = DayOfWeek.valueOf(now.dayOfWeek.name)
 
-        val isWorkingInThisMoment = staffMember.staffMemberWorkingSchedule[today]?.contains(now.time)
+        val isWorkingInThisMoment = staffMember.staffMemberWorkingSchedule[today]?.contains(hourOnly)
 
         Card(
             shape = RoundedCornerShape(size_0),

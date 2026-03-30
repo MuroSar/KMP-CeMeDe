@@ -33,13 +33,9 @@ object DateTimeHandler {
     fun parseTime(timeLabel: String): LocalTime =
         try {
             val customFormat = LocalTime.Format {
-                amPmHour(padding = Padding.NONE) // Maneja automáticamente 1 o 2 dígitos (7 o 12)
+                hour(padding = Padding.NONE) // Maneja automáticamente 1 o 2 dígitos (7 o 12)
                 char(':')
                 minute()
-                char(':')
-                second()
-                char(' ')
-                amPmMarker("AM", "PM")
             }
 
             LocalTime.parse(timeLabel, customFormat)
