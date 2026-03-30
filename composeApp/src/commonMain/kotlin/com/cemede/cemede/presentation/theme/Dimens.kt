@@ -97,6 +97,7 @@ val space_40 = 40.dp
 const val WEIGHT_1 = 1f
 
 // Width
+val width_1 = 1.dp
 val width_2 = 2.dp
 val width_4 = 4.dp
 val width_24 = 24.dp
