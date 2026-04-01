@@ -6,10 +6,12 @@ import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import com.cemede.cemede.domain.model.StaffMember
 import com.cemede.cemede.presentation.screen.main.MainScreen
+import com.cemede.cemede.presentation.screen.partner_detail.PartnerDetailScreen
 import com.cemede.cemede.presentation.screen.partner_list.PartnerListScreen
 import com.cemede.cemede.presentation.screen.staff_member_detail.StaffMemberDetailScreen
 import com.cemede.cemede.presentation.screen.staff_member_list.StaffMemberListScreen
 import com.cemede.cemede.presentation.screen.splash.SplashScreen
+import kotlin.reflect.typeOf
 
 fun NavGraphBuilder.addCeMeDeScreenGraph(navController: NavController) {
     composable<NavRoutes.Splash> {
@@ -53,12 +55,25 @@ fun NavGraphBuilder.addCeMeDeScreenGraph(navController: NavController) {
                     name = staffMemberDetail.staffMemberName,
                 ),
             onNavigateBack = { navController.popBackStack() },
-            onNavigateToPartnerDetail = { },
+            onNavigateToPartnerDetail = { partner ->
+                navController.navigate(NavRoutes.PartnerDetail(partner))
+            },
         )
     }
     composable<NavRoutes.PartnerList> {
         PartnerListScreen(
-            onNavigateToPartnerDetail = { partner -> },
+            onNavigateToPartnerDetail = { partner ->
+                navController.navigate(NavRoutes.PartnerDetail(partner))
+            },
+            onNavigateBack = { navController.popBackStack() }
+        )
+    }
+    composable<NavRoutes.PartnerDetail>(
+        typeMap = mapOf(typeOf<com.cemede.cemede.domain.model.Partner>() to NavCustomTypes.PartnerType)
+    ) { backStackEntry ->
+        val partnerDetail: NavRoutes.PartnerDetail = backStackEntry.toRoute()
+        PartnerDetailScreen(
+            partner = partnerDetail.partner,
             onNavigateBack = { navController.popBackStack() }
         )
     }

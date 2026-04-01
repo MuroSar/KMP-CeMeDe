@@ -74,7 +74,9 @@ fun StaffMemberListScreen(
 }
 
 private enum class StaffMemberFilter {
-    ALL, WORKING, RESTING
+    ALL,
+    WORKING,
+    RESTING,
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -114,51 +116,54 @@ fun StaffMemberListContent(
                     Column {
                         LazyRow(
                             contentPadding = PaddingValues(horizontal = padding_16, vertical = padding_8),
-                            horizontalArrangement = Arrangement.spacedBy(space_12)
+                            horizontalArrangement = Arrangement.spacedBy(space_12),
                         ) {
                             item {
                                 CemedePill(
                                     text = stringResource(Res.string.all),
                                     isSelected = selectedFilter == StaffMemberFilter.ALL,
-                                    onClick = { selectedFilter = StaffMemberFilter.ALL }
+                                    onClick = { selectedFilter = StaffMemberFilter.ALL },
                                 )
                             }
                             item {
                                 CemedePill(
                                     text = stringResource(Res.string.working),
                                     isSelected = selectedFilter == StaffMemberFilter.WORKING,
-                                    onClick = { selectedFilter = StaffMemberFilter.WORKING }
+                                    onClick = { selectedFilter = StaffMemberFilter.WORKING },
                                 )
                             }
                             item {
                                 CemedePill(
                                     text = stringResource(Res.string.resting),
                                     isSelected = selectedFilter == StaffMemberFilter.RESTING,
-                                    onClick = { selectedFilter = StaffMemberFilter.RESTING }
+                                    onClick = { selectedFilter = StaffMemberFilter.RESTING },
                                 )
                             }
                         }
 
-                        val filteredStaffMembers = staffMembers.filter { prof ->
-                            val matchesSearch = prof.name.contains(searchQuery, ignoreCase = true)
-                            val isWorkingNow = prof.staffMemberWorkingSchedule[today]?.contains(currentHour) == true
-                            val matchesFilter = when (selectedFilter) {
-                                StaffMemberFilter.ALL -> true
-                                StaffMemberFilter.WORKING -> isWorkingNow
-                                StaffMemberFilter.RESTING -> !isWorkingNow
+                        val filteredStaffMembers =
+                            staffMembers.filter { prof ->
+                                val matchesSearch = prof.name.contains(searchQuery, ignoreCase = true)
+                                val isWorkingNow = prof.staffMemberWorkingSchedule[today]?.contains(currentHour) == true
+                                val matchesFilter =
+                                    when (selectedFilter) {
+                                        StaffMemberFilter.ALL -> true
+                                        StaffMemberFilter.WORKING -> isWorkingNow
+                                        StaffMemberFilter.RESTING -> !isWorkingNow
+                                    }
+                                matchesSearch && matchesFilter
                             }
-                            matchesSearch && matchesFilter
-                        }
 
                         if (filteredStaffMembers.isEmpty()) {
                             CemedeEmptyState.EmptyState(
                                 title = stringResource(Res.string.staff_member_list_screen_empty_state_title),
                                 subtitle = stringResource(Res.string.empty_state_subtitle),
-                                actionText = if (searchQuery.isNotEmpty() || selectedFilter != StaffMemberFilter.ALL) {
-                                    stringResource(Res.string.clear_search)
-                                } else {
-                                    ""
-                                },
+                                actionText =
+                                    if (searchQuery.isNotEmpty() || selectedFilter != StaffMemberFilter.ALL) {
+                                        stringResource(Res.string.clear_search)
+                                    } else {
+                                        ""
+                                    },
                                 onActionClick = {
                                     searchQuery = ""
                                     selectedFilter = StaffMemberFilter.ALL
