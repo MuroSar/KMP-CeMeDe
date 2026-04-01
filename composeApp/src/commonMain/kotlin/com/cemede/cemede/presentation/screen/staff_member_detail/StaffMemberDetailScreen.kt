@@ -17,6 +17,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.FilterList
@@ -25,6 +26,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -45,6 +47,7 @@ import cemede.composeapp.generated.resources.back
 import cemede.composeapp.generated.resources.clear_search
 import cemede.composeapp.generated.resources.empty_state_subtitle
 import cemede.composeapp.generated.resources.filter
+import cemede.composeapp.generated.resources.see_all
 import cemede.composeapp.generated.resources.staff_member_detail_screen_daily_schedule
 import cemede.composeapp.generated.resources.staff_member_detail_screen_daily_schedule_empty_state
 import cemede.composeapp.generated.resources.staff_member_detail_screen_empty_state_title
@@ -70,10 +73,13 @@ import com.cemede.cemede.presentation.theme.ALPHA_0_7
 import com.cemede.cemede.presentation.theme.CemedeTheme
 import com.cemede.cemede.presentation.theme.height_16
 import com.cemede.cemede.presentation.theme.height_8
+import com.cemede.cemede.presentation.theme.padding_12
 import com.cemede.cemede.presentation.theme.padding_16
 import com.cemede.cemede.presentation.theme.padding_24
+import com.cemede.cemede.presentation.theme.padding_6
 import com.cemede.cemede.presentation.theme.padding_8
 import com.cemede.cemede.presentation.theme.size_16
+import com.cemede.cemede.presentation.theme.size_8
 import com.cemede.cemede.presentation.theme.space_12
 import com.cemede.cemede.presentation.theme.width_4
 import com.cemede.cemede.presentation.util.AnimationUtils.smoothScrollTo
@@ -113,7 +119,7 @@ fun StaffMemberDetailContent(
             CemedeDialog.PartnerListDialog(
                 time = it.first,
                 partners = it.second,
-                onPartnerClicked = { partner -> onNavigateToPartnerDetail(partner) },
+                onPartnerClicked = onNavigateToPartnerDetail,
                 onDismiss = { selectedSchedule = null },
             )
         }
@@ -152,10 +158,11 @@ fun StaffMemberDetailContent(
                             onScheduleClick = { time, partners ->
                                 selectedSchedule = time to partners
                             },
+                            onSeeAllClicked = { showConstructionBanner = true }
                         )
                         AssignedPartners(
                             partners = state.staffMember.partners,
-                            onNavigateToPartnerDetail = { showConstructionBanner = true },
+                            onNavigateToPartnerDetail = onNavigateToPartnerDetail,
                         )
                     }
                 } else {
@@ -181,6 +188,7 @@ fun StaffMemberDetailContent(
 private fun DailySchedule(
     partnersSchedule: Map<DayOfWeek, Map<LocalTime, List<Partner>>>,
     onScheduleClick: (LocalTime, List<Partner>) -> Unit,
+    onSeeAllClicked: () -> Unit,
 ) {
     val now = DateTimeHandler.getCurrentDateTimeInfo()
     val today = DayOfWeek.valueOf(now.dayOfWeek.name)
@@ -201,7 +209,7 @@ private fun DailySchedule(
         modifier =
             Modifier
                 .background(Color.White.copy(alpha = ALPHA_0_2))
-                .padding(vertical = padding_24),
+                .padding(vertical = padding_16),
     ) {
         Row(
             modifier =
@@ -212,16 +220,24 @@ private fun DailySchedule(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
-                stringResource(Res.string.staff_member_detail_screen_daily_schedule),
+                stringResource(Res.string.staff_member_detail_screen_daily_schedule, DateTimeHandler.getSpanishDayOfWeek(now.dayOfWeek)),
                 style = MaterialTheme.typography.labelMedium,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.primary,
             )
-            Text(
-                text = "${DateTimeHandler.getSpanishMonth(now.month)} ${now.year}",
-                style = MaterialTheme.typography.labelSmall,
-                color = MaterialTheme.colorScheme.secondary,
-            )
+            Surface(
+                onClick = onSeeAllClicked,
+                shape = RoundedCornerShape(size_8),
+                color = MaterialTheme.colorScheme.secondary.copy(ALPHA_0_2),
+            ) {
+                Text(
+                    text = stringResource(Res.string.see_all),
+                    modifier = Modifier.padding(horizontal = padding_12, vertical = padding_6),
+                    style = MaterialTheme.typography.labelMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.secondary,
+                )
+            }
         }
         Spacer(modifier = Modifier.height(height_16))
 
@@ -323,7 +339,7 @@ private fun AssignedPartners(
                     items(filteredPartners) { partner ->
                         CemedeCard.PartnerCard(
                             partner = partner,
-                            onCardClick = { onNavigateToPartnerDetail(partner) },
+                            onCardClick = onNavigateToPartnerDetail,
                         )
                         Spacer(modifier = Modifier.height(height_16))
                     }

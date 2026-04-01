@@ -16,6 +16,10 @@
     <string name="all">Todos</string>
     <string name="working">Trabajando</string>
     <string name="resting">Descansando</string>
+    <string name="contact">Contactar</string>
+    <string name="objective">Objetivo</string>
+    <string name="day">DÍA</string>
+    <string name="time">HORARIO</string>
 
     <!--Splash screen-->
     <string name="splash_screen_title_ce">CE.</string>
@@ -64,7 +68,7 @@
     <string name="staff_member_detail_screen_staff_member_not_found">No se encontró el profesor.</string>
     <string name="staff_member_detail_screen_empty_state_title">No se encontraron socios</string>
     <string name="staff_member_detail_screen_partner_list">Socios asignados</string>
-    <string name="staff_member_detail_screen_daily_schedule">Cronograma Diario</string>
+    <string name="staff_member_detail_screen_daily_schedule">Cronograma Diario (%1$s)</string>
     <string name="staff_member_detail_screen_individual_partner">%1$s Socio</string>
     <string name="staff_member_detail_screen_multiple_partners">%1$s Socios</string>
     <string name="staff_member_detail_screen_daily_schedule_normal_capacity">Normal</string>
@@ -77,6 +81,20 @@
     <string name="partner_list_screen_search_bar">Buscar socio..</string>
     <string name="partner_list_screen_loading">Actualizando listado de socios</string>
     <string name="partner_list_screen_empty_state_title">No se encontraron socios</string>
+
+    <!--Partner detail screen-->
+    <string name="partner_detail_screen_header_title">Socio</string>
+    <string name="partner_detail_screen_entry_date">Ingreso: #%1$s</string>
+    <string name="partner_detail_screen_partner_id">Socio #%1$s</string>
+    <string name="partner_detail_screen_clinical_info">Información clínica</string>
+    <string name="partner_detail_screen_principal_diagnosis">DIAGNÓSTICO PRINCIPAL</string>
+    <string name="partner_detail_screen_principal_diagnosis_fallback">Sin diagnóstico registrado</string>
+    <string name="partner_detail_screen_related_syndrome">SÍNDROME RELACIONADO</string>
+    <string name="partner_detail_screen_related_syndrome_fallback">Sin síndrome registrado</string>
+    <string name="partner_detail_screen_assigned_professor">PROFESOR ASIGNADO</string>
+    <string name="partner_detail_screen_working_plan">PLAN DE TRABAJO</string>
+    <string name="partner_detail_screen_schedule">Cronograma de horarios</string>
+    <string name="partner_detail_screen_schedule_fallback">No hay horarios registrados</string>
 
     <!--Partner dialog-->
     <string name="partner_dialog_schedule">Turno %1$s</string>

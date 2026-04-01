@@ -114,7 +114,7 @@ object CemedeDialog {
                             items(partners) { partner ->
                                 CemedeCard.PartnerCard(
                                     partner = partner,
-                                    onCardClick = { p -> onPartnerClicked(p) },
+                                    onCardClick = onPartnerClicked,
                                 )
                             }
                         }

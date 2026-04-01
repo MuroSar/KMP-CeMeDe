@@ -79,8 +79,6 @@ fun PartnerListContent(
     var searchQuery by remember { mutableStateOf("") }
     var selectedProcessType by remember { mutableStateOf<String?>(null) }
 
-    var showConstructionBanner by remember { mutableStateOf(false) }
-
     val processTypes = remember(partners) {
         partners.map { it.processType }.distinct().filter { it.isNotBlank() }
     }
@@ -155,8 +153,7 @@ fun PartnerListContent(
                                 items(filteredPartners) { partner ->
                                     CemedeCard.PartnerCard(
                                         partner = partner,
-                                        // onCardClick = onNavigateToPartnerDetail,
-                                        onCardClick = { showConstructionBanner = true },
+                                        onCardClick = onNavigateToPartnerDetail,
                                     )
                                     Spacer(modifier = Modifier.height(height_16))
                                 }
@@ -164,18 +161,6 @@ fun PartnerListContent(
                         }
                     }
                 }
-                CemedeBanner.ConstructionBanner(
-                    modifier =
-                        Modifier
-                            .align(Alignment.BottomCenter)
-                            .padding(
-                                bottom = padding_16,
-                                start = padding_16,
-                                end = padding_16,
-                            ),
-                    showBanner = showConstructionBanner,
-                    onDismiss = { showConstructionBanner = false },
-                )
             }
         }
     }

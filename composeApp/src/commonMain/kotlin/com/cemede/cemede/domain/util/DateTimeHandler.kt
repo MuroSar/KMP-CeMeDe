@@ -7,6 +7,8 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
+import kotlinx.datetime.DayOfWeek
+import kotlinx.datetime.LocalDate
 import kotlinx.datetime.format.Padding
 import kotlinx.datetime.format.char
 
@@ -29,6 +31,24 @@ object DateTimeHandler {
             Month.NOVEMBER -> "NOVIEMBRE"
             Month.DECEMBER -> "DICIEMBRE"
         }
+
+    fun getSpanishDayOfWeek(dayOfWeek: DayOfWeek): String =
+        when (dayOfWeek) {
+            DayOfWeek.MONDAY -> "Lunes"
+            DayOfWeek.TUESDAY -> "Martes"
+            DayOfWeek.WEDNESDAY -> "Miércoles"
+            DayOfWeek.THURSDAY -> "Jueves"
+            DayOfWeek.FRIDAY -> "Viernes"
+            DayOfWeek.SATURDAY -> "Sábado"
+            DayOfWeek.SUNDAY -> "Domingo"
+        }
+
+    fun formatDate(date: LocalDate?): String {
+        if (date == null) return "N/A"
+        val day = date.dayOfMonth.toString().padStart(2, '0')
+        val month = date.monthNumber.toString().padStart(2, '0')
+        return "$day/$month/${date.year}"
+    }
 
     fun parseTime(timeLabel: String): LocalTime =
         try {

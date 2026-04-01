@@ -1,5 +1,6 @@
 package com.cemede.cemede.presentation.navigation
 
+import com.cemede.cemede.domain.model.Partner
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -20,5 +21,10 @@ sealed interface NavRoutes {
     data class StaffMemberDetail(
         val staffMemberId: Int,
         val staffMemberName: String,
+    ) : NavRoutes
+
+    @Serializable
+    data class PartnerDetail(
+        val partner: Partner,
     ) : NavRoutes
 }

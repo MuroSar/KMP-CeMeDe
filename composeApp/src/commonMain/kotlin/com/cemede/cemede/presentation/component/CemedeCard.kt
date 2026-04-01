@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -23,8 +24,10 @@ import androidx.compose.material.icons.filled.Call
 import androidx.compose.material.icons.filled.ChatBubble
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.Groups
+import androidx.compose.material.icons.filled.MedicalServices
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
@@ -38,14 +41,25 @@ import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import cemede.composeapp.generated.resources.Res
 import cemede.composeapp.generated.resources.cemede_logo
+import cemede.composeapp.generated.resources.contact
+import cemede.composeapp.generated.resources.objective
+import cemede.composeapp.generated.resources.partner_detail_screen_assigned_professor
+import cemede.composeapp.generated.resources.partner_detail_screen_clinical_info
+import cemede.composeapp.generated.resources.partner_detail_screen_principal_diagnosis
+import cemede.composeapp.generated.resources.partner_detail_screen_principal_diagnosis_fallback
+import cemede.composeapp.generated.resources.partner_detail_screen_related_syndrome
+import cemede.composeapp.generated.resources.partner_detail_screen_related_syndrome_fallback
+import cemede.composeapp.generated.resources.partner_detail_screen_working_plan
 import cemede.composeapp.generated.resources.staff_member_card_action_call
 import cemede.composeapp.generated.resources.staff_member_card_action_message
 import cemede.composeapp.generated.resources.staff_member_card_action_schedule
@@ -57,42 +71,65 @@ import cemede.composeapp.generated.resources.staff_member_detail_screen_daily_sc
 import cemede.composeapp.generated.resources.staff_member_detail_screen_daily_schedule_overloaded_capacity
 import cemede.composeapp.generated.resources.staff_member_detail_screen_individual_partner
 import cemede.composeapp.generated.resources.staff_member_detail_screen_multiple_partners
+import cemede.composeapp.generated.resources.stethoscope
 import com.cemede.cemede.domain.model.DayOfWeek
-import com.cemede.cemede.domain.model.StaffMember
 import com.cemede.cemede.domain.model.Partner
+import com.cemede.cemede.domain.model.ScheduleType
+import com.cemede.cemede.domain.model.StaffMember
 import com.cemede.cemede.domain.util.DateTimeHandler
+import com.cemede.cemede.presentation.theme.ALPHA_0_05
+import com.cemede.cemede.presentation.theme.ALPHA_0_1
 import com.cemede.cemede.presentation.theme.ALPHA_0_2
 import com.cemede.cemede.presentation.theme.ALPHA_0_5
 import com.cemede.cemede.presentation.theme.ALPHA_0_7
+import com.cemede.cemede.presentation.theme.BrownCharcoal
 import com.cemede.cemede.presentation.theme.CemedeTheme
+import com.cemede.cemede.presentation.theme.DarkSage
 import com.cemede.cemede.presentation.theme.GreenNormalCapacity
+import com.cemede.cemede.presentation.theme.LightSage
+import com.cemede.cemede.presentation.theme.PartnerDetailGreen
 import com.cemede.cemede.presentation.theme.RedOverloadedCapacity
 import com.cemede.cemede.presentation.theme.WEIGHT_1
 import com.cemede.cemede.presentation.theme.YellowChargedCapacity
+import com.cemede.cemede.presentation.theme.elevation_0
 import com.cemede.cemede.presentation.theme.elevation_1
 import com.cemede.cemede.presentation.theme.elevation_2
 import com.cemede.cemede.presentation.theme.elevation_4
+import com.cemede.cemede.presentation.theme.height_16
+import com.cemede.cemede.presentation.theme.height_200
 import com.cemede.cemede.presentation.theme.height_48
+import com.cemede.cemede.presentation.theme.height_8
+import com.cemede.cemede.presentation.theme.letter_spacing_1
+import com.cemede.cemede.presentation.theme.line_height_20
 import com.cemede.cemede.presentation.theme.padding_10
 import com.cemede.cemede.presentation.theme.padding_12
 import com.cemede.cemede.presentation.theme.padding_16
 import com.cemede.cemede.presentation.theme.padding_2
+import com.cemede.cemede.presentation.theme.padding_20
+import com.cemede.cemede.presentation.theme.padding_24
 import com.cemede.cemede.presentation.theme.padding_8
 import com.cemede.cemede.presentation.theme.size_0
+import com.cemede.cemede.presentation.theme.size_12
 import com.cemede.cemede.presentation.theme.size_14
+import com.cemede.cemede.presentation.theme.size_150
 import com.cemede.cemede.presentation.theme.size_16
 import com.cemede.cemede.presentation.theme.size_18
 import com.cemede.cemede.presentation.theme.size_20
+import com.cemede.cemede.presentation.theme.size_24
 import com.cemede.cemede.presentation.theme.size_44
+import com.cemede.cemede.presentation.theme.size_48
 import com.cemede.cemede.presentation.theme.size_56
 import com.cemede.cemede.presentation.theme.size_80
 import com.cemede.cemede.presentation.theme.space_12
 import com.cemede.cemede.presentation.theme.space_16
+import com.cemede.cemede.presentation.theme.space_24
 import com.cemede.cemede.presentation.theme.space_4
 import com.cemede.cemede.presentation.theme.space_8
 import com.cemede.cemede.presentation.theme.width_110
+import com.cemede.cemede.presentation.theme.width_16
 import com.cemede.cemede.presentation.theme.width_2
 import com.cemede.cemede.presentation.theme.width_4
+import com.cemede.cemede.presentation.theme.width_8
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
 import org.jetbrains.compose.resources.painterResource
@@ -373,7 +410,7 @@ object CemedeCard {
                     Text(
                         text = partner.processType,
                         style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.secondary,
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = ALPHA_0_7),
                     ) // Mock data
                 }
                 Icon(
@@ -460,6 +497,209 @@ object CemedeCard {
                         style = MaterialTheme.typography.labelSmall,
                         color = subContentColor,
                         textAlign = TextAlign.Center,
+                    )
+                }
+            }
+        }
+    }
+
+    @Composable
+    fun ClinicalInfoCard(partner: Partner) {
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(size_24),
+            elevation = CardDefaults.cardElevation(elevation_0)
+        ) {
+            Box(modifier = Modifier.padding(padding_24)) {
+                Icon(
+                    imageVector = Icons.Default.MedicalServices,
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(size_80)
+                        .align(Alignment.TopEnd)
+                        .alpha(ALPHA_0_05),
+                    tint = Color.Black
+                )
+
+                Column(verticalArrangement = Arrangement.spacedBy(space_24)) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(space_8)
+                    ) {
+                        Icon(
+                            painter = painterResource(Res.drawable.stethoscope),
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.primary,
+                        )
+                        Text(
+                            text = stringResource(Res.string.partner_detail_screen_clinical_info),
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.primary,
+                        )
+                    }
+
+                    Row(modifier = Modifier.fillMaxWidth()) {
+                        Column(
+                            modifier = Modifier.weight(WEIGHT_1),
+                            verticalArrangement = Arrangement.spacedBy(space_4),
+                        ) {
+                            Text(
+                                text = stringResource(Res.string.partner_detail_screen_principal_diagnosis),
+                                style = MaterialTheme.typography.labelSmall,
+                                fontWeight = FontWeight.Bold,
+                            )
+                            Text(
+                                text = partner.diagnosis.ifBlank { stringResource(Res.string.partner_detail_screen_principal_diagnosis_fallback) },
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurface.copy(alpha = ALPHA_0_7),
+                                lineHeight = line_height_20
+                            )
+                        }
+                        Spacer(modifier = Modifier.width(width_16))
+                        Column(
+                            modifier = Modifier.weight(WEIGHT_1),
+                            verticalArrangement = Arrangement.spacedBy(space_4),
+                        ) {
+                            Text(
+                                text = stringResource(Res.string.partner_detail_screen_related_syndrome),
+                                style = MaterialTheme.typography.labelSmall,
+                                fontWeight = FontWeight.Bold,
+                            )
+                            Text(
+                                text = partner.syndrome.ifBlank { stringResource(Res.string.partner_detail_screen_related_syndrome_fallback) },
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurface.copy(alpha = ALPHA_0_7),
+                                lineHeight = line_height_20
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @Composable
+    fun AssignedProfessorCard(
+        modifier: Modifier = Modifier,
+        staffMemberName: String,
+        onButtonClicked: () -> Unit,
+    ) {
+        Card(
+            modifier = modifier.height(height_200),
+            shape = RoundedCornerShape(size_24),
+            colors = CardDefaults.cardColors(containerColor = PartnerDetailGreen)
+        ) {
+            Column(
+                modifier = Modifier.padding(padding_20).fillMaxSize(),
+                verticalArrangement = Arrangement.SpaceBetween
+            ) {
+                Column {
+                    Text(
+                        text = stringResource(Res.string.partner_detail_screen_assigned_professor),
+                        style = MaterialTheme.typography.labelSmall,
+                        fontWeight = FontWeight.Bold,
+                        letterSpacing = letter_spacing_1,
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = ALPHA_0_7),
+                    )
+                    Spacer(modifier = Modifier.height(height_16))
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(space_12),
+                    ) {
+                        Image(
+                            painter = painterResource(Res.drawable.cemede_logo),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .size(size_48)
+                                .clip(CircleShape)
+                                .border(
+                                    width = width_2,
+                                    color = LightSage,
+                                    shape = CircleShape,
+                                ),
+                            contentScale = ContentScale.Crop
+                        )
+                        Text(
+                            text = stringResource(Res.string.staff_member_card_name, staffMemberName),
+                            style = MaterialTheme.typography.bodyLarge,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.onSurface,
+                        )
+                    }
+                }
+
+                Button(
+                    onClick = onButtonClicked,
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color.White.copy(alpha = ALPHA_0_1)),
+                    shape = RoundedCornerShape(size_12)
+                ) {
+                    Icon(
+                        modifier = Modifier.size(size_16),
+                        imageVector = Icons.Default.ChatBubble,
+                        contentDescription = "Ícono de mensaje",
+                        tint = MaterialTheme.colorScheme.onSurface
+                    )
+                    Spacer(modifier = Modifier.width(width_8))
+                    Text(
+                        text = stringResource(Res.string.contact),
+                        style = MaterialTheme.typography.labelMedium,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onSurface,
+                    )
+                }
+            }
+        }
+    }
+
+    @Composable
+    fun WorkPlanCard(
+        modifier: Modifier = Modifier,
+        objective: String,
+    ) {
+        Card(
+            modifier = modifier.height(height_200),
+            shape = RoundedCornerShape(size_24),
+            colors = CardDefaults.cardColors(containerColor = BrownCharcoal)
+        ) {
+            Box(modifier = Modifier.fillMaxSize()) {
+                // Background Blur Effect
+                Box(
+                    modifier = Modifier
+                        .size(size_150)
+                        .align(Alignment.TopEnd)
+                        .background(
+                            color = DarkSage.copy(alpha = ALPHA_0_1),
+                            shape = CircleShape,
+                        )
+                )
+
+                Column(
+                    modifier = Modifier
+                        .padding(padding_20)
+                        .fillMaxSize(),
+                ) {
+                    Text(
+                        text = stringResource(Res.string.partner_detail_screen_working_plan),
+                        style = MaterialTheme.typography.labelSmall,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.primary,
+                        letterSpacing = letter_spacing_1
+                    )
+                    Spacer(modifier = Modifier.height(height_16))
+                    Text(
+                        text = stringResource(Res.string.objective),
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onSurface,
+                    )
+                    Spacer(modifier = Modifier.height(height_8))
+                    Text(
+                        text = "\"$objective\"",
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = ALPHA_0_7),
+                        fontStyle = FontStyle.Italic
                     )
                 }
             }
@@ -617,5 +857,47 @@ private fun WeeklyScheduleCard() {
                 )
             }
         }
+    }
+}
+
+@Preview
+@Composable
+private fun ClinicalInfoCardPreview() {
+    CemedeTheme {
+        CemedeCard.ClinicalInfoCard(
+            Partner(
+                id = 7607,
+                name = "Jaime Keith",
+                entryDate = null,
+                processType = "mentitum",
+                syndrome = "invenire",
+                diagnosis = "expetenda",
+                staffMemberName = "Noah Barton",
+                scheduleType = ScheduleType.FIXED,
+                workingSchedule = mapOf()
+
+            )
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun AssignedProfessorCardPreview() {
+    CemedeTheme {
+        CemedeCard.AssignedProfessorCard(
+            staffMemberName = "Macarena",
+            onButtonClicked = { }
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun WorkPlanCardPreview() {
+    CemedeTheme {
+        CemedeCard.WorkPlanCard(
+            objective = "Readaptación"
+        )
     }
 }

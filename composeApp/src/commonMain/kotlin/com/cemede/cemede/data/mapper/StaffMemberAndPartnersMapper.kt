@@ -1,8 +1,6 @@
 package com.cemede.cemede.data.mapper
 
-import com.cemede.cemede.data.data_base.model.PartnerEntity
 import com.cemede.cemede.data.data_base.model.StaffMemberAndPartners
-import com.cemede.cemede.domain.model.Partner
 import com.cemede.cemede.domain.model.StaffMember
 
 fun StaffMemberAndPartners.mapToStaffMember() =
@@ -12,17 +10,4 @@ fun StaffMemberAndPartners.mapToStaffMember() =
         partners = partners.map { it.mapToPartner() },
         partnersSchedule = staffMember.partnersSchedule,
         staffMemberWorkingSchedule = staffMember.staffMemberWorkingSchedule,
-    )
-
-fun PartnerEntity.mapToPartner() =
-    Partner(
-        id = id,
-        name = name,
-        entryDate = entryDate,
-        processType = processType,
-        syndrome = syndrome,
-        diagnosis = diagnosis,
-        staffMemberName = staffMemberName,
-        scheduleType = scheduleType,
-        workingSchedule = workingSchedule,
     )
