@@ -83,6 +83,7 @@ import com.cemede.cemede.presentation.theme.size_8
 import com.cemede.cemede.presentation.theme.space_12
 import com.cemede.cemede.presentation.theme.width_4
 import com.cemede.cemede.presentation.util.AnimationUtils.smoothScrollTo
+import com.cemede.cemede.presentation.util.PhonesHelper
 import kotlinx.datetime.LocalTime
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
@@ -150,8 +151,8 @@ fun StaffMemberDetailContent(
                         CemedeCard.StaffMemberDetailCard(
                             modifier = Modifier.fillMaxWidth(),
                             staffMember = state.staffMember,
-                            onCallButtonClick = { showConstructionBanner = true },
-                            onMessageButtonClick = { showConstructionBanner = true },
+                            onCallButtonClick = { PhonesHelper.callStaffMember(state.staffMember.name) },
+                            onMessageButtonClick = { PhonesHelper.openWhatsApp(state.staffMember.name) },
                         )
                         DailySchedule(
                             partnersSchedule = state.staffMember.partnersSchedule,

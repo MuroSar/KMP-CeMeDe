@@ -53,6 +53,7 @@ import com.cemede.cemede.presentation.theme.height_16
 import com.cemede.cemede.presentation.theme.padding_16
 import com.cemede.cemede.presentation.theme.padding_8
 import com.cemede.cemede.presentation.theme.space_12
+import com.cemede.cemede.presentation.util.PhonesHelper
 import kotlinx.datetime.LocalTime
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
@@ -175,8 +176,8 @@ fun StaffMemberListContent(
                                     CemedeCard.StaffMemberCard(
                                         staffMember = staffMember,
                                         onCardClick = { onNavigateToStaffMemberDetail(staffMember) },
-                                        onCallButtonClick = { showConstructionBanner = true },
-                                        onMessageButtonClick = { showConstructionBanner = true },
+                                        onCallButtonClick = { PhonesHelper.callStaffMember(staffMember.name) },
+                                        onMessageButtonClick = { PhonesHelper.openWhatsApp(staffMember.name) },
                                         onScheduleButtonClick = { showConstructionBanner = true },
                                     )
                                     Spacer(modifier = Modifier.height(height_16))
