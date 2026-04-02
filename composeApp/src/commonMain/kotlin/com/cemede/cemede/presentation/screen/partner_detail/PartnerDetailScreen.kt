@@ -51,6 +51,7 @@ import com.cemede.cemede.presentation.theme.size_14
 import com.cemede.cemede.presentation.theme.space_16
 import com.cemede.cemede.presentation.theme.space_4
 import com.cemede.cemede.presentation.theme.space_8
+import com.cemede.cemede.presentation.util.PhonesHelper
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalTime
 import org.jetbrains.compose.resources.stringResource
@@ -96,7 +97,7 @@ fun PartnerDetailScreen(
                     CemedeCard.AssignedProfessorCard(
                         modifier = Modifier.weight(WEIGHT_1),
                         staffMemberName = partner.staffMemberName,
-                        onButtonClicked = { }
+                        onButtonClicked = { PhonesHelper.openWhatsApp(partner.staffMemberName) }
                     )
                     CemedeCard.WorkPlanCard(
                         modifier = Modifier.weight(WEIGHT_1),
