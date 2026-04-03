@@ -90,20 +90,16 @@ fun PartnerDetailScreen(
 
                 CemedeCard.ClinicalInfoCard(partner)
 
-                Row(
+                CemedeCard.AssignedProfessorCard(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(space_16)
-                ) {
-                    CemedeCard.AssignedProfessorCard(
-                        modifier = Modifier.weight(WEIGHT_1),
-                        staffMemberName = partner.staffMemberName,
-                        onButtonClicked = { PhonesHelper.openWhatsApp(partner.staffMemberName) }
-                    )
-                    CemedeCard.WorkPlanCard(
-                        modifier = Modifier.weight(WEIGHT_1),
-                        objective = partner.processType
-                    )
-                }
+                    staffMemberName = partner.staffMemberName,
+                    onButtonClicked = { PhonesHelper.openWhatsApp(partner.staffMemberName) }
+                )
+
+                CemedeCard.WorkPlanCard(
+                    modifier = Modifier.fillMaxWidth(),
+                    objective = partner.processType
+                )
 
                 CemedeScheduleTable.PartnerSchedule(partner)
             }
