@@ -37,7 +37,6 @@ val height_8 = 8.dp
 val height_16 = 16.dp
 val height_24 = 24.dp
 val height_48 = 48.dp
-val height_200 = 200.dp
 
 // Letter Spacing
 val letter_spacing_0_2 = 0.2.sp

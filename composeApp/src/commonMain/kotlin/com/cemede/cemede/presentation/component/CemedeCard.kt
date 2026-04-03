@@ -586,7 +586,7 @@ object CemedeCard {
         onButtonClicked: () -> Unit,
     ) {
         Card(
-            modifier = modifier.height(height_200),
+            modifier = modifier.fillMaxWidth(),
             shape = RoundedCornerShape(size_24),
             colors = CardDefaults.cardColors(containerColor = PartnerDetailGreen)
         ) {
@@ -659,7 +659,7 @@ object CemedeCard {
         objective: String,
     ) {
         Card(
-            modifier = modifier.height(height_200),
+            modifier = modifier.fillMaxWidth(),
             shape = RoundedCornerShape(size_24),
             colors = CardDefaults.cardColors(containerColor = BrownCharcoal)
         ) {
