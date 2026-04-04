@@ -86,11 +86,14 @@ val size_40 = 40.dp
 val size_44 = 44.dp
 val size_48 = 48.dp
 val size_56 = 56.dp
+val size_64 = 64.dp
 val size_80 = 80.dp
 val size_96 = 96.dp
 val size_120 = 120.dp
 val size_150 = 150.dp
 val size_160 = 160.dp
+val size_180 = 180.dp
+val size_192 = 192.dp
 val size_200 = 200.dp
 val size_250 = 250.dp
 

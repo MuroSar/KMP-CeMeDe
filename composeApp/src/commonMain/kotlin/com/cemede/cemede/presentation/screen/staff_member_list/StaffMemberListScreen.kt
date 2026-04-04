@@ -44,6 +44,7 @@ import com.cemede.cemede.domain.util.DateTimeHandler
 import com.cemede.cemede.presentation.component.CemedeBanner
 import com.cemede.cemede.presentation.component.CemedeCard
 import com.cemede.cemede.presentation.component.CemedeEmptyState
+import com.cemede.cemede.presentation.component.CemedeErrorState
 import com.cemede.cemede.presentation.component.CemedeLoader
 import com.cemede.cemede.presentation.component.CemedePill
 import com.cemede.cemede.presentation.component.CemedeSearchBar
@@ -69,6 +70,8 @@ fun StaffMemberListScreen(
     StaffMemberListContent(
         isLoading = state.isLoading,
         staffMembers = state.staffMembers,
+        errorMessage = state.error,
+        onErrorRetry = { viewModel.getStaffMembers() },
         onNavigateBack = onNavigateBack,
         onNavigateToStaffMemberDetail = onNavigateToStaffMemberDetail,
     )
@@ -85,6 +88,8 @@ private enum class StaffMemberFilter {
 fun StaffMemberListContent(
     isLoading: Boolean,
     staffMembers: List<StaffMember>,
+    errorMessage: String?,
+    onErrorRetry: () -> Unit,
     onNavigateBack: () -> Unit,
     onNavigateToStaffMemberDetail: (StaffMember) -> Unit,
 ) {
@@ -103,7 +108,7 @@ fun StaffMemberListContent(
                     onNavigateBack = onNavigateBack,
                     searchQuery = searchQuery,
                     onSearchQueryChange = { searchQuery = it },
-                    searchBarEnabled = !isLoading,
+                    searchBarEnabled = !isLoading && errorMessage == null,
                 )
             },
         ) { paddingValues ->
@@ -114,73 +119,79 @@ fun StaffMemberListContent(
                         subtitle = stringResource(Res.string.staff_member_list_screen_loading),
                     )
                 } else {
-                    Column {
-                        LazyRow(
-                            contentPadding = PaddingValues(horizontal = padding_16, vertical = padding_8),
-                            horizontalArrangement = Arrangement.spacedBy(space_12),
-                        ) {
-                            item {
-                                CemedePill(
-                                    text = stringResource(Res.string.all),
-                                    isSelected = selectedFilter == StaffMemberFilter.ALL,
-                                    onClick = { selectedFilter = StaffMemberFilter.ALL },
-                                )
-                            }
-                            item {
-                                CemedePill(
-                                    text = stringResource(Res.string.working),
-                                    isSelected = selectedFilter == StaffMemberFilter.WORKING,
-                                    onClick = { selectedFilter = StaffMemberFilter.WORKING },
-                                )
-                            }
-                            item {
-                                CemedePill(
-                                    text = stringResource(Res.string.resting),
-                                    isSelected = selectedFilter == StaffMemberFilter.RESTING,
-                                    onClick = { selectedFilter = StaffMemberFilter.RESTING },
-                                )
-                            }
-                        }
-
-                        val filteredStaffMembers =
-                            staffMembers.filter { prof ->
-                                val matchesSearch = prof.name.contains(searchQuery, ignoreCase = true)
-                                val isWorkingNow = prof.staffMemberWorkingSchedule[today]?.contains(currentHour) == true
-                                val matchesFilter =
-                                    when (selectedFilter) {
-                                        StaffMemberFilter.ALL -> true
-                                        StaffMemberFilter.WORKING -> isWorkingNow
-                                        StaffMemberFilter.RESTING -> !isWorkingNow
-                                    }
-                                matchesSearch && matchesFilter
-                            }
-
-                        if (filteredStaffMembers.isEmpty()) {
-                            CemedeEmptyState.EmptyState(
-                                title = stringResource(Res.string.staff_member_list_screen_empty_state_title),
-                                subtitle = stringResource(Res.string.empty_state_subtitle),
-                                actionText =
-                                    if (searchQuery.isNotEmpty() || selectedFilter != StaffMemberFilter.ALL) {
-                                        stringResource(Res.string.clear_search)
-                                    } else {
-                                        ""
-                                    },
-                                onActionClick = {
-                                    searchQuery = ""
-                                    selectedFilter = StaffMemberFilter.ALL
-                                },
-                            )
-                        } else {
-                            LazyColumn(modifier = Modifier.padding(horizontal = padding_16)) {
-                                items(filteredStaffMembers) { staffMember ->
-                                    CemedeCard.StaffMemberCard(
-                                        staffMember = staffMember,
-                                        onCardClick = { onNavigateToStaffMemberDetail(staffMember) },
-                                        onCallButtonClick = { PhonesHelper.callStaffMember(staffMember.name) },
-                                        onMessageButtonClick = { PhonesHelper.openWhatsApp(staffMember.name) },
-                                        onScheduleButtonClick = { showConstructionBanner = true },
+                    if (errorMessage != null) {
+                        CemedeErrorState.ErrorState(
+                            onRetryClick = onErrorRetry,
+                        )
+                    } else {
+                        Column {
+                            LazyRow(
+                                contentPadding = PaddingValues(horizontal = padding_16, vertical = padding_8),
+                                horizontalArrangement = Arrangement.spacedBy(space_12),
+                            ) {
+                                item {
+                                    CemedePill(
+                                        text = stringResource(Res.string.all),
+                                        isSelected = selectedFilter == StaffMemberFilter.ALL,
+                                        onClick = { selectedFilter = StaffMemberFilter.ALL },
                                     )
-                                    Spacer(modifier = Modifier.height(height_16))
+                                }
+                                item {
+                                    CemedePill(
+                                        text = stringResource(Res.string.working),
+                                        isSelected = selectedFilter == StaffMemberFilter.WORKING,
+                                        onClick = { selectedFilter = StaffMemberFilter.WORKING },
+                                    )
+                                }
+                                item {
+                                    CemedePill(
+                                        text = stringResource(Res.string.resting),
+                                        isSelected = selectedFilter == StaffMemberFilter.RESTING,
+                                        onClick = { selectedFilter = StaffMemberFilter.RESTING },
+                                    )
+                                }
+                            }
+
+                            val filteredStaffMembers =
+                                staffMembers.filter { prof ->
+                                    val matchesSearch = prof.name.contains(searchQuery, ignoreCase = true)
+                                    val isWorkingNow = prof.staffMemberWorkingSchedule[today]?.contains(currentHour) == true
+                                    val matchesFilter =
+                                        when (selectedFilter) {
+                                            StaffMemberFilter.ALL -> true
+                                            StaffMemberFilter.WORKING -> isWorkingNow
+                                            StaffMemberFilter.RESTING -> !isWorkingNow
+                                        }
+                                    matchesSearch && matchesFilter
+                                }
+
+                            if (filteredStaffMembers.isEmpty()) {
+                                CemedeEmptyState.EmptyState(
+                                    title = stringResource(Res.string.staff_member_list_screen_empty_state_title),
+                                    subtitle = stringResource(Res.string.empty_state_subtitle),
+                                    actionText =
+                                        if (searchQuery.isNotEmpty() || selectedFilter != StaffMemberFilter.ALL) {
+                                            stringResource(Res.string.clear_search)
+                                        } else {
+                                            ""
+                                        },
+                                    onActionClick = {
+                                        searchQuery = ""
+                                        selectedFilter = StaffMemberFilter.ALL
+                                    },
+                                )
+                            } else {
+                                LazyColumn(modifier = Modifier.padding(horizontal = padding_16)) {
+                                    items(filteredStaffMembers) { staffMember ->
+                                        CemedeCard.StaffMemberCard(
+                                            staffMember = staffMember,
+                                            onCardClick = { onNavigateToStaffMemberDetail(staffMember) },
+                                            onCallButtonClick = { PhonesHelper.callStaffMember(staffMember.name) },
+                                            onMessageButtonClick = { PhonesHelper.openWhatsApp(staffMember.name) },
+                                            onScheduleButtonClick = { showConstructionBanner = true },
+                                        )
+                                        Spacer(modifier = Modifier.height(height_16))
+                                    }
                                 }
                             }
                         }
@@ -243,6 +254,47 @@ private fun StaffMemberListScreenPreview() {
     StaffMemberListContent(
         isLoading = false,
         staffMembers = sampleStaffMembers,
+        errorMessage = null,
+        onErrorRetry = {},
+        onNavigateBack = {},
+        onNavigateToStaffMemberDetail = {},
+    )
+}
+
+@Preview(showSystemUi = true)
+@Composable
+private fun StaffMemberListScreenEmptyPreview() {
+    StaffMemberListContent(
+        isLoading = false,
+        staffMembers = listOf(),
+        errorMessage = null,
+        onErrorRetry = {},
+        onNavigateBack = {},
+        onNavigateToStaffMemberDetail = {},
+    )
+}
+
+@Preview(showSystemUi = true)
+@Composable
+private fun StaffMemberListScreenLoadingPreview() {
+    StaffMemberListContent(
+        isLoading = true,
+        staffMembers = listOf(),
+        errorMessage = null,
+        onErrorRetry = {},
+        onNavigateBack = {},
+        onNavigateToStaffMemberDetail = {},
+    )
+}
+
+@Preview(showSystemUi = true)
+@Composable
+private fun StaffMemberListScreenErrorPreview() {
+    StaffMemberListContent(
+        isLoading = false,
+        staffMembers = listOf(),
+        errorMessage = "ErrorMessage",
+        onErrorRetry = {},
         onNavigateBack = {},
         onNavigateToStaffMemberDetail = {},
     )

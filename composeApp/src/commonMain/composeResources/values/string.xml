@@ -20,6 +20,7 @@
     <string name="objective">Objetivo</string>
     <string name="day">DÍA</string>
     <string name="time">HORARIO</string>
+    <string name="retry">Reintentar</string>
 
     <!--Splash screen-->
     <string name="splash_screen_title_ce">CE.</string>
@@ -49,6 +50,10 @@
     <!--No internet banner-->
     <string name="no_internet_banner_title">Error de conexión</string>
     <string name="no_internet_banner_subtitle">No pudimos sincronizar los datos con el servidor de CE.ME.DE. Por favor, verifica tu conexión e intenta de nuevo. Es posible que la información mostrada no esté actualizada.</string>
+
+    <!--Error state-->
+    <string name="error_state_title">¡Algo salió mal!</string>
+    <string name="error_state_subtitle">Ha ocurrido un error inesperado. Por favor, intenta de nuevo.</string>
 
     <!--Staff member card-->
     <string name="staff_member_card_photo_content_description">Foto de perfil de %1$s</string>
