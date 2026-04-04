@@ -20,3 +20,6 @@ val YellowChargedCapacity = Color(0xFFFFE599)
 val RedOverloadedCapacity = Color(0xFFEA9999)
 
 val ScheduleTableHeaderBackground = Color(0xFFFAFAF9)
+
+val ErrorStateCentralCircleColor = Color(0xFFF0F0F0)
+val ErrorStateCentralIconContainerColor = Color(0xFFE0E0E0)

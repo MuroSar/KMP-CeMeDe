@@ -64,9 +64,6 @@ val padding_32 = 32.dp
 val padding_48 = 48.dp
 val padding_70 = 70.dp
 
-// Radius
-val radius_40 = 40.dp
-
 // Ratio
 const val RATIO_1 = 1f
 

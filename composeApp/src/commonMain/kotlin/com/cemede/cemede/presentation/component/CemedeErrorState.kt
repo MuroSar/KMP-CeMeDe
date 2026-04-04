@@ -1,6 +1,5 @@
 package com.cemede.cemede.presentation.component
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -29,7 +28,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
@@ -40,29 +38,25 @@ import cemede.composeapp.generated.resources.error_state_subtitle
 import cemede.composeapp.generated.resources.error_state_title
 import cemede.composeapp.generated.resources.retry
 import com.cemede.cemede.presentation.theme.ALPHA_0_05
-import com.cemede.cemede.presentation.theme.ALPHA_0_1
 import com.cemede.cemede.presentation.theme.ALPHA_0_3
-import com.cemede.cemede.presentation.theme.ALPHA_0_5
 import com.cemede.cemede.presentation.theme.ALPHA_0_7
 import com.cemede.cemede.presentation.theme.CemedeOliveGreen
 import com.cemede.cemede.presentation.theme.CemedeTheme
+import com.cemede.cemede.presentation.theme.ErrorStateCentralCircleColor
+import com.cemede.cemede.presentation.theme.ErrorStateCentralIconContainerColor
 import com.cemede.cemede.presentation.theme.RedOverloadedCapacity
 import com.cemede.cemede.presentation.theme.elevation_2
-import com.cemede.cemede.presentation.theme.elevation_4
-import com.cemede.cemede.presentation.theme.elevation_8
 import com.cemede.cemede.presentation.theme.font_size_22
 import com.cemede.cemede.presentation.theme.height_16
 import com.cemede.cemede.presentation.theme.padding_16
 import com.cemede.cemede.presentation.theme.padding_20
 import com.cemede.cemede.presentation.theme.padding_8
-import com.cemede.cemede.presentation.theme.radius_40
 import com.cemede.cemede.presentation.theme.size_180
 import com.cemede.cemede.presentation.theme.size_192
 import com.cemede.cemede.presentation.theme.size_20
 import com.cemede.cemede.presentation.theme.size_40
 import com.cemede.cemede.presentation.theme.size_64
 import com.cemede.cemede.presentation.theme.width_1
-import com.cemede.cemede.presentation.theme.width_2
 import com.cemede.cemede.presentation.theme.width_4
 import org.jetbrains.compose.resources.stringResource
 
@@ -133,79 +127,79 @@ object CemedeErrorState {
 
     @Composable
     private fun ErrorVisual() {
-        Box(contentAlignment = Alignment.Center) {
-            // Abstract Background Element (Blur effect)
+        Box(
+            modifier = Modifier.padding(padding_16),
+            contentAlignment = Alignment.Center,
+        ) {
             Box(
                 modifier = Modifier
                     .size(size_180)
                     .alpha(ALPHA_0_3)
-                    .blur(radius_40)
                     .background(
-                        color = CemedeOliveGreen.copy(alpha = ALPHA_0_5),
+                        color = ErrorStateCentralIconContainerColor, // Un gris medio-claro
                         shape = CircleShape,
                     )
             )
 
-            // Central Error Visual
+            // ⭕ Central Error Visual - ¡GRIS CLARO, NO BLANCO SÓLIDO!
             Box(
                 modifier = Modifier
                     .size(size_192)
                     .border(
-                        width = width_2,
-                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = ALPHA_0_1),
+                        width = width_1,
+                        color = Color.Black.copy(alpha = ALPHA_0_05),
                         shape = CircleShape,
                     )
                     .background(
-                        color = Color.White,
-                        shape = CircleShape,
-                    )
-                    .shadow(
-                        elevation = elevation_2,
+                        color = ErrorStateCentralCircleColor, // Un gris muy claro
                         shape = CircleShape,
                     ),
                 contentAlignment = Alignment.Center
             ) {
 
-                // Main Icon Component
+                // ⬛ Contenedor del icono principal
                 Box(contentAlignment = Alignment.TopEnd) {
+                    // Contenedor del icono - Cuadrado redondeado gris medio-claro
                     Surface(
                         modifier = Modifier
-                            .padding(padding_16)
-                            .shadow(
-                                elevation = elevation_4,
+                            .padding(padding_8)
+                            .border(
+                                width = width_1,
+                                color = Color.Black.copy(alpha = ALPHA_0_05),
                                 shape = RoundedCornerShape(size_20),
                             ),
                         shape = RoundedCornerShape(size_20),
-                        color = CemedeOliveGreen.copy(alpha = ALPHA_0_05),
-                        border = BorderStroke(
-                            width = width_1,
-                            color = CemedeOliveGreen.copy(alpha = ALPHA_0_1),
-                        )
+                        color = ErrorStateCentralIconContainerColor, // Un gris medio-claro
                     ) {
-                        Icon(
-                            imageVector = Icons.Filled.Dangerous,
-                            contentDescription = null,
-                            modifier = Modifier
-                                .padding(padding_20)
-                                .size(size_64),
-                            tint = CemedeOliveGreen
-                        )
+                        // Contenedor de iconos combinados para octágono "X"
+                        Box(
+                            modifier = Modifier.padding(padding_20),
+                            contentAlignment = Alignment.Center,
+                        ) {
+                            Icon(
+                                imageVector = Icons.Filled.Dangerous,
+                                contentDescription = null,
+                                modifier = Modifier.size(size_64),
+                                tint = CemedeOliveGreen
+                            )
+                        }
                     }
 
-                    // Priority High Badge
+                    // ❗ Priority High Badge - ¡MÁS SUTIL Y SALMÓN!
                     Surface(
                         modifier = Modifier
                             .size(size_40)
                             .shadow(
-                                elevation = elevation_8,
+                                elevation = elevation_2, // Sombra mucho más sutil
+                                shape = CircleShape,
+                            )
+                            .border(
+                                width = width_4 / 2, // Borde blanco más fino
+                                color = Color.White,
                                 shape = CircleShape,
                             ),
                         shape = CircleShape,
                         color = RedOverloadedCapacity,
-                        border = BorderStroke(
-                            width = width_4,
-                            color = Color.White,
-                        )
                     ) {
                         Box(contentAlignment = Alignment.Center) {
                             Icon(
