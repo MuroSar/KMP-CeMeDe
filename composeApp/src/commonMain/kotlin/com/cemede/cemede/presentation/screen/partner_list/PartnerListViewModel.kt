@@ -31,10 +31,11 @@ class PartnerListViewModel(
                             partners = partners,
                         )
                 }.catch { error ->
-                    _state.value = _state.value.copy(
-                        isLoading = false,
-                        error = error.message,
-                    )
+                    _state.value =
+                        _state.value.copy(
+                            isLoading = false,
+                            error = error.message,
+                        )
                 }.launchIn(viewModelScope)
         }
     }

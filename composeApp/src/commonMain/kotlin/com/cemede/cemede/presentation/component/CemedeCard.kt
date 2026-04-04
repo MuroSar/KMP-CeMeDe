@@ -10,12 +10,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -96,7 +97,6 @@ import com.cemede.cemede.presentation.theme.elevation_1
 import com.cemede.cemede.presentation.theme.elevation_2
 import com.cemede.cemede.presentation.theme.elevation_4
 import com.cemede.cemede.presentation.theme.height_16
-import com.cemede.cemede.presentation.theme.height_200
 import com.cemede.cemede.presentation.theme.height_48
 import com.cemede.cemede.presentation.theme.height_8
 import com.cemede.cemede.presentation.theme.letter_spacing_1
@@ -591,8 +591,10 @@ object CemedeCard {
             colors = CardDefaults.cardColors(containerColor = PartnerDetailGreen)
         ) {
             Column(
-                modifier = Modifier.padding(padding_20).fillMaxSize(),
-                verticalArrangement = Arrangement.SpaceBetween
+                modifier = Modifier
+                    .padding(padding_20)
+                    .wrapContentSize(),
+                verticalArrangement = Arrangement.spacedBy(space_12)
             ) {
                 Column {
                     Text(
@@ -659,11 +661,15 @@ object CemedeCard {
         objective: String,
     ) {
         Card(
-            modifier = modifier.fillMaxWidth(),
+            modifier = modifier.wrapContentSize(),
             shape = RoundedCornerShape(size_24),
             colors = CardDefaults.cardColors(containerColor = BrownCharcoal)
         ) {
-            Box(modifier = Modifier.fillMaxSize()) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentHeight()
+            ) {
                 // Background Blur Effect
                 Box(
                     modifier = Modifier
@@ -678,7 +684,7 @@ object CemedeCard {
                 Column(
                     modifier = Modifier
                         .padding(padding_20)
-                        .fillMaxSize(),
+                        .wrapContentSize(),
                 ) {
                     Text(
                         text = stringResource(Res.string.partner_detail_screen_working_plan),

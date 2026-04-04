@@ -75,12 +75,12 @@ import com.cemede.cemede.presentation.theme.height_16
 import com.cemede.cemede.presentation.theme.height_8
 import com.cemede.cemede.presentation.theme.padding_12
 import com.cemede.cemede.presentation.theme.padding_16
-import com.cemede.cemede.presentation.theme.padding_24
 import com.cemede.cemede.presentation.theme.padding_6
 import com.cemede.cemede.presentation.theme.padding_8
 import com.cemede.cemede.presentation.theme.size_16
 import com.cemede.cemede.presentation.theme.size_8
 import com.cemede.cemede.presentation.theme.space_12
+import com.cemede.cemede.presentation.theme.space_8
 import com.cemede.cemede.presentation.theme.width_4
 import com.cemede.cemede.presentation.util.AnimationUtils.smoothScrollTo
 import com.cemede.cemede.presentation.util.PhonesHelper
@@ -102,6 +102,7 @@ fun StaffMemberDetailScreen(
         state = state,
         onNavigateBack = onNavigateBack,
         onNavigateToPartnerDetail = onNavigateToPartnerDetail,
+        onDismissNetworkBanner = { viewModel.dismissNetworkBanner() },
     )
 }
 
@@ -111,6 +112,7 @@ fun StaffMemberDetailContent(
     state: StaffMemberDetailState,
     onNavigateBack: () -> Unit,
     onNavigateToPartnerDetail: (Partner) -> Unit,
+    onDismissNetworkBanner: () -> Unit,
 ) {
     var showConstructionBanner by remember { mutableStateOf(false) }
     var selectedSchedule by remember { mutableStateOf<Pair<LocalTime, List<Partner>>?>(null) }
@@ -172,14 +174,23 @@ fun StaffMemberDetailContent(
                     }
                 }
 
-                CemedeBanner.ConstructionBanner(
+                Column(
                     modifier =
                         Modifier
                             .align(Alignment.BottomCenter)
                             .padding(bottom = padding_16, start = padding_16, end = padding_16),
-                    showBanner = showConstructionBanner,
-                    onDismiss = { showConstructionBanner = false },
-                )
+                    verticalArrangement = Arrangement.spacedBy(space_8),
+                ) {
+                    CemedeBanner.NoInternetConnectionBanner(
+                        showBanner = state.showNetworkBanner,
+                        onDismiss = onDismissNetworkBanner,
+                    )
+
+                    CemedeBanner.ConstructionBanner(
+                        showBanner = showConstructionBanner,
+                        onDismiss = { showConstructionBanner = false },
+                    )
+                }
             }
         }
     }
@@ -379,5 +390,6 @@ private fun StaffMemberDetailScreenPreview() {
         state = StaffMemberDetailState(staffMember = staffMember, isLoading = false),
         onNavigateBack = {},
         onNavigateToPartnerDetail = {},
+        onDismissNetworkBanner = {},
     )
 }

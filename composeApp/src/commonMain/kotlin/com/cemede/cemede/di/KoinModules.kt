@@ -21,6 +21,7 @@ import com.cemede.cemede.domain.use_case.SyncStaffMemberInfoUseCase
 import com.cemede.cemede.domain.use_case.SyncStaffMemberInfoUseCaseImpl
 import com.cemede.cemede.domain.use_case.SyncStaffMembersWorkingScheduleUseCase
 import com.cemede.cemede.domain.use_case.SyncStaffMembersWorkingScheduleUseCaseImpl
+import com.cemede.cemede.domain.util.getNetworkHelper
 import com.cemede.cemede.presentation.screen.main.MainViewModel
 import com.cemede.cemede.presentation.screen.partner_list.PartnerListViewModel
 import com.cemede.cemede.presentation.screen.splash.SplashViewModel
@@ -51,6 +52,7 @@ expect val platformModule: Module
 val sharedModule =
     module {
         factory { Dispatchers.IO }
+        single { getNetworkHelper() }
         viewModelOf(::SplashViewModel)
         viewModelOf(::MainViewModel)
         viewModelOf(::StaffMemberListViewModel)

@@ -45,7 +45,10 @@
     <!--Construction banner-->
     <string name="construction_banner_title">En construcción</string>
     <string name="construction_banner_subtitle">Esta funcionalidad estará disponible próximamente.</string>
-    <string name="construction_banner_button">Cerrar</string>
+
+    <!--No internet banner-->
+    <string name="no_internet_banner_title">Error de conexión</string>
+    <string name="no_internet_banner_subtitle">No pudimos sincronizar los datos con el servidor de CE.ME.DE. Por favor, verifica tu conexión e intenta de nuevo. Es posible que la información mostrada no esté actualizada.</string>
 
     <!--Staff member card-->
     <string name="staff_member_card_photo_content_description">Foto de perfil de %1$s</string>

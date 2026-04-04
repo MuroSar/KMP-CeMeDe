@@ -73,6 +73,7 @@ import com.cemede.cemede.presentation.theme.size_24
 import com.cemede.cemede.presentation.theme.size_40
 import com.cemede.cemede.presentation.theme.size_8
 import com.cemede.cemede.presentation.theme.space_16
+import com.cemede.cemede.presentation.theme.space_8
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -133,14 +134,23 @@ fun MainScreen(
                     }
                 }
 
-                CemedeBanner.ConstructionBanner(
+                Column(
                     modifier =
                         Modifier
                             .align(Alignment.BottomCenter)
                             .padding(bottom = padding_16, start = padding_16, end = padding_16),
-                    showBanner = showConstructionBanner,
-                    onDismiss = { showConstructionBanner = false },
-                )
+                    verticalArrangement = Arrangement.spacedBy(space_8),
+                ) {
+                    CemedeBanner.NoInternetConnectionBanner(
+                        showBanner = state.showNetworkBanner,
+                        onDismiss = { viewModel.dismissNetworkBanner() },
+                    )
+
+                    CemedeBanner.ConstructionBanner(
+                        showBanner = showConstructionBanner,
+                        onDismiss = { showConstructionBanner = false },
+                    )
+                }
             }
         }
     }

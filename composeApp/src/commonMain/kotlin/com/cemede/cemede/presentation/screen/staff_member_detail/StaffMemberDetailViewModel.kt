@@ -6,6 +6,7 @@ import com.cemede.cemede.domain.model.StaffMember
 import com.cemede.cemede.domain.use_case.GetStaffMemberDetailFlowUseCase
 import com.cemede.cemede.domain.use_case.SyncStaffMemberInfoUseCase
 import com.cemede.cemede.domain.util.CoroutineResult
+import com.cemede.cemede.domain.util.NetworkHelper
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
@@ -17,12 +18,25 @@ class StaffMemberDetailViewModel(
     private val staffMember: StaffMember,
     private val getStaffMemberDetailFlowUseCase: GetStaffMemberDetailFlowUseCase,
     private val syncStaffMemberInfoUseCase: SyncStaffMemberInfoUseCase,
+    private val networkHelper: NetworkHelper,
 ) : ViewModel() {
     private val _state = MutableStateFlow(StaffMemberDetailState())
     val state = _state.asStateFlow()
 
     init {
         syncStaffMemberInfo()
+        observeNetworkStatus()
+    }
+
+    private fun observeNetworkStatus() {
+        networkHelper
+            .observeNetworkStatus()
+            .onEach { isAvailable ->
+                _state.value =
+                    _state.value.copy(
+                        showNetworkBanner = !isAvailable,
+                    )
+            }.launchIn(viewModelScope)
     }
 
     fun syncStaffMemberInfo() =
@@ -54,10 +68,15 @@ class StaffMemberDetailViewModel(
                     _state.value = _state.value.copy(isLoading = false, error = error.message)
                 }.launchIn(viewModelScope)
         }
+
+    fun dismissNetworkBanner() {
+        _state.value = _state.value.copy(showNetworkBanner = false)
+    }
 }
 
 data class StaffMemberDetailState(
     val staffMember: StaffMember? = null,
     val isLoading: Boolean = true,
     val error: String? = null,
+    val showNetworkBanner: Boolean = false,
 )
