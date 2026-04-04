@@ -23,7 +23,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import cemede.composeapp.generated.resources.Res
@@ -37,7 +36,6 @@ import cemede.composeapp.generated.resources.partner_list_screen_loading
 import cemede.composeapp.generated.resources.partner_list_screen_search_bar
 import cemede.composeapp.generated.resources.synchronizing_data
 import com.cemede.cemede.domain.model.Partner
-import com.cemede.cemede.presentation.component.CemedeBanner
 import com.cemede.cemede.presentation.component.CemedeCard
 import com.cemede.cemede.presentation.component.CemedeEmptyState
 import com.cemede.cemede.presentation.component.CemedeLoader
@@ -79,9 +77,10 @@ fun PartnerListContent(
     var searchQuery by remember { mutableStateOf("") }
     var selectedProcessType by remember { mutableStateOf<String?>(null) }
 
-    val processTypes = remember(partners) {
-        partners.map { it.processType }.distinct().filter { it.isNotBlank() }
-    }
+    val processTypes =
+        remember(partners) {
+            partners.map { it.processType }.distinct().filter { it.isNotBlank() }
+        }
 
     CemedeTheme {
         Scaffold(
@@ -106,40 +105,42 @@ fun PartnerListContent(
                         if (processTypes.isNotEmpty()) {
                             LazyRow(
                                 contentPadding = PaddingValues(horizontal = padding_16, vertical = padding_8),
-                                horizontalArrangement = Arrangement.spacedBy(space_12)
+                                horizontalArrangement = Arrangement.spacedBy(space_12),
                             ) {
                                 item {
                                     CemedePill(
                                         text = stringResource(Res.string.all),
                                         isSelected = selectedProcessType == null,
-                                        onClick = { selectedProcessType = null }
+                                        onClick = { selectedProcessType = null },
                                     )
                                 }
                                 items(processTypes) { type ->
                                     CemedePill(
                                         text = type,
                                         isSelected = selectedProcessType == type,
-                                        onClick = { selectedProcessType = type }
+                                        onClick = { selectedProcessType = type },
                                     )
                                 }
                             }
                         }
 
-                        val filteredPartners = partners.filter { partner ->
-                            val matchesSearch = partner.name.contains(searchQuery, ignoreCase = true)
-                            val matchesType = selectedProcessType == null || partner.processType == selectedProcessType
-                            matchesSearch && matchesType
-                        }
+                        val filteredPartners =
+                            partners.filter { partner ->
+                                val matchesSearch = partner.name.contains(searchQuery, ignoreCase = true)
+                                val matchesType = selectedProcessType == null || partner.processType == selectedProcessType
+                                matchesSearch && matchesType
+                            }
 
                         if (filteredPartners.isEmpty()) {
                             CemedeEmptyState.EmptyState(
                                 title = stringResource(Res.string.partner_list_screen_empty_state_title),
                                 subtitle = stringResource(Res.string.empty_state_subtitle),
-                                actionText = if (searchQuery.isNotEmpty() || selectedProcessType != null) {
-                                    stringResource(Res.string.clear_search)
-                                } else {
-                                    ""
-                                },
+                                actionText =
+                                    if (searchQuery.isNotEmpty() || selectedProcessType != null) {
+                                        stringResource(Res.string.clear_search)
+                                    } else {
+                                        ""
+                                    },
                                 onActionClick = {
                                     searchQuery = ""
                                     selectedProcessType = null
@@ -148,7 +149,7 @@ fun PartnerListContent(
                         } else {
                             LazyColumn(
                                 modifier = Modifier.padding(horizontal = padding_16),
-                                contentPadding = PaddingValues(vertical = padding_8)
+                                contentPadding = PaddingValues(vertical = padding_8),
                             ) {
                                 items(filteredPartners) { partner ->
                                     CemedeCard.PartnerCard(
@@ -200,12 +201,13 @@ private fun PartnerListTopAppBar(
 @Preview(showSystemUi = true)
 @Composable
 private fun PartnerListScreenPreview() {
-    val samplePartners = listOf(
-        Partner(id = 1, name = "Juan Pérez", processType = "Readaptacion"),
-        Partner(id = 2, name = "María García", processType = "Deportivo"),
-        Partner(id = 3, name = "Lucas Rodríguez", processType = "Salud"),
-        Partner(id = 4, name = "Ana Martínez", processType = "Readaptacion"),
-    )
+    val samplePartners =
+        listOf(
+            Partner(id = 1, name = "Juan Pérez", processType = "Readaptacion"),
+            Partner(id = 2, name = "María García", processType = "Deportivo"),
+            Partner(id = 3, name = "Lucas Rodríguez", processType = "Salud"),
+            Partner(id = 4, name = "Ana Martínez", processType = "Readaptacion"),
+        )
     PartnerListContent(
         isLoading = false,
         partners = samplePartners,
