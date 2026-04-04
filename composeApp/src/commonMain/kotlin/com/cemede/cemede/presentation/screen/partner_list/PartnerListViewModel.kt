@@ -21,7 +21,7 @@ class PartnerListViewModel(
         getPartners()
     }
 
-    private fun getPartners() {
+    fun getPartners() {
         viewModelScope.launch {
             getAllPartnersFlowUseCase()
                 .onEach { partners ->
@@ -29,6 +29,7 @@ class PartnerListViewModel(
                         _state.value.copy(
                             isLoading = false,
                             partners = partners,
+                            error = null,
                         )
                 }.catch { error ->
                     _state.value =

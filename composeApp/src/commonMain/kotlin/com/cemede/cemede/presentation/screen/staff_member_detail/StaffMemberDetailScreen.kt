@@ -65,9 +65,11 @@ import com.cemede.cemede.presentation.component.CemedeBanner
 import com.cemede.cemede.presentation.component.CemedeCard
 import com.cemede.cemede.presentation.component.CemedeDialog
 import com.cemede.cemede.presentation.component.CemedeEmptyState
+import com.cemede.cemede.presentation.component.CemedeErrorState
 import com.cemede.cemede.presentation.component.CemedeLoader
 import com.cemede.cemede.presentation.component.CemedeSearchBar
 import com.cemede.cemede.presentation.component.CemedeTopAppBar
+import com.cemede.cemede.presentation.screen.partner_list.PartnerListContent
 import com.cemede.cemede.presentation.theme.ALPHA_0_2
 import com.cemede.cemede.presentation.theme.ALPHA_0_7
 import com.cemede.cemede.presentation.theme.CemedeTheme
@@ -100,6 +102,7 @@ fun StaffMemberDetailScreen(
 
     StaffMemberDetailContent(
         state = state,
+        onErrorRetry = { viewModel.syncStaffMemberInfo() },
         onNavigateBack = onNavigateBack,
         onNavigateToPartnerDetail = onNavigateToPartnerDetail,
         onDismissNetworkBanner = { viewModel.dismissNetworkBanner() },
@@ -110,6 +113,7 @@ fun StaffMemberDetailScreen(
 @Composable
 fun StaffMemberDetailContent(
     state: StaffMemberDetailState,
+    onErrorRetry: () -> Unit,
     onNavigateBack: () -> Unit,
     onNavigateToPartnerDetail: (Partner) -> Unit,
     onDismissNetworkBanner: () -> Unit,
@@ -143,34 +147,43 @@ fun StaffMemberDetailContent(
             },
         ) { paddingValues ->
             Box(modifier = Modifier.fillMaxSize()) {
-                if (state.isLoading) {
-                    CemedeLoader(
-                        title = stringResource(Res.string.synchronizing_data),
-                        subtitle = stringResource(Res.string.staff_member_detail_screen_loading),
-                    )
-                } else if (state.staffMember != null) {
-                    Column(modifier = Modifier.padding(paddingValues)) {
-                        CemedeCard.StaffMemberDetailCard(
-                            modifier = Modifier.fillMaxWidth(),
-                            staffMember = state.staffMember,
-                            onCallButtonClick = { PhonesHelper.callStaffMember(state.staffMember.name) },
-                            onMessageButtonClick = { PhonesHelper.openWhatsApp(state.staffMember.name) },
-                        )
-                        DailySchedule(
-                            partnersSchedule = state.staffMember.partnersSchedule,
-                            onScheduleClick = { time, partners ->
-                                selectedSchedule = time to partners
-                            },
-                            onSeeAllClicked = { showConstructionBanner = true }
-                        )
-                        AssignedPartners(
-                            partners = state.staffMember.partners,
-                            onNavigateToPartnerDetail = onNavigateToPartnerDetail,
+                when {
+                    state.isLoading -> {
+                        CemedeLoader(
+                            title = stringResource(Res.string.synchronizing_data),
+                            subtitle = stringResource(Res.string.staff_member_detail_screen_loading),
                         )
                     }
-                } else {
-                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                        Text(state.error ?: stringResource(Res.string.staff_member_detail_screen_staff_member_not_found))
+                    state.error != null -> {
+                        CemedeErrorState.ErrorState(
+                            onRetryClick = onErrorRetry,
+                        )
+                    }
+                    state.staffMember != null -> {
+                        Column(modifier = Modifier.padding(paddingValues)) {
+                            CemedeCard.StaffMemberDetailCard(
+                                modifier = Modifier.fillMaxWidth(),
+                                staffMember = state.staffMember,
+                                onCallButtonClick = { PhonesHelper.callStaffMember(state.staffMember.name) },
+                                onMessageButtonClick = { PhonesHelper.openWhatsApp(state.staffMember.name) },
+                            )
+                            DailySchedule(
+                                partnersSchedule = state.staffMember.partnersSchedule,
+                                onScheduleClick = { time, partners ->
+                                    selectedSchedule = time to partners
+                                },
+                                onSeeAllClicked = { showConstructionBanner = true }
+                            )
+                            AssignedPartners(
+                                partners = state.staffMember.partners,
+                                onNavigateToPartnerDetail = onNavigateToPartnerDetail,
+                            )
+                        }
+                    }
+                    else -> {
+                        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                            Text(state.error ?: stringResource(Res.string.staff_member_detail_screen_staff_member_not_found))
+                        }
                     }
                 }
 
@@ -388,6 +401,31 @@ private fun StaffMemberDetailScreenPreview() {
         )
     StaffMemberDetailContent(
         state = StaffMemberDetailState(staffMember = staffMember, isLoading = false),
+        onErrorRetry = {},
+        onNavigateBack = {},
+        onNavigateToPartnerDetail = {},
+        onDismissNetworkBanner = {},
+    )
+}
+
+@Preview(showSystemUi = true)
+@Composable
+private fun StaffMemberDetailScreenLoadingPreview() {
+    StaffMemberDetailContent(
+        state = StaffMemberDetailState(isLoading = true),
+        onErrorRetry = {},
+        onNavigateBack = {},
+        onNavigateToPartnerDetail = {},
+        onDismissNetworkBanner = {},
+    )
+}
+
+@Preview(showSystemUi = true)
+@Composable
+private fun StaffMemberDetailScreenErrorPreview() {
+    StaffMemberDetailContent(
+        state = StaffMemberDetailState(isLoading = false, error = "Error Message"),
+        onErrorRetry = {},
         onNavigateBack = {},
         onNavigateToPartnerDetail = {},
         onDismissNetworkBanner = {},

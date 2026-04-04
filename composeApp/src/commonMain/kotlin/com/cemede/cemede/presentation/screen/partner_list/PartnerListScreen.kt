@@ -38,6 +38,7 @@ import cemede.composeapp.generated.resources.synchronizing_data
 import com.cemede.cemede.domain.model.Partner
 import com.cemede.cemede.presentation.component.CemedeCard
 import com.cemede.cemede.presentation.component.CemedeEmptyState
+import com.cemede.cemede.presentation.component.CemedeErrorState
 import com.cemede.cemede.presentation.component.CemedeLoader
 import com.cemede.cemede.presentation.component.CemedePill
 import com.cemede.cemede.presentation.component.CemedeSearchBar
@@ -61,6 +62,8 @@ fun PartnerListScreen(
     PartnerListContent(
         isLoading = state.isLoading,
         partners = state.partners,
+        errorMessage = state.error,
+        onErrorRetry = { viewModel.getPartners() },
         onNavigateToPartnerDetail = onNavigateToPartnerDetail,
         onNavigateBack = onNavigateBack,
     )
@@ -71,6 +74,8 @@ fun PartnerListScreen(
 fun PartnerListContent(
     isLoading: Boolean,
     partners: List<Partner>,
+    errorMessage: String?,
+    onErrorRetry: () -> Unit,
     onNavigateToPartnerDetail: (Partner) -> Unit,
     onNavigateBack: () -> Unit,
 ) {
@@ -89,7 +94,7 @@ fun PartnerListContent(
                     onNavigateBack = onNavigateBack,
                     searchQuery = searchQuery,
                     onSearchQueryChange = { searchQuery = it },
-                    searchBarEnabled = !isLoading,
+                    searchBarEnabled = !isLoading && errorMessage == null,
                 )
             },
         ) { paddingValues ->
@@ -100,63 +105,69 @@ fun PartnerListContent(
                         subtitle = stringResource(Res.string.partner_list_screen_loading),
                     )
                 } else {
-                    Column {
-                        // Filter Pills
-                        if (processTypes.isNotEmpty()) {
-                            LazyRow(
-                                contentPadding = PaddingValues(horizontal = padding_16, vertical = padding_8),
-                                horizontalArrangement = Arrangement.spacedBy(space_12),
-                            ) {
-                                item {
-                                    CemedePill(
-                                        text = stringResource(Res.string.all),
-                                        isSelected = selectedProcessType == null,
-                                        onClick = { selectedProcessType = null },
-                                    )
-                                }
-                                items(processTypes) { type ->
-                                    CemedePill(
-                                        text = type,
-                                        isSelected = selectedProcessType == type,
-                                        onClick = { selectedProcessType = type },
-                                    )
+                    if (errorMessage != null) {
+                        CemedeErrorState.ErrorState(
+                            onRetryClick = onErrorRetry,
+                        )
+                    } else {
+                        Column {
+                            // Filter Pills
+                            if (processTypes.isNotEmpty()) {
+                                LazyRow(
+                                    contentPadding = PaddingValues(horizontal = padding_16, vertical = padding_8),
+                                    horizontalArrangement = Arrangement.spacedBy(space_12),
+                                ) {
+                                    item {
+                                        CemedePill(
+                                            text = stringResource(Res.string.all),
+                                            isSelected = selectedProcessType == null,
+                                            onClick = { selectedProcessType = null },
+                                        )
+                                    }
+                                    items(processTypes) { type ->
+                                        CemedePill(
+                                            text = type,
+                                            isSelected = selectedProcessType == type,
+                                            onClick = { selectedProcessType = type },
+                                        )
+                                    }
                                 }
                             }
-                        }
 
-                        val filteredPartners =
-                            partners.filter { partner ->
-                                val matchesSearch = partner.name.contains(searchQuery, ignoreCase = true)
-                                val matchesType = selectedProcessType == null || partner.processType == selectedProcessType
-                                matchesSearch && matchesType
-                            }
+                            val filteredPartners =
+                                partners.filter { partner ->
+                                    val matchesSearch = partner.name.contains(searchQuery, ignoreCase = true)
+                                    val matchesType = selectedProcessType == null || partner.processType == selectedProcessType
+                                    matchesSearch && matchesType
+                                }
 
-                        if (filteredPartners.isEmpty()) {
-                            CemedeEmptyState.EmptyState(
-                                title = stringResource(Res.string.partner_list_screen_empty_state_title),
-                                subtitle = stringResource(Res.string.empty_state_subtitle),
-                                actionText =
-                                    if (searchQuery.isNotEmpty() || selectedProcessType != null) {
-                                        stringResource(Res.string.clear_search)
-                                    } else {
-                                        ""
+                            if (filteredPartners.isEmpty()) {
+                                CemedeEmptyState.EmptyState(
+                                    title = stringResource(Res.string.partner_list_screen_empty_state_title),
+                                    subtitle = stringResource(Res.string.empty_state_subtitle),
+                                    actionText =
+                                        if (searchQuery.isNotEmpty() || selectedProcessType != null) {
+                                            stringResource(Res.string.clear_search)
+                                        } else {
+                                            ""
+                                        },
+                                    onActionClick = {
+                                        searchQuery = ""
+                                        selectedProcessType = null
                                     },
-                                onActionClick = {
-                                    searchQuery = ""
-                                    selectedProcessType = null
-                                },
-                            )
-                        } else {
-                            LazyColumn(
-                                modifier = Modifier.padding(horizontal = padding_16),
-                                contentPadding = PaddingValues(vertical = padding_8),
-                            ) {
-                                items(filteredPartners) { partner ->
-                                    CemedeCard.PartnerCard(
-                                        partner = partner,
-                                        onCardClick = onNavigateToPartnerDetail,
-                                    )
-                                    Spacer(modifier = Modifier.height(height_16))
+                                )
+                            } else {
+                                LazyColumn(
+                                    modifier = Modifier.padding(horizontal = padding_16),
+                                    contentPadding = PaddingValues(vertical = padding_8),
+                                ) {
+                                    items(filteredPartners) { partner ->
+                                        CemedeCard.PartnerCard(
+                                            partner = partner,
+                                            onCardClick = onNavigateToPartnerDetail,
+                                        )
+                                        Spacer(modifier = Modifier.height(height_16))
+                                    }
                                 }
                             }
                         }
@@ -211,6 +222,8 @@ private fun PartnerListScreenPreview() {
     PartnerListContent(
         isLoading = false,
         partners = samplePartners,
+        errorMessage = null,
+        onErrorRetry = {},
         onNavigateToPartnerDetail = {},
         onNavigateBack = {},
     )
@@ -222,6 +235,8 @@ private fun PartnerListScreenEmptyPreview() {
     PartnerListContent(
         isLoading = false,
         partners = listOf(),
+        errorMessage = null,
+        onErrorRetry = {},
         onNavigateToPartnerDetail = {},
         onNavigateBack = {},
     )
@@ -233,6 +248,21 @@ private fun PartnerListScreenLoadingPreview() {
     PartnerListContent(
         isLoading = true,
         partners = listOf(),
+        errorMessage = null,
+        onErrorRetry = {},
+        onNavigateToPartnerDetail = {},
+        onNavigateBack = {},
+    )
+}
+
+@Preview(showSystemUi = true)
+@Composable
+private fun PartnerListScreenErrorPreview() {
+    PartnerListContent(
+        isLoading = false,
+        partners = listOf(),
+        errorMessage = "ErrorMessage",
+        onErrorRetry = {},
         onNavigateToPartnerDetail = {},
         onNavigateBack = {},
     )

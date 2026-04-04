@@ -21,7 +21,7 @@ class StaffMemberListViewModel(
         getStaffMembers()
     }
 
-    private fun getStaffMembers() {
+    fun getStaffMembers() {
         viewModelScope.launch {
             getAllStaffMembersFlowUseCase()
                 .onEach { staffMembers ->
@@ -29,6 +29,7 @@ class StaffMemberListViewModel(
                         _state.value.copy(
                             isLoading = false,
                             staffMembers = staffMembers,
+                            error = null,
                         )
                 }.catch { error ->
                     _state.value =

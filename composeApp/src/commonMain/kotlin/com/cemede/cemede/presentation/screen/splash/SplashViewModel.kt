@@ -44,7 +44,10 @@ class SplashViewModel(
             _state.value = _state.value.copy(isLoading = true)
             when (val result = syncPartnersInfoUseCase()) {
                 is CoroutineResult.Success -> {
-                    _state.value = _state.value.copy(isLoading = false)
+                    _state.value = _state.value.copy(
+                        isLoading = false,
+                        error = null,
+                    )
                 }
 
                 is CoroutineResult.Error -> {

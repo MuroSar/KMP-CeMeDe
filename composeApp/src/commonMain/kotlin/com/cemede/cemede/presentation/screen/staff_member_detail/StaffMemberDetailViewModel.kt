@@ -44,7 +44,10 @@ class StaffMemberDetailViewModel(
             _state.value = _state.value.copy(isLoading = true)
             when (val result = syncStaffMemberInfoUseCase(staffMember)) {
                 is CoroutineResult.Success -> {
-                    _state.value = _state.value.copy(isLoading = false)
+                    _state.value = _state.value.copy(
+                        isLoading = false,
+                        error = null,
+                    )
                     getStaffMemberDetail(staffMember.id)
                 }
 
@@ -63,9 +66,16 @@ class StaffMemberDetailViewModel(
             _state.value = _state.value.copy(isLoading = true)
             getStaffMemberDetailFlowUseCase(id)
                 .onEach { staffMember ->
-                    _state.value = _state.value.copy(staffMember = staffMember, isLoading = false)
+                    _state.value = _state.value.copy(
+                        staffMember = staffMember,
+                        isLoading = false,
+                        error = null,
+                    )
                 }.catch { error ->
-                    _state.value = _state.value.copy(isLoading = false, error = error.message)
+                    _state.value = _state.value.copy(
+                        isLoading = false,
+                        error = error.message,
+                    )
                 }.launchIn(viewModelScope)
         }
 
