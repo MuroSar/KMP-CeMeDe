@@ -21,7 +21,7 @@ Este documento registra la evolución del proyecto y los hitos alcanzados en cad
 ## 🔑 Gestión de Credenciales y Keys
 Para la compilación y firma de releases, se deben tener en cuenta las siguientes consideraciones:
 
-*   **Android**: Los archivos `.jks` y las propiedades de firma deben configurarse en el `local.properties` o mediante variables de entorno en CI/CD. No subir nunca el archivo de almacén de claves al repositorio.
+*   **Android**: Los detalles específicos para el firmado de la aplicación se encuentran en: [Configuración de Keystore](./android/keystore.md).
 *   **iOS**: El aprovisionamiento se gestiona a través de Xcode (`iosApp.xcodeproj`) mediante perfiles de desarrollo y distribución de Apple.
 *   **API Keys**: Actualmente las URLs de Google Sheets son públicas (solo lectura), por lo que no requieren llaves de API adicionales por el momento.
 
