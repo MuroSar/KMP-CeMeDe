@@ -17,8 +17,9 @@ Bienvenido a la documentación técnica del proyecto **CeMeDe** (Centro Médico 
 6. [Soporte de Plataformas](technical/platforms.md)
 7. [Notas de Desarrollo](technical/development_notes.md)
 
-## 🚀 Versiones
-8. [Historial de Releases y Keys](releases/history.md)
+## 🚀 Releases
+8. [Guía de Compilación y Credenciales](releases/compilation.md)
+9. [Historial de Releases y Keys](releases/history.md)
 
 ---
 ### Navegación

@@ -18,12 +18,8 @@ Este documento registra la evolución del proyecto y los hitos alcanzados en cad
 
 ---
 
-## 🔑 Gestión de Credenciales y Keys
-Para la compilación y firma de releases, se deben tener en cuenta las siguientes consideraciones:
-
-*   **Android**: Los detalles específicos para el firmado de la aplicación se encuentran en: [Configuración de Keystore](./android/keystore.md).
-*   **iOS**: El aprovisionamiento se gestiona a través de Xcode (`iosApp.xcodeproj`) mediante perfiles de desarrollo y distribución de Apple.
-*   **API Keys**: Actualmente las URLs de Google Sheets son públicas (solo lectura), por lo que no requieren llaves de API adicionales por el momento.
+## 🛠️ Guía de Compilación
+Para detalles sobre cómo generar versiones firmadas para Android e iOS, consulta la [Guía de Compilación y Credenciales](./compilation.md).
 
 ---
 Regresar al [Índice](../Index.md)
