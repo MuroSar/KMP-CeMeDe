@@ -30,8 +30,9 @@ Dentro de la carpeta `docs/` encontrarás información detallada sobre:
 6. [Soporte de Plataformas](./docs/technical/platforms.md)
 7. [Notas de Desarrollo](./docs/technical/development_notes.md)
 
-## 🚀 Versiones
-8. [Historial de Releases y Keys](./docs/releases/history.md)
+## 🚀 Releases
+8. [Guía de Compilación y Credenciales](./docs/releases/compilation.md)
+9. [Historial de Releases y Keys](./docs/releases/history.md)
 
 ---
 
