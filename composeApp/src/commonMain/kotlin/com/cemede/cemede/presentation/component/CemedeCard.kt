@@ -527,6 +527,7 @@ object CemedeCard {
                         horizontalArrangement = Arrangement.spacedBy(space_8)
                     ) {
                         Icon(
+                            modifier = Modifier.size(size_14),
                             painter = painterResource(Res.drawable.stethoscope),
                             contentDescription = null,
                             tint = MaterialTheme.colorScheme.primary,
