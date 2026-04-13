@@ -6,6 +6,11 @@ Este documento centraliza las tareas pendientes, mejoras de UI y lógica de nego
 
 ## 🚀 Prioridad Alta (Crítico / Core UX)
 
+### 🛠️ Ajuste de Versión en Splash
+*Evitar el uso de strings hardcodeados para la versión de la app.*
+- [ ] **Dinamicidad de la versión:**
+    - [ ] Configurar la Splash Screen para que obtenga y muestre el `versionCode` (o `versionName`) real definido en el build script, eliminando la dependencia de un string manual.
+
 ### 🛠️ Configuración de Seguridad - Android Release
 *Asegurar el manejo correcto de credenciales de firmado.*
 - [ ] **Configuración de Keystore:**
@@ -24,6 +29,10 @@ Este documento centraliza las tareas pendientes, mejoras de UI y lógica de nego
 ---
 
 ## 🛠️ Prioridad Media (Nuevas Funcionalidades)
+
+### ⚙️ Pantalla de Configuración
+- [ ] **Ajustes de la Aplicación:**
+    - [ ] Implementar una interfaz para gestionar preferencias de usuario, parámetros de sincronización o temas visuales.
 
 ### 📅 Visualización de Agenda
 - [ ] **Calendario Completo:** Implementar vista de calendario extendido dentro del detalle de cada StaffMember.
