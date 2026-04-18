@@ -19,6 +19,8 @@ import com.cemede.cemede.domain.use_case.SyncPartnersInfoUseCase
 import com.cemede.cemede.domain.use_case.SyncPartnersInfoUseCaseImpl
 import com.cemede.cemede.domain.use_case.SyncStaffMemberInfoUseCase
 import com.cemede.cemede.domain.use_case.SyncStaffMemberInfoUseCaseImpl
+import com.cemede.cemede.domain.use_case.SyncAllStaffMembersScheduleUseCase
+import com.cemede.cemede.domain.use_case.SyncAllStaffMembersScheduleUseCaseImpl
 import com.cemede.cemede.domain.use_case.SyncStaffMembersWorkingScheduleUseCase
 import com.cemede.cemede.domain.use_case.SyncStaffMembersWorkingScheduleUseCaseImpl
 import com.cemede.cemede.domain.util.getNetworkHelper
@@ -68,6 +70,7 @@ val useCaseModule =
         singleOf(::SyncStaffMembersWorkingScheduleUseCaseImpl).bind<SyncStaffMembersWorkingScheduleUseCase>()
         singleOf(::SyncPartnersInfoUseCaseImpl).bind<SyncPartnersInfoUseCase>()
         singleOf(::GetAllPartnersUseCaseImpl).bind<GetAllPartnersUseCase>()
+        singleOf(::SyncAllStaffMembersScheduleUseCaseImpl).bind<SyncAllStaffMembersScheduleUseCase>()
     }
 
 val repositoryModule =

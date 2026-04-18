@@ -99,8 +99,11 @@ fun SplashScreen(
                     repeatMode = RepeatMode.Reverse // Esto hace que el valor vaya de 1.1f de vuelta al valor original
                 )
             )
-        } else {
-            // Cuando isLoading pasa a false, el LaunchedEffect se cancela, interrumpe la animación y entra aquí
+        }
+    }
+
+    LaunchedEffect(state.isSyncComplete) {
+        if (state.isSyncComplete) {
             onSplashFinished()
         }
     }

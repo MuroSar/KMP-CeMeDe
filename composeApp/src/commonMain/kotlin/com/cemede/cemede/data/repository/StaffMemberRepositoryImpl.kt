@@ -120,4 +120,49 @@ class StaffMemberRepositoryImpl(
             }
         }
     }
+
+    override suspend fun syncAllStaffMembersSchedule(): CoroutineResult<Unit> {
+        val existingStaffMembers =
+            withContext(Dispatchers.IO) {
+                cemedeDataBase.getAllStaffMembersFlow().first()
+            }
+
+        UrlProvider.staffMemberScheduleTabs.forEach { (name, url) ->
+            val staffMember = existingStaffMembers.find { it.name == name } ?: return@forEach
+
+            when (val result = csvDataSource.getStaffMemberScheduleData(url)) {
+                is CoroutineResult.Success -> {
+                    val staffMemberScheduleWithPartnersNames = CsvParser.staffMemberSchedule(result.data)
+                    val partnersSchedule = mutableMapOf<DayOfWeek, Map<LocalTime, List<Partner>>>()
+
+                    staffMemberScheduleWithPartnersNames.forEach { (day, timeMap) ->
+                        val newTimeMap = mutableMapOf<LocalTime, List<Partner>>()
+                        timeMap.forEach { (time, partnerNames) ->
+                            val partners =
+                                partnerNames.mapNotNull { partnerName ->
+                                    cemedeDataBase.getPartnerByName(partnerName)
+                                }
+                            newTimeMap[time] = partners
+                        }
+                        partnersSchedule[day] = newTimeMap
+                    }
+
+                    val staffMemberEntity =
+                        StaffMemberEntity(
+                            id = staffMember.id,
+                            name = staffMember.name,
+                            partnersSchedule = partnersSchedule,
+                            staffMemberWorkingSchedule = staffMember.staffMemberWorkingSchedule,
+                        )
+
+                    cemedeDataBase.upsertStaffMember(staffMemberEntity)
+                }
+
+                is CoroutineResult.Error -> {
+                    return result
+                }
+            }
+        }
+        return CoroutineResult.Success(Unit)
+    }
 }

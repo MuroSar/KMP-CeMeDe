@@ -12,4 +12,6 @@ interface StaffMemberRepository {
     suspend fun syncStaffMemberInfo(staffMember: StaffMember): CoroutineResult<Unit>
 
     suspend fun syncStaffMembersWorkingSchedule(): CoroutineResult<Unit>
+
+    suspend fun syncAllStaffMembersSchedule(): CoroutineResult<Unit>
 }

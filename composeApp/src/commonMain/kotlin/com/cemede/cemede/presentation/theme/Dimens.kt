@@ -73,6 +73,7 @@ const val SCALE_1_25 = 1.25f
 
 // Size
 val size_0 = 0.dp
+val size_4 = 4.dp
 val size_8 = 8.dp
 val size_12 = 12.dp
 val size_14 = 14.dp
@@ -98,6 +99,7 @@ val size_200 = 200.dp
 val size_250 = 250.dp
 
 // Space
+val space_2 = 2.dp
 val space_4 = 4.dp
 val space_8 = 8.dp
 val space_12 = 12.dp
@@ -117,4 +119,6 @@ val width_8 = 8.dp
 val width_16 = 16.dp
 val width_24 = 24.dp
 val width_48 = 48.dp
+val width_80 = 80.dp
+val width_100 = 100.dp
 val width_110 = 110.dp
