@@ -41,7 +41,7 @@
     <string name="main_screen_member_button_subtitle">Buscar socio</string>
     <string name="main_screen_services_button_title">Servicios</string>
     <string name="main_screen_services_button_subtitle">Protocolos</string>
-    <string name="main_screen_daily_resume">Resumen diario</string>
+    <string name="main_screen_daily_availability">Disponibilidad diario</string>
 
     <!--Construction banner-->
     <string name="construction_banner_title">En construcción</string>

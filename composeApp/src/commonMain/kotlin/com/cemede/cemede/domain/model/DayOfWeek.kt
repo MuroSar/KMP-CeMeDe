@@ -23,5 +23,14 @@ enum class DayOfWeek(
                     "sabado" -> SATURDAY
                     else -> null
                 }
+
+        fun laborDays(): List<DayOfWeek> =
+            listOf(
+                MONDAY,
+                TUESDAY,
+                WEDNESDAY,
+                THURSDAY,
+                FRIDAY,
+            )
     }
 }

@@ -36,7 +36,6 @@ Este documento centraliza las tareas pendientes, mejoras de UI y lógica de nego
 
 ### 📅 Visualización de Agenda
 - [ ] **Calendario Completo:** Implementar vista de calendario extendido dentro del detalle de cada StaffMember.
-- [ ] **Disponibilidad en Main:** Agregar indicador/filtro en la pantalla principal para identificar profesionales con lugares libres en tiempo real.
 
 ### 🔄 Lógica de Negocio
 - [ ] **Flujo de Protocolos:** Implementar la máquina de estados o navegación secuencial para la gestión de protocolos médicos/clínicos.
