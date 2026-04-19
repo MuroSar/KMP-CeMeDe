@@ -1,9 +1,12 @@
 package com.cemede.cemede.presentation.screen.splash
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -54,6 +57,7 @@ import com.cemede.cemede.presentation.theme.SCALE_1_1
 import com.cemede.cemede.presentation.theme.SCALE_1_25
 import com.cemede.cemede.presentation.theme.WEIGHT_1
 import com.cemede.cemede.presentation.theme.font_size_12
+import com.cemede.cemede.presentation.theme.font_size_14
 import com.cemede.cemede.presentation.theme.font_size_18
 import com.cemede.cemede.presentation.theme.font_size_20
 import com.cemede.cemede.presentation.theme.font_size_36
@@ -73,6 +77,7 @@ import com.cemede.cemede.presentation.theme.size_32
 import com.cemede.cemede.presentation.theme.space_32
 import com.cemede.cemede.presentation.theme.space_4
 import com.cemede.cemede.presentation.theme.space_40
+import com.cemede.cemede.presentation.theme.space_8
 import com.cemede.cemede.presentation.theme.width_24
 import com.cemede.cemede.presentation.theme.width_4
 import com.cemede.cemede.presentation.theme.width_48
@@ -133,7 +138,35 @@ fun SplashScreen(
                         AppTitle()
                     }
                 }
+                
+                LoadingMessages(messages = state.messages)
+                
                 SplashScreenFooter()
+            }
+        }
+    }
+}
+
+@Composable
+private fun LoadingMessages(messages: List<String>) {
+    AnimatedVisibility(
+        visible = messages.isNotEmpty(),
+        enter = fadeIn(),
+        exit = fadeOut()
+    ) {
+        Column(
+            modifier = Modifier.padding(bottom = space_32),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(space_8)
+        ) {
+            messages.forEach { message ->
+                Text(
+                    text = message,
+                    color = Color.White.copy(alpha = ALPHA_0_6),
+                    fontSize = font_size_14,
+                    fontWeight = FontWeight.Normal,
+                    textAlign = TextAlign.Center
+                )
             }
         }
     }
