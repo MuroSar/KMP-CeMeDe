@@ -9,6 +9,7 @@ import com.cemede.cemede.domain.util.CoroutineResult
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class SplashViewModel(
@@ -25,18 +26,24 @@ class SplashViewModel(
 
     private fun syncStaffMembersWorkingSchedule() {
         viewModelScope.launch {
-            _state.value = _state.value.copy(isLoading = true)
+            _state.update { it.copy(isLoading = true) }
+            val message = "Cargando horarios del staff.."
+            addMessage(message)
+
             when (val result = syncStaffMembersWorkingScheduleUseCase()) {
                 is CoroutineResult.Success -> {
+                    removeMessage(message)
                     syncAllRemainingData()
                 }
 
                 is CoroutineResult.Error -> {
-                    _state.value =
-                        _state.value.copy(
+                    removeMessage(message)
+                    _state.update {
+                        it.copy(
                             isLoading = false,
                             error = "Error al sincronizar horarios de trabajo: ${result.message}",
                         )
+                    }
                 }
             }
         }
@@ -44,33 +51,62 @@ class SplashViewModel(
 
     private fun syncAllRemainingData() {
         viewModelScope.launch {
-            val partnersInfoDeferred = async { syncPartnersInfoUseCase() }
-            val allStaffMembersScheduleDeferred = async { syncAllStaffMembersScheduleUseCase() }
+            val syncPartnersInfoMessage = "Cargando socios.."
+            val syncAllStaffMembersScheduleMessage = "Cargando disponibilidad horaria del staff.."
+
+            val partnersInfoDeferred =
+                async {
+                    addMessage(syncPartnersInfoMessage)
+                    val result = syncPartnersInfoUseCase()
+                    removeMessage(syncPartnersInfoMessage)
+                    result
+                }
+            val allStaffMembersScheduleDeferred =
+                async {
+                    addMessage(syncAllStaffMembersScheduleMessage)
+                    val result = syncAllStaffMembersScheduleUseCase()
+                    removeMessage(syncAllStaffMembersScheduleMessage)
+                    result
+                }
 
             val partnersResult = partnersInfoDeferred.await()
             val scheduleResult = allStaffMembersScheduleDeferred.await()
 
             if (partnersResult is CoroutineResult.Error) {
-                _state.value = _state.value.copy(
-                    isLoading = false,
-                    error = "Error al sincronizar información de socios: ${partnersResult.message}"
-                )
+                _state.update {
+                    it.copy(
+                        isLoading = false,
+                        error = "Error al sincronizar información de socios: ${partnersResult.message}",
+                    )
+                }
                 return@launch
             }
 
             if (scheduleResult is CoroutineResult.Error) {
-                _state.value = _state.value.copy(
-                    isLoading = false,
-                    error = "Error al sincronizar agenda de staff: ${scheduleResult.message}"
-                )
+                _state.update {
+                    it.copy(
+                        isLoading = false,
+                        error = "Error al sincronizar agenda de staff: ${scheduleResult.message}",
+                    )
+                }
                 return@launch
             }
 
-            _state.value = _state.value.copy(
-                isLoading = false,
-                isSyncComplete = true
-            )
+            _state.update {
+                it.copy(
+                    isLoading = false,
+                    isSyncComplete = true,
+                )
+            }
         }
+    }
+
+    private fun addMessage(message: String) {
+        _state.update { it.copy(messages = it.messages + message) }
+    }
+
+    private fun removeMessage(message: String) {
+        _state.update { it.copy(messages = it.messages - message) }
     }
 }
 
@@ -78,4 +114,5 @@ data class SplashState(
     val isLoading: Boolean = true,
     val isSyncComplete: Boolean = false,
     val error: String? = null,
+    val messages: List<String> = emptyList(),
 )
