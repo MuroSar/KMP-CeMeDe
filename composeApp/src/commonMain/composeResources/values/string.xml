@@ -84,6 +84,11 @@
     <string name="staff_member_detail_screen_daily_schedule_overloaded_capacity">Saturado</string>
     <string name="staff_member_detail_screen_daily_schedule_empty_state">No hay clases programadas hoy</string>
 
+    <!--Staff member schedule screen-->
+    <string name="staff_member_schedule_screen_header">Horarios de %1$s</string>
+    <string name="staff_member_schedule_screen_secondary_header">Horarios</string>
+    <string name="staff_member_schedule_screen_loading">Cargando agenda del profesor</string>
+
     <!--Partner list screen-->
     <string name="partner_list_screen_header_title">Socios</string>
     <string name="partner_list_screen_search_bar">Buscar socio..</string>

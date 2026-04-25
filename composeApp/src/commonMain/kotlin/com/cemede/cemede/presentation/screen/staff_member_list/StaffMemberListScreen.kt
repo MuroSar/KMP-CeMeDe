@@ -63,6 +63,7 @@ import org.koin.compose.koinInject
 fun StaffMemberListScreen(
     onNavigateBack: () -> Unit,
     onNavigateToStaffMemberDetail: (StaffMember) -> Unit,
+    onNavigateToStaffMemberSchedule: (StaffMember) -> Unit,
     viewModel: StaffMemberListViewModel = koinInject(),
 ) {
     val state by viewModel.state.collectAsState()
@@ -74,6 +75,7 @@ fun StaffMemberListScreen(
         onErrorRetry = { viewModel.getStaffMembers() },
         onNavigateBack = onNavigateBack,
         onNavigateToStaffMemberDetail = onNavigateToStaffMemberDetail,
+        onNavigateToStaffMemberSchedule = onNavigateToStaffMemberSchedule,
     )
 }
 
@@ -92,10 +94,10 @@ fun StaffMemberListContent(
     onErrorRetry: () -> Unit,
     onNavigateBack: () -> Unit,
     onNavigateToStaffMemberDetail: (StaffMember) -> Unit,
+    onNavigateToStaffMemberSchedule: (StaffMember) -> Unit,
 ) {
     var searchQuery by remember { mutableStateOf("") }
     var selectedFilter by remember { mutableStateOf(StaffMemberFilter.ALL) }
-    var showConstructionBanner by remember { mutableStateOf(false) }
 
     val now = DateTimeHandler.getCurrentDateTimeInfo()
     val today = DayOfWeek.valueOf(now.dayOfWeek.name)
@@ -188,7 +190,7 @@ fun StaffMemberListContent(
                                             onCardClick = { onNavigateToStaffMemberDetail(staffMember) },
                                             onCallButtonClick = { PhonesHelper.callStaffMember(staffMember.name) },
                                             onMessageButtonClick = { PhonesHelper.openWhatsApp(staffMember.name) },
-                                            onScheduleButtonClick = { showConstructionBanner = true },
+                                            onScheduleButtonClick = { onNavigateToStaffMemberSchedule(staffMember) },
                                         )
                                         Spacer(modifier = Modifier.height(height_16))
                                     }
@@ -197,14 +199,6 @@ fun StaffMemberListContent(
                         }
                     }
                 }
-                CemedeBanner.ConstructionBanner(
-                    modifier =
-                        Modifier
-                            .align(Alignment.BottomCenter)
-                            .padding(bottom = padding_16, start = padding_16, end = padding_16),
-                    showBanner = showConstructionBanner,
-                    onDismiss = { showConstructionBanner = false },
-                )
             }
         }
     }
@@ -258,6 +252,7 @@ private fun StaffMemberListScreenPreview() {
         onErrorRetry = {},
         onNavigateBack = {},
         onNavigateToStaffMemberDetail = {},
+        onNavigateToStaffMemberSchedule = {},
     )
 }
 
@@ -271,6 +266,7 @@ private fun StaffMemberListScreenEmptyPreview() {
         onErrorRetry = {},
         onNavigateBack = {},
         onNavigateToStaffMemberDetail = {},
+        onNavigateToStaffMemberSchedule = {},
     )
 }
 
@@ -284,6 +280,7 @@ private fun StaffMemberListScreenLoadingPreview() {
         onErrorRetry = {},
         onNavigateBack = {},
         onNavigateToStaffMemberDetail = {},
+        onNavigateToStaffMemberSchedule = {},
     )
 }
 
@@ -297,5 +294,6 @@ private fun StaffMemberListScreenErrorPreview() {
         onErrorRetry = {},
         onNavigateBack = {},
         onNavigateToStaffMemberDetail = {},
+        onNavigateToStaffMemberSchedule = {},
     )
 }

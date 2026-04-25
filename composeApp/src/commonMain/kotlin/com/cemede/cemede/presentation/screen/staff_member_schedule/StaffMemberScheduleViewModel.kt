@@ -1,4 +1,4 @@
-package com.cemede.cemede.presentation.screen.staff_member_detail
+package com.cemede.cemede.presentation.screen.staff_member_schedule
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -14,18 +14,23 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
-class StaffMemberDetailViewModel(
+class StaffMemberScheduleViewModel(
     private val staffMember: StaffMember,
+    private val shouldSyncInfo: Boolean,
     private val getStaffMemberDetailFlowUseCase: GetStaffMemberDetailFlowUseCase,
     private val syncStaffMemberInfoUseCase: SyncStaffMemberInfoUseCase,
     private val networkHelper: NetworkHelper,
 ) : ViewModel() {
-    private val _state = MutableStateFlow(StaffMemberDetailState())
+    private val _state = MutableStateFlow(StaffMemberScheduleState())
     val state = _state.asStateFlow()
 
     init {
-        syncStaffMemberInfo()
-        observeNetworkStatus()
+        if (shouldSyncInfo) {
+            syncStaffMemberInfo()
+            observeNetworkStatus()
+        } else {
+            getStaffMemberDetail(staffMember.id)
+        }
     }
 
     private fun observeNetworkStatus() {
@@ -44,11 +49,6 @@ class StaffMemberDetailViewModel(
             _state.value = _state.value.copy(isLoading = true)
             when (val result = syncStaffMemberInfoUseCase(staffMember)) {
                 is CoroutineResult.Success -> {
-                    _state.value =
-                        _state.value.copy(
-                            isLoading = false,
-                            error = null,
-                        )
                     getStaffMemberDetail(staffMember.id)
                 }
 
@@ -87,7 +87,7 @@ class StaffMemberDetailViewModel(
     }
 }
 
-data class StaffMemberDetailState(
+data class StaffMemberScheduleState(
     val staffMember: StaffMember? = null,
     val isLoading: Boolean = true,
     val error: String? = null,

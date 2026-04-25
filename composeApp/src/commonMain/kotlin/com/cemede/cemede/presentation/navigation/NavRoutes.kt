@@ -24,6 +24,13 @@ sealed interface NavRoutes {
     ) : NavRoutes
 
     @Serializable
+    data class StaffMemberSchedule(
+        val staffMemberId: Int,
+        val staffMemberName: String,
+        val shouldSyncInfo: Boolean = false,
+    ) : NavRoutes
+
+    @Serializable
     data class PartnerDetail(
         val partner: Partner,
     ) : NavRoutes

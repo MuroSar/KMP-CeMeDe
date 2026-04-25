@@ -69,7 +69,6 @@ import com.cemede.cemede.presentation.component.CemedeErrorState
 import com.cemede.cemede.presentation.component.CemedeLoader
 import com.cemede.cemede.presentation.component.CemedeSearchBar
 import com.cemede.cemede.presentation.component.CemedeTopAppBar
-import com.cemede.cemede.presentation.screen.partner_list.PartnerListContent
 import com.cemede.cemede.presentation.theme.ALPHA_0_2
 import com.cemede.cemede.presentation.theme.ALPHA_0_7
 import com.cemede.cemede.presentation.theme.CemedeTheme
@@ -96,6 +95,7 @@ fun StaffMemberDetailScreen(
     staffMember: StaffMember,
     onNavigateBack: () -> Unit,
     onNavigateToPartnerDetail: (Partner) -> Unit,
+    onNavigateToFullSchedule: (StaffMember) -> Unit,
     viewModel: StaffMemberDetailViewModel = koinInject(parameters = { parametersOf(staffMember) }),
 ) {
     val state by viewModel.state.collectAsState()
@@ -105,6 +105,7 @@ fun StaffMemberDetailScreen(
         onErrorRetry = { viewModel.syncStaffMemberInfo() },
         onNavigateBack = onNavigateBack,
         onNavigateToPartnerDetail = onNavigateToPartnerDetail,
+        onNavigateToFullSchedule = onNavigateToFullSchedule,
         onDismissNetworkBanner = { viewModel.dismissNetworkBanner() },
     )
 }
@@ -116,9 +117,9 @@ fun StaffMemberDetailContent(
     onErrorRetry: () -> Unit,
     onNavigateBack: () -> Unit,
     onNavigateToPartnerDetail: (Partner) -> Unit,
+    onNavigateToFullSchedule: (StaffMember) -> Unit,
     onDismissNetworkBanner: () -> Unit,
 ) {
-    var showConstructionBanner by remember { mutableStateOf(false) }
     var selectedSchedule by remember { mutableStateOf<Pair<LocalTime, List<Partner>>?>(null) }
 
     CemedeTheme {
@@ -154,11 +155,13 @@ fun StaffMemberDetailContent(
                             subtitle = stringResource(Res.string.staff_member_detail_screen_loading),
                         )
                     }
+
                     state.error != null -> {
                         CemedeErrorState.ErrorState(
                             onRetryClick = onErrorRetry,
                         )
                     }
+
                     state.staffMember != null -> {
                         Column(modifier = Modifier.padding(paddingValues)) {
                             CemedeCard.StaffMemberDetailCard(
@@ -172,7 +175,7 @@ fun StaffMemberDetailContent(
                                 onScheduleClick = { time, partners ->
                                     selectedSchedule = time to partners
                                 },
-                                onSeeAllClicked = { showConstructionBanner = true }
+                                onSeeAllClicked = { onNavigateToFullSchedule(state.staffMember) }
                             )
                             AssignedPartners(
                                 partners = state.staffMember.partners,
@@ -180,6 +183,7 @@ fun StaffMemberDetailContent(
                             )
                         }
                     }
+
                     else -> {
                         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                             Text(state.error ?: stringResource(Res.string.staff_member_detail_screen_staff_member_not_found))
@@ -197,11 +201,6 @@ fun StaffMemberDetailContent(
                     CemedeBanner.NoInternetConnectionBanner(
                         showBanner = state.showNetworkBanner,
                         onDismiss = onDismissNetworkBanner,
-                    )
-
-                    CemedeBanner.ConstructionBanner(
-                        showBanner = showConstructionBanner,
-                        onDismiss = { showConstructionBanner = false },
                     )
                 }
             }
@@ -404,6 +403,7 @@ private fun StaffMemberDetailScreenPreview() {
         onErrorRetry = {},
         onNavigateBack = {},
         onNavigateToPartnerDetail = {},
+        onNavigateToFullSchedule = {},
         onDismissNetworkBanner = {},
     )
 }
@@ -416,6 +416,7 @@ private fun StaffMemberDetailScreenLoadingPreview() {
         onErrorRetry = {},
         onNavigateBack = {},
         onNavigateToPartnerDetail = {},
+        onNavigateToFullSchedule = {},
         onDismissNetworkBanner = {},
     )
 }
@@ -428,6 +429,7 @@ private fun StaffMemberDetailScreenErrorPreview() {
         onErrorRetry = {},
         onNavigateBack = {},
         onNavigateToPartnerDetail = {},
+        onNavigateToFullSchedule = {},
         onDismissNetworkBanner = {},
     )
 }
