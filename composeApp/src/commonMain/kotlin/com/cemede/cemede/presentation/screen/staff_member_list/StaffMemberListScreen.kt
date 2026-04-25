@@ -23,7 +23,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import cemede.composeapp.generated.resources.Res
@@ -41,7 +40,6 @@ import cemede.composeapp.generated.resources.working
 import com.cemede.cemede.domain.model.DayOfWeek
 import com.cemede.cemede.domain.model.StaffMember
 import com.cemede.cemede.domain.util.DateTimeHandler
-import com.cemede.cemede.presentation.component.CemedeBanner
 import com.cemede.cemede.presentation.component.CemedeCard
 import com.cemede.cemede.presentation.component.CemedeEmptyState
 import com.cemede.cemede.presentation.component.CemedeErrorState
@@ -107,6 +105,7 @@ fun StaffMemberListContent(
         Scaffold(
             topBar = {
                 StaffMemberListTopAppBar(
+                    staffMembersAmount = staffMembers.size,
                     onNavigateBack = onNavigateBack,
                     searchQuery = searchQuery,
                     onSearchQueryChange = { searchQuery = it },
@@ -207,6 +206,7 @@ fun StaffMemberListContent(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun StaffMemberListTopAppBar(
+    staffMembersAmount: Int,
     onNavigateBack: () -> Unit,
     searchQuery: String,
     onSearchQueryChange: (String) -> Unit,
@@ -214,7 +214,7 @@ private fun StaffMemberListTopAppBar(
 ) {
     Column {
         CemedeTopAppBar.TopAppBar(
-            title = stringResource(Res.string.staff_member_list_screen_header_title),
+            title = stringResource(Res.string.staff_member_list_screen_header_title, staffMembersAmount),
             navigationIcon = {
                 IconButton(onClick = onNavigateBack) {
                     Icon(
