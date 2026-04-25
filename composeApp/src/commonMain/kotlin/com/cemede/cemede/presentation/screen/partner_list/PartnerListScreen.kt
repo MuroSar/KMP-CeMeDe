@@ -91,6 +91,7 @@ fun PartnerListContent(
         Scaffold(
             topBar = {
                 PartnerListTopAppBar(
+                    partnersAmount = partners.size,
                     onNavigateBack = onNavigateBack,
                     searchQuery = searchQuery,
                     onSearchQueryChange = { searchQuery = it },
@@ -181,6 +182,7 @@ fun PartnerListContent(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun PartnerListTopAppBar(
+    partnersAmount: Int,
     onNavigateBack: () -> Unit,
     searchQuery: String,
     onSearchQueryChange: (String) -> Unit,
@@ -188,7 +190,7 @@ private fun PartnerListTopAppBar(
 ) {
     Column {
         CemedeTopAppBar.TopAppBar(
-            title = stringResource(Res.string.partner_list_screen_header_title),
+            title = stringResource(Res.string.partner_list_screen_header_title, partnersAmount),
             navigationIcon = {
                 IconButton(onClick = onNavigateBack) {
                     Icon(

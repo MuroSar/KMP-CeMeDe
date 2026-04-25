@@ -28,7 +28,7 @@
     <string name="splash_screen_title_de">DE</string>
     <string name="splash_screen_subtitle_line1">CENTRO MÉDICO</string>
     <string name="splash_screen_subtitle_line2">Deportivo del Este</string>
-    <string name="splash_screen_version">MANEJO INTERNO V1.0.0</string>
+    <string name="splash_screen_version">MANEJO INTERNO V%1$s</string>
 
     <!--Main screen-->
     <string name="main_screen_top_app_bar_title">CE.ME.DE</string>
@@ -64,7 +64,7 @@
     <string name="staff_member_card_action_schedule">Horario</string>
 
     <!--Staff member list screen-->
-    <string name="staff_member_list_screen_header_title">Staff</string>
+    <string name="staff_member_list_screen_header_title">Staff (%1$s)</string>
     <string name="staff_member_list_screen_search_bar">Buscar profesor..</string>
     <string name="staff_member_list_screen_loading">Actualizando listado de profes</string>
     <string name="staff_member_list_screen_empty_state_title">No se encontraron profesores</string>
@@ -75,7 +75,7 @@
     <string name="staff_member_detail_screen_loading">Cargando detalle del profesor</string>
     <string name="staff_member_detail_screen_staff_member_not_found">No se encontró el profesor.</string>
     <string name="staff_member_detail_screen_empty_state_title">No se encontraron socios</string>
-    <string name="staff_member_detail_screen_partner_list">Socios asignados</string>
+    <string name="staff_member_detail_screen_partner_list">Socios asignados (%1$s)</string>
     <string name="staff_member_detail_screen_daily_schedule">Cronograma Diario (%1$s)</string>
     <string name="staff_member_detail_screen_individual_partner">%1$s Socio</string>
     <string name="staff_member_detail_screen_multiple_partners">%1$s Socios</string>
@@ -90,7 +90,7 @@
     <string name="staff_member_schedule_screen_loading">Cargando agenda del profesor</string>
 
     <!--Partner list screen-->
-    <string name="partner_list_screen_header_title">Socios</string>
+    <string name="partner_list_screen_header_title">Socios (%1$s)</string>
     <string name="partner_list_screen_search_bar">Buscar socio..</string>
     <string name="partner_list_screen_loading">Actualizando listado de socios</string>
     <string name="partner_list_screen_empty_state_title">No se encontraron socios</string>

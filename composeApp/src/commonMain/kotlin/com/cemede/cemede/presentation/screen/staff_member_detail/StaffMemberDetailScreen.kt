@@ -309,7 +309,7 @@ private fun AssignedPartners(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
-                text = stringResource(Res.string.staff_member_detail_screen_partner_list),
+                text = stringResource(Res.string.staff_member_detail_screen_partner_list, partners.size),
                 style = MaterialTheme.typography.labelMedium,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.primary,
