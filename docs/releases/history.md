@@ -4,7 +4,8 @@ Este documento registra la evolución del proyecto y los hitos alcanzados en cad
 
 ## [1.1.0] - Incremental con funcionalidades - DD-MM-2026
 * **Disponibilidad en Main**: Agregar indicador/filtro en la pantalla principal para identificar profesionales con lugares libres en tiempo real.
-* **Actualización de estado en Splash**: Agregar mensaje de estado en la splash para visibilidad del usuario 
+* **Actualización de estado en Splash**: Agregar mensaje de estado en la splash para visibilidad del usuario
+* **Calendario completo:** Implementar vista de calendario extendido dentro del detalle de cada StaffMember.
 
 ## [1.0.0] - Lanzamiento Inicial - 13-04-2026
 * **Soporte Multiplataforma**: Android, iOS y Desktop (JVM).

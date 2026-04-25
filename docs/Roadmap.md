@@ -34,9 +34,6 @@ Este documento centraliza las tareas pendientes, mejoras de UI y lógica de nego
 - [ ] **Ajustes de la Aplicación:**
     - [ ] Implementar una interfaz para gestionar preferencias de usuario, parámetros de sincronización o temas visuales.
 
-### 📅 Visualización de Agenda
-- [ ] **Calendario Completo:** Implementar vista de calendario extendido dentro del detalle de cada StaffMember.
-
 ### 🔄 Lógica de Negocio
 - [ ] **Flujo de Protocolos:** Implementar la máquina de estados o navegación secuencial para la gestión de protocolos médicos/clínicos.
 

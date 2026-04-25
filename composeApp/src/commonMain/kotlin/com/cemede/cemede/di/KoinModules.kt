@@ -15,12 +15,12 @@ import com.cemede.cemede.domain.use_case.GetAllStaffMembersFlowUseCase
 import com.cemede.cemede.domain.use_case.GetAllStaffMembersFlowUseCaseImpl
 import com.cemede.cemede.domain.use_case.GetStaffMemberDetailFlowUseCase
 import com.cemede.cemede.domain.use_case.GetStaffMemberDetailFlowUseCaseImpl
+import com.cemede.cemede.domain.use_case.SyncAllStaffMembersScheduleUseCase
+import com.cemede.cemede.domain.use_case.SyncAllStaffMembersScheduleUseCaseImpl
 import com.cemede.cemede.domain.use_case.SyncPartnersInfoUseCase
 import com.cemede.cemede.domain.use_case.SyncPartnersInfoUseCaseImpl
 import com.cemede.cemede.domain.use_case.SyncStaffMemberInfoUseCase
 import com.cemede.cemede.domain.use_case.SyncStaffMemberInfoUseCaseImpl
-import com.cemede.cemede.domain.use_case.SyncAllStaffMembersScheduleUseCase
-import com.cemede.cemede.domain.use_case.SyncAllStaffMembersScheduleUseCaseImpl
 import com.cemede.cemede.domain.use_case.SyncStaffMembersWorkingScheduleUseCase
 import com.cemede.cemede.domain.use_case.SyncStaffMembersWorkingScheduleUseCaseImpl
 import com.cemede.cemede.domain.util.getNetworkHelper
@@ -29,6 +29,7 @@ import com.cemede.cemede.presentation.screen.partner_list.PartnerListViewModel
 import com.cemede.cemede.presentation.screen.splash.SplashViewModel
 import com.cemede.cemede.presentation.screen.staff_member_detail.StaffMemberDetailViewModel
 import com.cemede.cemede.presentation.screen.staff_member_list.StaffMemberListViewModel
+import com.cemede.cemede.presentation.screen.staff_member_schedule.StaffMemberScheduleViewModel
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.plugins.DefaultRequest
@@ -59,6 +60,7 @@ val sharedModule =
         viewModelOf(::MainViewModel)
         viewModelOf(::StaffMemberListViewModel)
         viewModelOf(::StaffMemberDetailViewModel)
+        viewModelOf(::StaffMemberScheduleViewModel)
         viewModelOf(::PartnerListViewModel)
     }
 
