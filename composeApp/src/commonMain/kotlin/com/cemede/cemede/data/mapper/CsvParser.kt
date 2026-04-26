@@ -77,23 +77,26 @@ object CsvParser {
             val timeLabel = columns.firstOrNull()?.trim() ?: return@forEach
             val time = DateTimeHandler.parseTime(timeLabel)
 
-            // 3. Iterate through days and count partners in each cell
-            days.forEachIndexed { index, day ->
-                if (day == null) return@forEachIndexed
+            // Validate pasteTime works fine
+            if (time.toString() != "00:00") {
+                // 3. Iterate through days and count partners in each cell
+                days.forEachIndexed { index, day ->
+                    if (day == null) return@forEachIndexed
 
-                // Column index is day index + 1
-                val cellContent = columns.getOrNull(index + 1)?.trim() ?: ""
+                    // Column index is day index + 1
+                    val cellContent = columns.getOrNull(index + 1)?.trim() ?: ""
 
-                if (cellContent.isNotBlank() && cellContent != NOT_AN_ANSWER) {
-                    val partnerNames =
-                        cellContent
-                            .split("; ")
-                            .filter { it.trim().isNotBlank() }
-                            .map { it.trim() }
+                    if (cellContent.isNotBlank() && cellContent != NOT_AN_ANSWER) {
+                        val partnerNames =
+                            cellContent
+                                .split("; ")
+                                .filter { it.trim().isNotBlank() }
+                                .map { it.trim() }
 
-                    if (partnerNames.isNotEmpty()) {
-                        val timeMap = partnersSchedule.getOrPut(day) { mutableMapOf() }
-                        timeMap[time] = partnerNames
+                        if (partnerNames.isNotEmpty()) {
+                            val timeMap = partnersSchedule.getOrPut(day) { mutableMapOf() }
+                            timeMap[time] = partnerNames
+                        }
                     }
                 }
             }
