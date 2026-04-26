@@ -6,6 +6,9 @@ import java.net.URI
 class JVMPlatform : Platform {
     override val name: String = "Java ${System.getProperty("java.version")}"
 
+    override val appVersion: String
+        get() = BuildInfo.VERSION
+
     override fun openUrl(url: String) {
         if (Desktop.isDesktopSupported()) {
             val desktop = Desktop.getDesktop()

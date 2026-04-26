@@ -44,6 +44,7 @@ kotlin {
         compilerOptions {
             jvmTarget.set(JvmTarget.JVM_21)
         }
+        compilations.getByName("main").defaultSourceSet.kotlin.srcDir("build/generated/version")
     }
 
     sourceSets {
@@ -157,8 +158,8 @@ android {
             libs.versions.android.targetSdk
                 .get()
                 .toInt()
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = libs.versions.app.versionCode.get().toInt()
+        versionName = libs.versions.app.versionName.get()
     }
     packaging {
         resources {
@@ -193,12 +194,63 @@ compose.desktop {
     application {
         mainClass = "com.cemede.cemede.MainKt"
 
+        jvmArgs += "-Dapp.version=${libs.versions.app.versionName.get()}"
+
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "com.cemede.cemede"
-            packageVersion = "1.0.0"
+            packageVersion = libs.versions.app.versionName.get()
         }
     }
+}
+
+// Tarea para sincronizar versiones con iOS
+tasks.register("generateIosVersionConfig") {
+    val versionFile = file("${project.rootDir}/iosApp/Configuration/Version.xcconfig")
+    inputs.property("versionName", libs.versions.app.versionName.get())
+    inputs.property("versionCode", libs.versions.app.versionCode.get())
+    outputs.file(versionFile)
+
+    doLast {
+        versionFile.parentFile.mkdirs()
+        versionFile.writeText(
+            """
+            // Generado automáticamente por Gradle - No editar manualmente
+            MARKETING_VERSION_GRADLE = ${libs.versions.app.versionName.get()}
+            CURRENT_PROJECT_VERSION_GRADLE = ${libs.versions.app.versionCode.get()}
+            """.trimIndent(),
+        )
+    }
+}
+
+// Tarea para sincronizar versiones con Desktop
+tasks.register("generateJvmVersionConfig") {
+    val versionFile = file("$buildDir/generated/version/com/cemede/cemede/BuildInfo.kt")
+    inputs.property("versionName", libs.versions.app.versionName.get())
+    outputs.file(versionFile)
+
+    doLast {
+        versionFile.parentFile.mkdirs()
+        versionFile.writeText(
+            """
+            package com.cemede.cemede
+
+            internal object BuildInfo {
+                const val VERSION = "${libs.versions.desktop.versionName.get()}"
+            }
+            """.trimIndent(),
+        )
+    }
+}
+
+// Asegurar que la tarea corra antes de compilar para iOS
+tasks.matching { it.name.contains("embedAndSign") || it.name.contains("link") }.configureEach {
+    dependsOn(tasks.named("generateIosVersionConfig"))
+}
+
+// Asegurar que la tarea corra antes de compilar para Desktop
+tasks.matching { it.name == "compileKotlinJvm" || it.name == "jvmProcessResources" || it.name == "kspKotlinJvm" }.configureEach {
+    dependsOn("generateJvmVersionConfig")
 }
 
 // Room

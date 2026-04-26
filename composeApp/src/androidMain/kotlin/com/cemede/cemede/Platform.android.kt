@@ -2,6 +2,7 @@ package com.cemede.cemede
 
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 
@@ -9,6 +10,15 @@ class AndroidPlatform(
     private val context: Context,
 ) : Platform {
     override val name: String = "Android ${Build.VERSION.SDK_INT}"
+
+    override val appVersion: String
+        get() =
+            try {
+                val packageInfo = context.packageManager.getPackageInfo(context.packageName, 0)
+                packageInfo.versionName ?: "Unknown"
+            } catch (e: PackageManager.NameNotFoundException) {
+                "Unknown"
+            }
 
     override fun openUrl(url: String) {
         val intent =
