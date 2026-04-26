@@ -46,6 +46,7 @@ import cemede.composeapp.generated.resources.splash_screen_title_ce
 import cemede.composeapp.generated.resources.splash_screen_title_de
 import cemede.composeapp.generated.resources.splash_screen_title_me
 import cemede.composeapp.generated.resources.splash_screen_version
+import com.cemede.cemede.getPlatform
 import com.cemede.cemede.presentation.theme.ALPHA_0_1
 import com.cemede.cemede.presentation.theme.ALPHA_0_2
 import com.cemede.cemede.presentation.theme.ALPHA_0_3
@@ -99,10 +100,11 @@ fun SplashScreen(
             // Ejecuta la animación de forma infinita mientras isLoading sea true
             pulse.animateTo(
                 targetValue = 1.1f,
-                animationSpec = infiniteRepeatable(
-                    animation = tween(durationMillis = ANIMATION_DURATION),
-                    repeatMode = RepeatMode.Reverse // Esto hace que el valor vaya de 1.1f de vuelta al valor original
-                )
+                animationSpec =
+                    infiniteRepeatable(
+                        animation = tween(durationMillis = ANIMATION_DURATION),
+                        repeatMode = RepeatMode.Reverse, // Esto hace que el valor vaya de 1.1f de vuelta al valor original
+                    ),
             )
         }
     }
@@ -138,9 +140,9 @@ fun SplashScreen(
                         AppTitle()
                     }
                 }
-                
+
                 LoadingMessages(messages = state.messages)
-                
+
                 SplashScreenFooter()
             }
         }
@@ -152,12 +154,12 @@ private fun LoadingMessages(messages: List<String>) {
     AnimatedVisibility(
         visible = messages.isNotEmpty(),
         enter = fadeIn(),
-        exit = fadeOut()
+        exit = fadeOut(),
     ) {
         Column(
             modifier = Modifier.padding(bottom = space_32),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(space_8)
+            verticalArrangement = Arrangement.spacedBy(space_8),
         ) {
             messages.forEach { message ->
                 Text(
@@ -165,7 +167,7 @@ private fun LoadingMessages(messages: List<String>) {
                     color = Color.White.copy(alpha = ALPHA_0_6),
                     fontSize = font_size_14,
                     fontWeight = FontWeight.Normal,
-                    textAlign = TextAlign.Center
+                    textAlign = TextAlign.Center,
                 )
             }
         }
@@ -265,6 +267,7 @@ private fun AppTitle() {
 
 @Composable
 private fun SplashScreenFooter(modifier: Modifier = Modifier) {
+    val version = remember { getPlatform().appVersion }
     Column(
         modifier = modifier.padding(bottom = padding_48),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -284,7 +287,7 @@ private fun SplashScreenFooter(modifier: Modifier = Modifier) {
             )
         }
         Text(
-            text = stringResource(Res.string.splash_screen_version),
+            text = stringResource(Res.string.splash_screen_version, version),
             color = Color.White.copy(alpha = ALPHA_0_4),
             fontSize = font_size_12,
             fontWeight = FontWeight.Normal,

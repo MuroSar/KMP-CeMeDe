@@ -6,11 +6,6 @@ Este documento centraliza las tareas pendientes, mejoras de UI y lógica de nego
 
 ## 🚀 Prioridad Alta (Crítico / Core UX)
 
-### 🛠️ Ajuste de Versión en Splash
-*Evitar el uso de strings hardcodeados para la versión de la app.*
-- [ ] **Dinamicidad de la versión:**
-    - [ ] Configurar la Splash Screen para que obtenga y muestre el `versionCode` (o `versionName`) real definido en el build script, eliminando la dependencia de un string manual.
-
 ### 🛠️ Configuración de Seguridad - Android Release
 *Asegurar el manejo correcto de credenciales de firmado.*
 - [ ] **Configuración de Keystore:**
@@ -86,17 +81,5 @@ Este documento centraliza las tareas pendientes, mejoras de UI y lógica de nego
 - **Iconografía:** Usar recursos vectoriales propios (como el estetoscopio) para asegurar nitidez.
 - **Desktop:** Asegurar que la UI sea adaptativa (no solo estirar la versión móvil).
 
----
-
-## ✅ Finalizado
-- [x] Configuración inicial de Kotlin Multiplatform 2.1.0+
-  - [x] Implementación de Koin para DI
-  - [x] Implementación a Room para persistencia local
-- [x] Sincronización de Staff desde CSV (Google Sheets)
-- [x] Listado y detalle de Staff
-- [x] Listado y detalle de Socio
-- [x] Comunicación entre detalles de Socio y Staff
-- [x] Documentación técnica del proyecto
-- [x] Seteo de íconos por plataforma (Android Manifest & Xcode Assets)
 ---
 Regresar al [Índice](Index.md)

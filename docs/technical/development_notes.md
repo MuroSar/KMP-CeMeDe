@@ -32,5 +32,12 @@ Nota: El Google Sheet está configurado para que con cada ajuste se publiqué au
 ## 6. Diseño Visual
 El sistema visual utiliza una paleta de colores centrada en el **verde oliva** y **dorado**, evocando una sensación de salud, deporte y profesionalismo. Se utilizan fuentes modernas (`Public Sans`) y componentes de `Material 3`.
 
+## 7. Gestión de Versiones Multiplataforma
+Para mantener la consistencia entre las versiones de Gradle y los binarios finales de cada plataforma, el proyecto utiliza tareas automáticas de generación de código/configuración:
+
+*   **`generateIosVersionConfig`**: Crea el archivo `Version.xcconfig` en la carpeta `iosApp`. Este archivo mapea la versión definida en Gradle (`MARKETING_VERSION_GRADLE`) para que Xcode la utilice automáticamente al compilar, evitando discrepancias entre plataformas.
+*   **`generateJvmVersionConfig`**: Genera un objeto Kotlin llamado `BuildInfo` (en el sourceSet de Desktop). Esto permite que la versión de la aplicación sea accesible programáticamente en la versión de escritorio, facilitando su visualización en menús de "Acerca de" o logs.
+*   **Automatización**: Estas tareas están integradas en el ciclo de vida de Gradle mediante `dependsOn`, por lo que se ejecutan automáticamente durante el proceso de build.
+
 ---
 Regresar al [Índice](../Index.md)

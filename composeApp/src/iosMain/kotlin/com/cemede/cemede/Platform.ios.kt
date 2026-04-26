@@ -1,11 +1,15 @@
 package com.cemede.cemede
 
-import platform.UIKit.UIDevice
-import platform.UIKit.UIApplication
+import platform.Foundation.NSBundle
 import platform.Foundation.NSURL
+import platform.UIKit.UIApplication
+import platform.UIKit.UIDevice
 
 class IOSPlatform : Platform {
     override val name: String = UIDevice.currentDevice.systemName() + " " + UIDevice.currentDevice.systemVersion
+
+    override val appVersion: String
+        get() = NSBundle.mainBundle.infoDictionary?.get("CFBundleShortVersionString") as? String ?: "Unknown"
 
     override fun openUrl(url: String) {
         val nsUrl = NSURL.URLWithString(url)
