@@ -1,3 +1,4 @@
+import java.util.Properties
 import org.jetbrains.compose.ExperimentalComposeLibrary
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
@@ -22,7 +23,15 @@ plugins {
     alias(libs.plugins.ktlint)
 }
 
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(21))
+    }
+}
+
 kotlin {
+    jvmToolchain(21)
+
     androidTarget {
         compilerOptions {
             jvmTarget.set(JvmTarget.JVM_21)
@@ -142,11 +151,27 @@ kotlin {
 }
 
 android {
+    // Lectura de local.properties para el firmado de la app
+    val keystorePropertiesFile = rootProject.file("local.properties")
+    val keystoreProperties = Properties()
+    if (keystorePropertiesFile.exists()) {
+        keystoreProperties.load(keystorePropertiesFile.inputStream())
+    }
+
     namespace = "com.cemede.cemede"
     compileSdk =
         libs.versions.android.compileSdk
             .get()
             .toInt()
+
+    signingConfigs {
+        create("release") {
+            keyAlias = keystoreProperties["release.keystore.alias"] as String?
+            keyPassword = keystoreProperties["release.keystore.key.password"] as String?
+            storeFile = keystoreProperties["release.keystore.path"]?.let { file(it) }
+            storePassword = keystoreProperties["release.keystore.password"] as String?
+        }
+    }
 
     defaultConfig {
         applicationId = "com.cemede.cemede"
@@ -169,6 +194,7 @@ android {
     buildTypes {
         getByName("release") {
             isMinifyEnabled = false
+            signingConfig = signingConfigs.getByName("release")
         }
     }
     compileOptions {
