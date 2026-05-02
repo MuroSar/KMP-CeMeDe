@@ -6,13 +6,6 @@ Este documento centraliza las tareas pendientes, mejoras de UI y lógica de nego
 
 ## 🚀 Prioridad Alta (Crítico / Core UX)
 
-### 🛠️ Configuración de Seguridad - Android Release
-*Asegurar el manejo correcto de credenciales de firmado.*
-- [ ] **Configuración de Keystore:**
-    - [ ] Implementar la lectura de claves (`storePassword`, `keyAlias`, `keyPassword`) desde el archivo `local.properties`.
-    - [ ] Ajustar el `build.gradle.kts` del módulo `:composeApp` para utilizar estas propiedades en el bloque `signingConfigs`.
-    - [ ] Ajustar la documentación [keystore](./releases/android/keystore.md)
-
 ### 🛠️ Corrección de Scroll - Detalle de Staff (StaffDetail)
 *Optimización de la experiencia de navegación en el perfil del profesional.*
 - [ ] **Lógica de scroll condicional:**

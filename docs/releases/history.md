@@ -2,6 +2,10 @@
 
 Este documento registra la evolución del proyecto y los hitos alcanzados en cada lanzamiento.
 
+## [1.2.0] - Seguridad y Automatización Android - XX-XX-2026
+* **Configuración Automatizada del Keystore**: Implementación de lectura de credenciales de firmado desde `local.properties` para automatizar la generación de APKs y AABs firmados en Android, eliminando la necesidad de completar el asistente manual de Android Studio.
+* **Actualización de Documentación**: Reestructuración de las guías de release y keystore para reflejar el nuevo flujo de trabajo simplificado.
+
 ## [1.1.1] - Hotfix iOS - 02-05-2026
 * **Ejecución en dispositivos físicos iOS**: Ajustes en la configuración del framework y scripts de build para permitir la instalación y ejecución en dispositivos Apple reales (no solo simuladores).
 
