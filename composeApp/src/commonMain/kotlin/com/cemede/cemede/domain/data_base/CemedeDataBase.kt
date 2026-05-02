@@ -4,8 +4,10 @@ import com.cemede.cemede.data.data_base.model.PartnerEntity
 import com.cemede.cemede.data.data_base.model.StaffMemberEntity
 import com.cemede.cemede.domain.model.Partner
 import com.cemede.cemede.domain.model.StaffMember
+import io.mockative.Mockable
 import kotlinx.coroutines.flow.Flow
 
+@Mockable
 interface CemedeDataBase {
     suspend fun getAllStaffMembersFlow(): Flow<List<StaffMember>>
 
