@@ -1,6 +1,6 @@
 [versions]
 # App Versioning
-app-versionName = "1.1.0"
+app-versionName = "1.1.1"
 app-versionCode = "2"
 
 # Desktop Versioning
