@@ -7,9 +7,11 @@ import androidx.room.Upsert
 import com.cemede.cemede.data.data_base.model.PartnerEntity
 import com.cemede.cemede.data.data_base.model.StaffMemberAndPartners
 import com.cemede.cemede.data.data_base.model.StaffMemberEntity
+import io.mockative.Mockable
 import kotlinx.coroutines.flow.Flow
 
 @Dao
+@Mockable
 interface CemedeDao {
     @Upsert
     suspend fun upsertStaffMember(staffMembers: StaffMemberEntity): Long
