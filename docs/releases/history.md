@@ -3,6 +3,7 @@
 Este documento registra la evolución del proyecto y los hitos alcanzados en cada lanzamiento.
 
 ## [1.2.0] - Seguridad, Automatización y UX - XX-XX-2026
+* **Optimización de Scroll en Detalle de Staff**: Implementación de lógica de scroll inteligente y condicional en `StaffMemberDetailScreen`. Ahora la aplicación detecta automáticamente si el horario próximo es visible o si requiere un desplazamiento suave, mejorando la UX al abrir el perfil del profesional.
 * **Eliminación de Splash Nativa**: Optimización de los puntos de entrada nativos para eliminar la sensación de "doble pantalla" y asegurar un arranque instantáneo con la identidad visual de la marca.
     * **Android**: Implementación de `androidx.core:core-splashscreen` configurada con el color de la marca (`#72775F`) y logo. Esto evita el fondo negro/logo por defecto de Android 12+ y proporciona feedback visual inmediato antes de entrar al Splash de Compose.
     * **iOS**: Configuración del `LaunchScreen` vía `Info.plist` con un Color Set sólido (`LaunchBackground`) coincidente con la marca, eliminando cualquier delay visual o pantalla en blanco al iniciar.

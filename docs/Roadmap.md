@@ -6,13 +6,12 @@ Este documento centraliza las tareas pendientes, mejoras de UI y lógica de nego
 
 ## 🚀 Prioridad Alta (Crítico / Core UX)
 
-### 🛠️ Corrección de Scroll - Detalle de Staff (StaffDetail)
+### 🛠️ Corrección de Scroll - Detalle de Staff (StaffDetail) ✅
 *Optimización de la experiencia de navegación en el perfil del profesional.*
-- [ ] **Lógica de scroll condicional:**
-    - [ ] Escenario A: Si no hay elementos activos (horarios/sesiones) -> **Deshabilitar scroll**.
-    - [ ] Escenario B: Elemento activo presente y visible en pantalla -> **Mantener scroll estático**.
-    - [ ] Escenario C: Elemento activo presente pero fuera del área visible -> **Habilitar/Ejecutar scroll automático** hasta el elemento.
-> **💡 Recomendación técnica:** Utilizar `LazyListState` junto con `derivedStateOf` para monitorear `layoutInfo.visibleItemsInfo`. Esto permite detectar la visibilidad del ítem activo sin disparar recomposiciones innecesarias cada vez que el usuario scrollea.
+- [x] **Lógica de scroll condicional:**
+    - [x] Escenario A: Si no hay elementos activos (horarios/sesiones) -> **Deshabilitar scroll**.
+    - [x] Escenario B: Elemento activo presente y visible en pantalla -> **Mantener scroll estático**.
+    - [x] Escenario C: Elemento activo presente pero fuera del área visible -> **Habilitar/Ejecutar scroll automático** hasta el elemento.
 
 ---
 
