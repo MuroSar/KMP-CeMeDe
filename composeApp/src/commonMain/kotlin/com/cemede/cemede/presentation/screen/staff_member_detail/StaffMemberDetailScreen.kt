@@ -32,6 +32,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -178,6 +179,7 @@ fun StaffMemberDetailContent(
                                 onSeeAllClicked = { onNavigateToFullSchedule(state.staffMember) }
                             )
                             AssignedPartners(
+                                modifier = Modifier.weight(1f),
                                 partners = state.staffMember.partners,
                                 onNavigateToPartnerDetail = onNavigateToPartnerDetail,
                             )
@@ -214,17 +216,29 @@ private fun DailySchedule(
     onScheduleClick: (LocalTime, List<Partner>) -> Unit,
     onSeeAllClicked: () -> Unit,
 ) {
-    val now = DateTimeHandler.getCurrentDateTimeInfo()
+    val now = remember { DateTimeHandler.getCurrentDateTimeInfo() }
     val today = DayOfWeek.valueOf(now.dayOfWeek.name)
 
     val scrollState = rememberLazyListState()
 
-    val scheduleForToday = partnersSchedule[today]?.entries?.toList()?.sortedBy { it.key }
-    val upcomingAppointmentIndex =
-        scheduleForToday?.indexOfFirst { (time, _) -> time >= now.time } ?: -1
+    val scheduleForToday = remember(partnersSchedule, today) {
+        partnersSchedule[today]?.entries?.toList()?.sortedBy { it.key } ?: emptyList()
+    }
+
+    val upcomingAppointmentIndex = remember(scheduleForToday, now.time) {
+        scheduleForToday.indexOfFirst { (time, _) -> time >= now.time }
+    }
+
+    // Escenario B y C: Detectar si el ítem activo ya es visible
+    val isUpcomingVisible by remember(upcomingAppointmentIndex) {
+        derivedStateOf {
+            if (upcomingAppointmentIndex == -1) true
+            else scrollState.layoutInfo.visibleItemsInfo.any { it.index == upcomingAppointmentIndex }
+        }
+    }
 
     LaunchedEffect(upcomingAppointmentIndex) {
-        if (upcomingAppointmentIndex != -1) {
+        if (upcomingAppointmentIndex != -1 && !isUpcomingVisible) {
             scrollState.smoothScrollTo(upcomingAppointmentIndex)
         }
     }
@@ -265,7 +279,7 @@ private fun DailySchedule(
         }
         Spacer(modifier = Modifier.height(height_16))
 
-        if (partnersSchedule[today].isNullOrEmpty()) {
+        if (scheduleForToday.isEmpty()) {
             Text(
                 modifier = Modifier.fillMaxWidth(),
                 text = stringResource(Res.string.staff_member_detail_screen_daily_schedule_empty_state),
@@ -278,16 +292,16 @@ private fun DailySchedule(
                 state = scrollState,
                 contentPadding = PaddingValues(horizontal = padding_16),
                 horizontalArrangement = Arrangement.spacedBy(space_12),
+                // Escenario A: Deshabilitar scroll si no hay elementos activos (opcional según interpretación de UX)
+                userScrollEnabled = upcomingAppointmentIndex != -1
             ) {
-                partnersSchedule[today]?.let {
-                    items(it.entries.toList()) { (time, partners) ->
-                        CemedeCard.WeeklyScheduleCard(
-                            time = time,
-                            partners = partners,
-                            now = now,
-                            onCardClick = { onScheduleClick(time, partners) },
-                        )
-                    }
+                items(scheduleForToday) { (time, partners) ->
+                    CemedeCard.WeeklyScheduleCard(
+                        time = time,
+                        partners = partners,
+                        now = now,
+                        onCardClick = { onScheduleClick(time, partners) },
+                    )
                 }
             }
         }
@@ -296,13 +310,14 @@ private fun DailySchedule(
 
 @Composable
 private fun AssignedPartners(
+    modifier: Modifier = Modifier,
     partners: List<Partner>,
     onNavigateToPartnerDetail: (Partner) -> Unit,
 ) {
     var searchQuery by remember { mutableStateOf("") }
     var showSearchBar by remember { mutableStateOf(false) }
 
-    Column(modifier = Modifier.padding(horizontal = padding_16)) {
+    Column(modifier = modifier.padding(horizontal = padding_16)) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -359,7 +374,7 @@ private fun AssignedPartners(
                     onActionClick = { searchQuery = "" },
                 )
             } else {
-                LazyColumn {
+                LazyColumn(modifier = Modifier.fillMaxWidth()) {
                     items(filteredPartners) { partner ->
                         CemedeCard.PartnerCard(
                             partner = partner,
