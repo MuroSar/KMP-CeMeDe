@@ -6,6 +6,9 @@ Este documento centraliza las tareas pendientes, mejoras de UI y lógica de nego
 
 ## 🚀 Prioridad Alta (Crítico / Core UX)
 
+### 🎨 Splash Screen
+- [ ] **Eliminar Splash Nativo:** Remover la pantalla de carga nativa de Android/iOS y dejar únicamente el Splash Custom implementado para asegurar una transición fluida y marca consistente.
+
 ### 🛠️ Corrección de Scroll - Detalle de Staff (StaffDetail)
 *Optimización de la experiencia de navegación en el perfil del profesional.*
 - [ ] **Lógica de scroll condicional:**
