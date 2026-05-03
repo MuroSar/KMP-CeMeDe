@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Official Splash Screen API Theme to control Android 12+ behavior -->
+    <style name="Theme.App.Starting" parent="Theme.SplashScreen">
+        <!-- Background identical to your Compose SplashScreen (Olive Green) -->
+        <item name="windowSplashScreenBackground">#72775F</item>
+
+        <!-- Show the app icon in the center of the native splash -->
+        <item name="windowSplashScreenAnimatedIcon">@mipmap/cemede_launcher</item>
+
+        <!-- Theme to switch to once Compose is ready -->
+        <item name="postSplashScreenTheme">@android:style/Theme.Material.Light.NoActionBar</item>
+    </style>
+</resources>

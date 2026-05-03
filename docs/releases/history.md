@@ -2,7 +2,10 @@
 
 Este documento registra la evolución del proyecto y los hitos alcanzados en cada lanzamiento.
 
-## [1.2.0] - Seguridad y Automatización Android - XX-XX-2026
+## [1.2.0] - Seguridad, Automatización y UX - XX-XX-2026
+* **Eliminación de Splash Nativa**: Optimización de los puntos de entrada nativos para eliminar la sensación de "doble pantalla" y asegurar un arranque instantáneo con la identidad visual de la marca.
+    * **Android**: Implementación de `androidx.core:core-splashscreen` configurada con el color de la marca (`#72775F`) y logo. Esto evita el fondo negro/logo por defecto de Android 12+ y proporciona feedback visual inmediato antes de entrar al Splash de Compose.
+    * **iOS**: Configuración del `LaunchScreen` vía `Info.plist` con un Color Set sólido (`LaunchBackground`) coincidente con la marca, eliminando cualquier delay visual o pantalla en blanco al iniciar.
 * **Configuración Automatizada del Keystore**: Implementación de lectura de credenciales de firmado desde `local.properties` para automatizar la generación de APKs y AABs firmados en Android, eliminando la necesidad de completar el asistente manual de Android Studio.
 * **Actualización de Documentación**: Reestructuración de las guías de release y keystore para reflejar el nuevo flujo de trabajo simplificado.
 * **Implementación de Unit Tests**: Cobertura exhaustiva de pruebas unitarias para asegurar la estabilidad y calidad de la lógica de negocio mediante el uso de Mockative y Turbine.
