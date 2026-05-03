@@ -39,19 +39,6 @@ Este documento centraliza las tareas pendientes, mejoras de UI y lógica de nego
 
 ### 🩺 Testing
 - [ ] **Unit Tests:**
-    - [ ] UT de ViewModels (Splash, Staff, Login).
-      - [ ] `MainViewModel`
-      - [ ] `PartnerListViewModel`
-      - [ ] `SplashViewModel`
-      - [ ] `StaffMemberDetailViewModel`
-      - [ ] `StaffMemberListViewModel`
-    - [ ] UT de UseCases.
-      - [ ] `GetAllPartnersUseCase`
-      - [ ] `GetAllStaffMembersFlowUseCase`
-      - [ ] `GetStaffMemberDetailFlowUseCase`
-      - [ ] `SyncPartnersInfoUseCase`
-      - [ ] `SyncStaffMemberInfoUseCase`
-      - [ ] `SyncStaffMembersWorkingScheduleUseCase`
     - [ ] UT Repositories.
       - [ ] `PartnerRepository`
       - [ ] `StaffMemberRepository`
