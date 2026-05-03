@@ -4,7 +4,6 @@ import assertk.assertThat
 import assertk.assertions.isEqualTo
 import com.cemede.cemede.domain.model.Partner
 import com.cemede.cemede.domain.repository.PartnerRepository
-import io.mockative.Mockable
 import io.mockative.coEvery
 import io.mockative.mock
 import io.mockative.of
@@ -14,7 +13,6 @@ import kotlinx.coroutines.test.runTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 
-@Mockable(PartnerRepository::class)
 class GetAllPartnersUseCaseTest {
     private val repository = mock(of<PartnerRepository>())
     private lateinit var useCase: GetAllPartnersUseCase

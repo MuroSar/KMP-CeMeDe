@@ -5,6 +5,14 @@ Este documento registra la evolución del proyecto y los hitos alcanzados en cad
 ## [1.2.0] - Seguridad y Automatización Android - XX-XX-2026
 * **Configuración Automatizada del Keystore**: Implementación de lectura de credenciales de firmado desde `local.properties` para automatizar la generación de APKs y AABs firmados en Android, eliminando la necesidad de completar el asistente manual de Android Studio.
 * **Actualización de Documentación**: Reestructuración de las guías de release y keystore para reflejar el nuevo flujo de trabajo simplificado.
+* **Implementación de Unit Tests**: Cobertura exhaustiva de pruebas unitarias para asegurar la estabilidad y calidad de la lógica de negocio mediante el uso de Mockative y Turbine.
+    * **ViewModels**: Validación de estados de UI y flujos de datos reactivos.
+    * **UseCases**: Pruebas de lógica de negocio y orquestación de datos.
+    * **Repositories**: Verificación de la integración y mapeo de datos de dominio.
+    * **DataSources**: Validación de fuentes de datos externas (Ktor/CSV) y locales.
+    * **DataBase**: Pruebas de persistencia, consultas y transacciones con Room.
+    * **Mappers**: Verificación de transformaciones de modelos entre las diferentes capas de la arquitectura.
+    * **Utils**: Validación de utilidades de ayuda, formateo y lógica auxiliar (ej. `DateTimeHandler`).
 
 ## [1.1.1] - Hotfix iOS - 02-05-2026
 * **Ejecución en dispositivos físicos iOS**: Ajustes en la configuración del framework y scripts de build para permitir la instalación y ejecución en dispositivos Apple reales (no solo simuladores).

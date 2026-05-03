@@ -10,23 +10,25 @@ import kotlinx.datetime.LocalTime
 import kotlin.test.Test
 
 class StaffMemberAndPartnersMapperTest {
-
     @Test
     fun `mapToStaffMember should map staff member and its partners correctly`() {
-        val staffEntity = StaffMemberEntity(
-            id = 1,
-            name = "Dr. Test",
-            staffMemberWorkingSchedule = mapOf(DayOfWeek.MONDAY to listOf(LocalTime(8, 0))),
-            partnersSchedule = emptyMap()
-        )
-        val partnerEntities = listOf(
-            PartnerEntity(id = 10, name = "Partner A", processType = "Type 1", staffMemberId = 1),
-            PartnerEntity(id = 11, name = "Partner B", processType = "Type 2", staffMemberId = 1)
-        )
-        val staffMemberAndPartners = StaffMemberAndPartners(
-            staffMember = staffEntity,
-            partners = partnerEntities
-        )
+        val staffEntity =
+            StaffMemberEntity(
+                id = 1,
+                name = "Dr. Test",
+                staffMemberWorkingSchedule = mapOf(DayOfWeek.MONDAY to listOf(LocalTime(8, 0))),
+                partnersSchedule = emptyMap(),
+            )
+        val partnerEntities =
+            listOf(
+                PartnerEntity(id = 10, name = "Partner A", processType = "Type 1", staffMemberId = 1),
+                PartnerEntity(id = 11, name = "Partner B", processType = "Type 2", staffMemberId = 1),
+            )
+        val staffMemberAndPartners =
+            StaffMemberAndPartners(
+                staffMember = staffEntity,
+                partners = partnerEntities,
+            )
 
         val domain = staffMemberAndPartners.mapToStaffMember()
 

@@ -35,27 +35,6 @@ Este documento centraliza las tareas pendientes, mejoras de UI y lógica de nego
 
 ---
 
-## 🧪 Estabilidad y Calidad (Mantenimiento)
-
-### 🩺 Testing
-- [ ] **Unit Tests:**
-    - [ ] UT Repositories.
-      - [ ] `PartnerRepository`
-      - [ ] `StaffMemberRepository`
-    - [ ] UT data sources.
-      - [ ] `CSVDataSource`
-    - [ ] UT data base.
-      - [ ] `CemedeDataBase`
-    - [ ] UT mappers.
-      - [ ] `CsvParser`
-      - [ ] `PartnerMapper`
-      - [ ] `StaffMemberAndPartnersMapper`
-    - [ ] UT de utils
-      - [ ] Validar formateadores de fecha y hora (`DateTimeHandler`).
-      - [ ] `PhonesHelper`
-
----
-
 ## 🎨 Notas de Diseño (UI/UX)
 - **Colores:** Mantener la sutileza de los grises y el verde oliva de la marca.
 - **Iconografía:** Usar recursos vectoriales propios (como el estetoscopio) para asegurar nitidez.

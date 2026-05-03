@@ -120,6 +120,7 @@ kotlin {
             implementation(libs.assertk)
             implementation(libs.mockative)
             implementation(libs.turbine)
+            implementation(libs.ktor.client.mock)
 
             // UI testing
             @OptIn(ExperimentalComposeLibrary::class)
