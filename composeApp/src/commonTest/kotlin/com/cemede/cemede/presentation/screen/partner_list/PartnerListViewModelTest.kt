@@ -11,6 +11,7 @@ import io.mockative.mock
 import io.mockative.of
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
@@ -19,7 +20,6 @@ import kotlinx.coroutines.test.setMain
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
-import kotlinx.coroutines.flow.flow
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class PartnerListViewModelTest {

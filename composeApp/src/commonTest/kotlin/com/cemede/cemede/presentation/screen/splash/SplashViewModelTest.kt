@@ -13,19 +13,18 @@ import com.cemede.cemede.domain.util.CoroutineResult
 import io.mockative.coEvery
 import io.mockative.mock
 import io.mockative.of
-import kotlin.test.AfterTest
-import kotlin.test.BeforeTest
-import kotlin.test.Test
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
+import kotlin.test.AfterTest
+import kotlin.test.BeforeTest
+import kotlin.test.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class SplashViewModelTest {
-
     private val syncStaffMembersWorkingScheduleUseCase = mock(of<SyncStaffMembersWorkingScheduleUseCase>())
     private val syncPartnersInfoUseCase = mock(of<SyncPartnersInfoUseCase>())
     private val syncAllStaffMembersScheduleUseCase = mock(of<SyncAllStaffMembersScheduleUseCase>())
@@ -44,61 +43,65 @@ class SplashViewModelTest {
     }
 
     @Test
-    fun `init should sync all data successfully`() = runTest {
-        // Given
-        coEvery { syncStaffMembersWorkingScheduleUseCase() }.returns(CoroutineResult.Success(Unit))
-        coEvery { syncPartnersInfoUseCase() }.returns(CoroutineResult.Success(Unit))
-        coEvery { syncAllStaffMembersScheduleUseCase() }.returns(CoroutineResult.Success(Unit))
+    fun `init should sync all data successfully`() =
+        runTest {
+            // Given
+            coEvery { syncStaffMembersWorkingScheduleUseCase() }.returns(CoroutineResult.Success(Unit))
+            coEvery { syncPartnersInfoUseCase() }.returns(CoroutineResult.Success(Unit))
+            coEvery { syncAllStaffMembersScheduleUseCase() }.returns(CoroutineResult.Success(Unit))
 
-        // When
-        viewModel = SplashViewModel(
-            syncStaffMembersWorkingScheduleUseCase,
-            syncPartnersInfoUseCase,
-            syncAllStaffMembersScheduleUseCase
-        )
+            // When
+            viewModel =
+                SplashViewModel(
+                    syncStaffMembersWorkingScheduleUseCase,
+                    syncPartnersInfoUseCase,
+                    syncAllStaffMembersScheduleUseCase,
+                )
 
-        // Then
-        viewModel.state.test {
-            // Initial state
-            val initialState = awaitItem()
-            assertThat(initialState.isLoading).isTrue()
-            
-            // Wait for all syncs to complete
-            var finalState = awaitItem()
-            while(!finalState.isSyncComplete && finalState.isLoading) {
-                finalState = awaitItem()
+            // Then
+            viewModel.state.test {
+                // Initial state
+                val initialState = awaitItem()
+                assertThat(initialState.isLoading).isTrue()
+
+                // Wait for all syncs to complete
+                var finalState = awaitItem()
+                while (!finalState.isSyncComplete && finalState.isLoading) {
+                    finalState = awaitItem()
+                }
+
+                assertThat(finalState.isSyncComplete).isTrue()
+                assertThat(finalState.isLoading).isFalse()
+                assertThat(finalState.error).isEqualTo(null)
             }
-            
-            assertThat(finalState.isSyncComplete).isTrue()
-            assertThat(finalState.isLoading).isFalse()
-            assertThat(finalState.error).isEqualTo(null)
         }
-    }
 
     @Test
-    fun `init should show error when first sync fails`() = runTest {
-        // Given
-        val errorMessage = "Network Error"
-        coEvery { syncStaffMembersWorkingScheduleUseCase() }.returns(CoroutineResult.Error(errorMessage))
+    fun `init should show error when first sync fails`() =
+        runTest {
+            // Given
+            val errorMessage = "Network Error"
+            coEvery { syncStaffMembersWorkingScheduleUseCase() }.returns(CoroutineResult.Error(errorMessage))
 
-        // When
-        viewModel = SplashViewModel(
-            syncStaffMembersWorkingScheduleUseCase,
-            syncPartnersInfoUseCase,
-            syncAllStaffMembersScheduleUseCase
-        )
+            // When
+            viewModel =
+                SplashViewModel(
+                    syncStaffMembersWorkingScheduleUseCase,
+                    syncPartnersInfoUseCase,
+                    syncAllStaffMembersScheduleUseCase,
+                )
 
-        // Then
-        viewModel.state.test {
-            val state = awaitItem()
-            var lastState = state
-            while(lastState.error == null && lastState.isLoading) {
-                lastState = awaitItem()
+            // Then
+            viewModel.state.test {
+                val state = awaitItem()
+                var lastState = state
+                while (lastState.error == null && lastState.isLoading) {
+                    lastState = awaitItem()
+                }
+
+                assertThat(lastState.error).isNotNull()
+                assertThat(lastState.error).equals(errorMessage)
+                assertThat(lastState.isLoading).isFalse()
             }
-
-            assertThat(lastState.error).isNotNull()
-            assertThat(lastState.error).equals(errorMessage)
-            assertThat(lastState.isLoading).isFalse()
         }
-    }
 }

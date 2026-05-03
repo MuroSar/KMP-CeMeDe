@@ -10,20 +10,20 @@ import kotlinx.datetime.LocalTime
 import kotlin.test.Test
 
 class PartnerMapperTest {
-
     @Test
     fun `mapToPartner should map all fields correctly`() {
-        val entity = PartnerEntity(
-            id = 1,
-            name = "Test Partner",
-            entryDate = LocalDate(2023, 1, 1),
-            processType = "Type A",
-            syndrome = "Syndrome X",
-            diagnosis = "Diagnosis Y",
-            staffMemberName = "Staff A",
-            scheduleType = ScheduleType.FIXED,
-            workingSchedule = mapOf(DayOfWeek.MONDAY to LocalTime(10, 0))
-        )
+        val entity =
+            PartnerEntity(
+                id = 1,
+                name = "Test Partner",
+                entryDate = LocalDate(2023, 1, 1),
+                processType = "Type A",
+                syndrome = "Syndrome X",
+                diagnosis = "Diagnosis Y",
+                staffMemberName = "Staff A",
+                scheduleType = ScheduleType.FIXED,
+                workingSchedule = mapOf(DayOfWeek.MONDAY to LocalTime(10, 0)),
+            )
 
         val domain = entity.mapToPartner()
 
